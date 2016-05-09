@@ -105,7 +105,7 @@ class ImageHandler {
 		return $this->resize;
 	}
 
-	function injectImageEditor(\WP_Image_Editor $imageEditor)
+	function setImageEditor(\WP_Image_Editor $imageEditor)
 	{
 		$this->imageEditor = $imageEditor;
 	}

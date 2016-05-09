@@ -47,7 +47,7 @@ if (is_wp_error($imageEditor)) {
 	return;
 }
 
-$imageHandler->injectImageEditor($imageEditor);
+$imageHandler->setImageEditor($imageEditor);
 $img = $imageHandler->handleImage();
 
 $output = wp_get_image_editor($img['path']);
