@@ -1,0 +1,15 @@
+{
+    "name": "alpipego/dynamic-image-resizer",
+    "description": "Resize WordPress Attachment Images via Query String",
+    "license": "GPL",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "psr-4": {
+            "Alpipego\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.5",
+        "composer/installers": "~1.0"
+    }
+}
