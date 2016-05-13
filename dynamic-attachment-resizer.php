@@ -1,6 +1,6 @@
 <?php
 
-use Alpipego\WpLib\Autoload;
+use Alpipego\DynamicImage\Autoload;
 
 /**
  * Plugin Name: Dynamic Image Resizer
@@ -9,5 +9,7 @@ use Alpipego\WpLib\Autoload;
  * Author:      Alex
  * Author URI:  http://alpipego.com/
  */
+
+require_once __DIR__ . '/Autoload.php';
 
 new Autoload(__DIR__, 'Alpipego');

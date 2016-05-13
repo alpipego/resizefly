@@ -5,7 +5,7 @@ Tell your server to redirect all request to JPEGs to `image.php`, e.g.
 
 ```
 location ~* (\.jpg|jpeg)$ {
-    rewrite ^/* /wp-content/dynamic-attachment-resizer/image.php?image=$uri last;
+    rewrite ^/* /wp-content/dynamic-image-resizer/image.php?image=$uri last;
 }
 ```
 
@@ -13,14 +13,13 @@ location ~* (\.jpg|jpeg)$ {
 Append `width`, `height` and `quality` as optional query args to get an image in the specified size. Leave out either `width` or `height` to resize proportionally. If you do not specify `quality` the WordPress default will be used (90% pre WP 4.5; 82% since WP 4.5).
 
 # Dependencies
-* Currently requires my [WordPress Libs](git@github.com:alpipego/wordpress-libraries.git) (but only using the autoloader so it could easily be isolated)
 * WordPress > 3.5.0 (WP_Image_Editor Class)
 * php > 5.4
+* either GD or ImageMagick installed on the server
 
 ```
 "require": {
     "php": ">=5.4",
-    "alpipego/wordpress-libs": "> 1.0.6",
     "composer/installers": "~1.0"
 }
 ```
