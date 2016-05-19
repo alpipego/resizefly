@@ -15,7 +15,7 @@ class Autoload
 
     public function __construct($dir, $ns = __NAMESPACE__)
     {
-        $this->dir = $dir;
+        $this->dir = $dir . '/src';
         $this->ns = $ns;
         $this->load();
     }
@@ -23,12 +23,14 @@ class Autoload
     public function load()
     {
         \spl_autoload_register(function($class) {
-            $class = ltrim($class, '\\');
-            if(strpos($class, $this->ns) !== 0) {
+            $class = ltrim( $class, '\\' );
+
+            if (strpos($class, $this->ns) !== 0) {
                 return;
             }
+
             $class = str_replace($this->ns, '', $class);
-            $path = $this->dir . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+            $path  = $this->dir . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
             require_once $path;
         });
     }

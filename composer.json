@@ -5,7 +5,7 @@
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
-            "Alpipego\\": "src/"
+            "Alpipego\\DynamicImage": "src/"
         }
     },
     "require": {

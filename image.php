@@ -2,23 +2,34 @@
 
 use Alpipego\DynamicImage\ImageHandler;
 
+
+if (!isset($_GET)) {
+	exit;
+}
+
 $defaultQuality = 82;
+$resizeDir = 'dyn-img';
+$pathinfo = pathinfo(realpath($_SERVER['DOCUMENT_ROOT'] . $_GET['image']));
 
-http_response_code(200);
-header('Pragma: public');
-header('Cache-Control: max-age=86400, public');
-header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-
-if (isset($_GET) && isset($_GET['width']) && isset($_GET['height'])) {
+if (isset($_GET['width']) && isset($_GET['height'])) {
 	$quality = isset($_GET['quality']) ? (int) $_GET['quality'] : $defaultQuality;
-	$pathinfo = pathinfo($_GET['image']);
-	$file = sprintf('%s/%s-%d-%d-%d.%s', $_SERVER['DOCUMENT_ROOT'] . $pathinfo['dirname'], $pathinfo['filename'], (int) $_GET['width'], (int) $_GET['height'], $quality, $pathinfo['extension']);
+	$file = sprintf('%s/%s/%s-%d-%d-%d.%s', $pathinfo['dirname'], $resizeDir, $pathinfo['filename'], (int) $_GET['width'], (int) $_GET['height'], $quality, $pathinfo['extension']);
+}
 
-	if (file_exists($file)) {
-		header('Content-Type:' . mime_content_type($file));
-		readfile($file);
-		exit;
-	}
+if (count($_GET) == 1 && isset($_GET['image'])) {
+	$file = sprintf('%s/%s/%s', $pathinfo['dirname'], $resizeDir, $pathinfo['basename']);
+}
+
+//	error_log(date('d.m.Y H:i:s', strtotime('now')) . ":\n" . print_r([$pathinfo, $file], true) . "\n", 3, '/srv/www/wordpress-default/wp-content/debug.log');
+
+if (file_exists($file)) {
+	http_response_code(200);
+	header('Pragma: public');
+	header('Cache-Control: max-age=86400, public');
+	header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+	header('Content-Type:' . mime_content_type($file));
+	readfile($file);
+	exit;
 }
 
 $index = explode('require', file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/index.php'));
@@ -31,7 +42,7 @@ if (strpos($wpBlogHeader, 'wp-blog-header')) {
 }
 
 $imageHandler = new ImageHandler($_GET['image']);
-$imageHandler->setImageData(wp_upload_dir(), get_bloginfo('url'));
+$imageHandler->setImageData(wp_get_upload_dir(), get_bloginfo('url'));
 $imageEditor = wp_get_image_editor($imageHandler->image['path']);
 
 if (is_wp_error($imageEditor)) {
