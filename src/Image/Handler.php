@@ -62,7 +62,4 @@ class Handler {
         return $this->file = sprintf( '%s/%s-%dx%d.%s', $pathinfo['dirname'], $pathinfo['filename'], $size['width'], $size['height'], $pathinfo['extension'] );
     }
 
-    function imageExists() {
-        return file_exists( $resizedImage );
-    }
 }
