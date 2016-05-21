@@ -1,7 +1,7 @@
 {
-    "name": "alpipego/dynamic-image-resizer",
-    "description": "Resize WordPress Attachment Images via Query String",
-    "license": "GPL",
+    "name": "alpipego/resizefly",
+    "description": "Dynamically resize WordPress images on the fly",
+    "license": "GPL 2.0+",
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
