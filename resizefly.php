@@ -43,7 +43,7 @@ new Autoload();
 
             // get the correct path ("regardless" of WordPress installation path etc)
             $plugin['image'] = function ( $plugin ) {
-                return new Image( $plugin['requested_file'], \wp_get_upload_dir(), \get_bloginfo( 'url' ) );
+                return new Image( $plugin['requested_file'], \wp_upload_dir( null, false ), \get_bloginfo( 'url' ) );
             };
 
             // get wp image editor and handle errors
