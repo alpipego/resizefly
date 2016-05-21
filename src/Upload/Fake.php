@@ -34,7 +34,7 @@ class Fake {
             $newsize = \image_resize_dimensions( $metadata['width'], $metadata['height'], $size['width'], $size['height'], $size['crop'] );
 
             if ( $newsize ) {
-                $uploads = \wp_get_upload_dir();
+                $uploads = \wp_upload_dir( null, false );
                 $file    = pathinfo( realpath( $uploads['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'] ) );
 
                 // build the fake meta entry for the size in question

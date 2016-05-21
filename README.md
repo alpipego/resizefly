@@ -1,31 +1,11 @@
-A dynamic attachment resizing plugin for WordPress
+# Resizefly
+Resize all your WordPress images on the fly (works with `*.jp(e)g`, `*.png` or `*.gif` files).
 
-# Installation
-Tell your server to redirect all request to JPEGs to `image.php`, e.g.
-
-```
-location ~* (\.jpg|jpeg)$ {
-    rewrite ^/* /wp-content/dynamic-image-resizer/image.php?image=$uri last;
-}
-```
-
-# Query Args
-Append `width`, `height` and `quality` as optional query args to get an image in the specified size. Leave out either `width` or `height` to resize proportionally. If you do not specify `quality` the WordPress default will be used (90% pre WP 4.5; 82% since WP 4.5).
-
-# Dependencies
-* WordPress > 3.5.0 (WP_Image_Editor Class)
-* php > 5.4
-* either GD or ImageMagick installed on the server
-
-```
-"require": {
-    "php": ">=5.4",
-    "composer/installers": "~1.0"
-}
-```
-
-# Disclaimer
-This plugin has been 'tested' (not actually 'tested') with WordPress 4.5, nginx, php-7.0.3
-
-You should not use it on a production server as of now, since your server could easily be DOS attacked by requesting a lot of different sizes.
-
+## How it works
+ Based on otto42's plugin [Dynamic Image Resizer](https://wordpress.org/plugins/dynamic-image-resizer/) this plugin hooks into the `template_redirect` and checks if the requested file is an image. It then resizes the image to the specified size, as appended by WordPress in the format `-[0-9]+x[0-9]+`, e.g. `-300x200`.
+  
+  If one of the aspects is set to `0` it resizes proportionally to the original image aspect ratio.
+  
+## Caveats
+* If one of the aspects is not specified, the whole plugin has to run to check the original aspect ratio and see if that image exists. Thus making it way slower (than simply serving the image) even if the image already exists
+* When a lot of different image sizes are requested (at the same time or in fast succession), this plugin may have a huge impact on performance
