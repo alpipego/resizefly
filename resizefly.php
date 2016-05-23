@@ -6,7 +6,7 @@ namespace Alpipego\Resizefly;
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
  * Plugin URI:  http://resizefly.com/
- * Version:     1.0.1
+ * Version:     1.1.0
  * Author:      Alex
  * Author URI:  http://alpipego.com/
  */
@@ -25,13 +25,20 @@ new Autoload();
 
     $plugin['path']    = realpath( \plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
     $plugin['url']     = \plugin_dir_url( __FILE__ );
-    $plugin['version'] = '1.0.1';
+    $plugin['version'] = '1.1.0';
+
+    $plugin['addons'] = apply_filters_ref_array('resizefly_addons', []);
+
+    add_filter('resizefly_plugin_lazy', function () use ($plugin) {
+        return $plugin;
+    });
 
     $plugin['fake'] = function () {
         return new Fake();
     };
 
     $plugin->run();
+
 
     \add_action( 'template_redirect', function () use ( $plugin ) {
         if ( ! is_404() ) {
