@@ -27,11 +27,18 @@ new Autoload();
     $plugin['url']     = \plugin_dir_url( __FILE__ );
     $plugin['version'] = '1.0.1';
 
+    $plugin['addons'] = apply_filters_ref_array('resizefly_addons', []);
+
+    add_filter('resizefly_plugin_lazy', function () use ($plugin) {
+        return $plugin;
+    });
+
     $plugin['fake'] = function () {
         return new Fake();
     };
 
     $plugin->run();
+
 
     \add_action( 'template_redirect', function () use ( $plugin ) {
         if ( ! is_404() ) {
