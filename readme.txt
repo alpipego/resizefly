@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego, otto42
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 Requires at least: 3.5.0
 Tested up to: 4.5.2
@@ -16,10 +16,11 @@ Normally after activating a new theme or plugin that adds new image sizes you wi
 This plugins takes care of the resizing dynamically and creates the requested size the moment it is first requested and only when it is requested.
 
 = Support =
-For users: The support forums on wordpress.org
-For developers: Head over to the [Github Repository](https://github.com/alpipego/resizefly/)
-For everything else, find me on [twitter](https://twitter.com/alpipego)
+For users: Please ust the support forums on [wordpress.org](https://wordpress.org/support/plugin/resizefly)
 
+For developers: Head over to the [Github Repository](https://github.com/alpipego/resizefly/)
+
+For everything else, find me on [twitter](https://twitter.com/alpipego) or on slack
 
 == Installation ==
 1. Upload the plugin to your plugins directory (usually \'wp-content/plugins\')
@@ -29,5 +30,17 @@ For everything else, find me on [twitter](https://twitter.com/alpipego)
 The plugin handles the images from here on. There is no administrative menu.
 
 = Uninstalling =
-If you want to uninstall the plugin for good, make sure to regenerate your image thumbnails/sizes.
+If you want to uninstall the plugin for good, make sure to regenerate your image thumbnails/sizes afterwards.
 
+== Frequently Asked Questions ==
+
+Will be added after there has been anything frequent. Please check [the support threads](https://wordpress.org/support/plugin/resizefly) for the time being.
+
+== Changelog ==
+
+= 1.1.0 =
+* Introduced filters for addons
+
+== Upgrade Notice ==
+
+== Screenshots ==
