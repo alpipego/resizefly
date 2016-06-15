@@ -25,7 +25,7 @@ class Image
         $this->originalFile = array_slice(explode(DIRECTORY_SEPARATOR, $file[1]), -1)[0] . '.' . $file[4];
         $this->url = $this->setImageUrl($siteUrl);
         $this->path = $this->setImagePath($uploads, $siteUrl);
-        $this->original = $this->setImageOriginal($file);
+        $this->original = $this->setImageOriginal();
         $this->resize = [
             'width' => $file[2],
             'height' => $file[3],
@@ -55,7 +55,7 @@ class Image
         }
     }
 
-    protected function setImageOriginal($file)
+    protected function setImageOriginal()
     {
         return str_replace($this->file, $this->originalFile, $this->path);
     }
