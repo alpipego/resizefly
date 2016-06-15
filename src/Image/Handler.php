@@ -35,8 +35,8 @@ class Handler {
     }
 
     private function parseRequestedImageSize() {
-        $origWidth  = $this->editor->width;
-        $origHeight = $this->editor->height;
+        $origWidth  = $this->editor->getWidth();
+        $origHeight = $this->editor->getHeight();
 
         // if width or height is larger than the image itself, set it to the original width/height
         // TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio

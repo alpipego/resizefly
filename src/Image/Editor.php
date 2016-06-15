@@ -17,12 +17,12 @@ class Editor {
         $this->editor = $editor;
     }
 
-    private function getWidth() {
-        return $this->editor->get_size()['width'];
+    public function getWidth() {
+        return $this->getSize()['width'];
     }
 
-    private function getHeight() {
-        return $this->editor->get_size()['height'];
+    public function getHeight() {
+        return $this->getSize()['height'];
     }
 
     private function getSize() {
@@ -31,9 +31,9 @@ class Editor {
 
     public function getRatio( $aspect ) {
         if ( in_array( $aspect, [ 'width', 'w' ] ) ) {
-            return $this->width / $this->height;
+            return $this->getWidth() / $this->getHeight();
         } elseif ( in_array( $aspect, [ 'height', 'h' ] ) ) {
-            return $this->height / $this->width;
+            return $this->getHeight() / $this->getWidth();
         }
 
         return 1;
@@ -59,6 +59,8 @@ class Editor {
         if ( method_exists( $this, 'get' . ucfirst( $name ) ) ) {
             return call_user_func( [ $this, 'get' . ucfirst( $name ) ] );
         }
+
+        return false;
     }
 
 
