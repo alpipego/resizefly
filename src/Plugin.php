@@ -25,4 +25,8 @@ class Plugin extends Container {
             }
         }
     }
+
+    public function loadTextdomain($dir) {
+        load_plugin_textdomain('resizefly', false, $dir);
+    }
 }
