@@ -13,6 +13,7 @@ class Image
     public $original;
     public $originalFile;
     public $resize;
+    public $uploadDir;
     protected $input;
     protected $file;
     protected $url;
@@ -30,6 +31,7 @@ class Image
             'width' => $file[2],
             'height' => $file[3],
         ];
+        $this->uploadDir = $uploads;
     }
 
     protected function setImageUrl($siteUrl)
