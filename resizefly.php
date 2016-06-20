@@ -4,13 +4,13 @@
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
  * Plugin URI:  http://resizefly.com/
- * Version:     1.1.5
+ * Version:     1.2.0
  * Author:      alpipego
  * Author URI:  http://alpipego.com/
  * Text Domain: resizefly
  */
 
-require_once dirname(__FILE__) . '/version-check.php';
+require_once dirname( __FILE__ ) . '/version-check.php';
 
 use Alpipego\Resizefly\Image\Editor as ImageEditor;
 use Alpipego\Resizefly\Image\Handler as ImageHandler;
@@ -46,26 +46,31 @@ new Autoload();
 
 	$plugin->run();
 
-
 	add_action( 'template_redirect', function () use ( $plugin ) {
 		if ( ! is_404() ) {
 			return;
 		}
 
-		if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpeg|jpg|png|gif)/i', $_SERVER['REQUEST_URI'], $matches ) ) {
+		$uploadDir     = wp_upload_dir( null, false );
+		$suffix        = apply_filters( 'resizefly_resized_path', '' );
+		$requestedFile = $_SERVER['REQUEST_URI'];
+		if ( ! empty( $suffix ) ) {
+			$requestedFile = str_replace( $_SERVER['DOCUMENT_ROOT'], '', str_replace( trailingslashit( $uploadDir['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR ), $uploadDir['basedir'], $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'] ) );
+		}
+
+
+		if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpeg|jpg|png|gif)/i', $requestedFile, $matches ) ) {
 			$plugin['requested_file'] = $matches;
 
 			// get the correct path ("regardless" of WordPress installation path etc)
-			$plugin['image'] = function ( $plugin ) {
-				return new Image( $plugin['requested_file'], wp_upload_dir( null, false ), get_bloginfo( 'url' ) );
+			$plugin['image'] = function ( $plugin ) use ( $uploadDir ) {
+				return new Image( $plugin['requested_file'], $uploadDir, get_bloginfo( 'url' ) );
 			};
 
 			// get wp image editor and handle errors
 			$plugin['wp_image_editor'] = wp_get_image_editor( $plugin['image']->original );
 			if ( ! file_exists( $plugin['image']->original ) || is_wp_error( $plugin['wp_image_editor'] ) ) {
 				status_header( '404' );
-				@include_once get_404_template();
-
 				exit;
 			}
 
@@ -84,7 +89,11 @@ new Autoload();
 				return new Stream( wp_get_image_editor( $plugin['image_handler']->file ) );
 			};
 
-			$plugin->run();
+			try {
+				$plugin->run();
+			} catch ( Exception $e ) {
+				error_log( date( 'd.m.Y H:i:s', strtotime( 'now' ) ) . ":\n" . print_r( $e->getMessage(), true ) . "\n", 3, trailingslashit( WP_CONTENT_DIR ) . 'debug.log' );
+			}
 		}
 	} );
 } );
