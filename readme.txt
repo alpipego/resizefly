@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego, otto42
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3
 Requires at least: 3.5.0
 Tested up to: 4.5.2
