@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="145px" height="165px" viewBox="0 0 145 165" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="106.956078 30.0198264 166.182222 64.2140567 166.182222 132.602517 106.956078 166.796748 47.7299336 132.602517 47.7299336 64.2140567"></polygon>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="118.452288" height="136.776921" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(-32.000000, -18.000000)">
+            <rect id="Rectangle-1" fill="#59BDE5" x="32" y="28" width="145" height="145" rx="8"></rect>
+            <polygon id="Shape" fill="#FFFFFF" points="98.9678891 101 98.9678891 103.852808 108.360182 103.852808 94 118.21299 96.0150166 120.229969 110.375198 105.867825 110.375198 115.260118 113.228007 115.260118 113.228007 101"></polygon>
+            <polyline id="Shape" fill="#FFFFFF" points="98.9678891 90.2299688 98.9678891 87.3771604 108.360182 87.3771604 94 73.0169787 96.0150166 71 110.375198 85.3621438 110.375198 75.9698511 113.228007 75.9698511 113.228007 90.2299688 98.9678891 90.2299688 98.9678891 90.2299688"></polyline>
+            <polyline id="Shape" fill="#FFFFFF" points="138.260118 101 138.260118 103.852808 128.867825 103.852808 143.228007 118.21299 141.21299 120.229969 126.852808 105.867825 126.852808 115.260118 124 115.260118 124 101 138.260118 101 138.260118 101"></polyline>
+            <polyline id="Shape" fill="#FFFFFF" points="138.260118 90.2299688 138.260118 87.3771604 128.867825 87.3771604 143.228007 73.0169787 141.21299 71 126.852808 85.3621438 126.852808 75.9698511 124 75.9698511 124 90.2299688 138.260118 90.2299688 138.260118 90.2299688"></polyline>
+            <polygon id="Polygon-4" stroke="#5B5B5B" stroke-width="2" transform="translate(104.468949, 100.525293) rotate(-240.000000) translate(-104.468949, -100.525293) " points="104.468949 20.1050586 174.114915 60.3151757 174.114915 140.73541 104.468949 180.945527 34.8229829 140.73541 34.8229829 60.3151757"></polygon>
+            <polygon id="Polygon-4" stroke="#5B5B5B" transform="translate(119.213745, 95.827454) rotate(-240.000000) translate(-119.213745, -95.827454) " points="119.213745 47.1654908 161.356241 71.4964724 161.356241 120.158436 119.213745 144.489417 77.0712482 120.158436 77.0712482 71.4964724"></polygon>
+            <use id="Polygon-4" stroke="#5B5B5B" mask="url(#mask-2)" stroke-width="2" stroke-dasharray="2" transform="translate(106.956078, 98.408287) rotate(-223.000000) translate(-106.956078, -98.408287) " xlink:href="#path-1"></use>
+        </g>
+    </g>
+</svg>
