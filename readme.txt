@@ -41,6 +41,14 @@ Will be added after there has been anything frequent. Please check [the support 
 
 == Changelog ==
 
+= 1.2.2 =
+* added `AbstractAddon` class
+* changed image resizing from simple `resize` method to `crop`
+* tested against WordPress 4.6 beta 3
+
+= 1.2.1 =
+* better version checking (including PHP version, WordPress version, GD or Imagick installed)
+
 = 1.2.0 =
 * introduced new filter `resizefly_resize_path`
 
