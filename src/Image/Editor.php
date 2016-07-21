@@ -11,57 +11,63 @@ namespace Alpipego\Resizefly\Image;
 use WP_Image_Editor;
 
 class Editor {
-    private $editor;
+	private $editor;
 
-    public function __construct( WP_Image_Editor $editor ) {
-        $this->editor = $editor;
-    }
+	public function __construct( WP_Image_Editor $editor ) {
+		$this->editor = $editor;
+	}
 
-    public function getWidth() {
-        return $this->getSize()['width'];
-    }
+	public function getRatio( $aspect ) {
+		if ( in_array( $aspect, [ 'width', 'w' ] ) ) {
+			return $this->getWidth() / $this->getHeight();
+		} elseif ( in_array( $aspect, [ 'height', 'h' ] ) ) {
+			return $this->getHeight() / $this->getWidth();
+		}
 
-    public function getHeight() {
-        return $this->getSize()['height'];
-    }
+		return 1;
+	}
 
-    private function getSize() {
-        return $this->editor->get_size();
-    }
+	public function getWidth() {
+		return $this->getSize()['width'];
+	}
 
-    public function getRatio( $aspect ) {
-        if ( in_array( $aspect, [ 'width', 'w' ] ) ) {
-            return $this->getWidth() / $this->getHeight();
-        } elseif ( in_array( $aspect, [ 'height', 'h' ] ) ) {
-            return $this->getHeight() / $this->getWidth();
-        }
+	private function getSize() {
+		return $this->editor->get_size();
+	}
 
-        return 1;
-    }
+	public function getHeight() {
+		return $this->getSize()['height'];
+	}
 
-    public function resizeImage( $width, $height ) {
-        return $this->editor->resize( $width, $height, true );
-    }
+	public function resizeImage( $width, $height, $focalX = 50, $focalY = 50 ) {
+		$origWidth  = $this->getWidth();
+		$origHeight = $this->getHeight();
+		$ratio      = max( $width / $origWidth, $height / $origHeight );
+		$srcX       = round( ( $origWidth - $width / $ratio ) * $focalX / 100 );
+		$srcY       = round( ( $origHeight - $height / $ratio ) * $focalY / 100 );
 
-    public function saveImage( $file ) {
-        return $this->editor->save( $file );
-    }
+		return $this->editor->crop( $srcX, $srcY, $width / $ratio, $height / $ratio, $width, $height );
+	}
 
-    protected function streamImage() {
-        http_response_code( 200 );
-        header( 'Pragma: public' );
-        header( 'Cache-Control: max-age=86400, public' );
-        header( 'Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time() + 86400 ) );
-        $this->editor->stream();
-    }
+	public function saveImage( $file ) {
+		return $this->editor->save( $file );
+	}
 
-    public function __get( $name ) {
-        if ( method_exists( $this, 'get' . ucfirst( $name ) ) ) {
-            return call_user_func( [ $this, 'get' . ucfirst( $name ) ] );
-        }
+	public function __get( $name ) {
+		if ( method_exists( $this, 'get' . ucfirst( $name ) ) ) {
+			return call_user_func( [ $this, 'get' . ucfirst( $name ) ] );
+		}
 
-        return false;
-    }
+		return false;
+	}
+
+	protected function streamImage() {
+		http_response_code( 200 );
+		header( 'Pragma: public' );
+		header( 'Cache-Control: max-age=86400, public' );
+		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time() + 86400 ) );
+		$this->editor->stream();
+	}
 
 
 }
