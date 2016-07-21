@@ -1,10 +1,10 @@
 === ResizeFly ===
 Contributors: alpipego, otto42
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3
 Requires at least: 3.5.0
-Tested up to: 4.5.2
+Tested up to: 4.6b3
 
 Dynamically resize your WordPress images on the fly. Upload your images once and don't worry about missing or new image sizes.
 
@@ -40,6 +40,14 @@ If you want to uninstall the plugin for good, make sure to regenerate your image
 Will be added after there has been anything frequent. Please check [the support threads](https://wordpress.org/support/plugin/resizefly) for the time being.
 
 == Changelog ==
+
+= 1.2.2 =
+* added `AbstractAddon` class
+* changed image resizing from simple `resize` method to `crop`
+* tested against WordPress 4.6 beta 3
+
+= 1.2.1 =
+* better version checking (including PHP version, WordPress version, GD or Imagick installed)
 
 = 1.2.0 =
 * introduced new filter `resizefly_resize_path`
