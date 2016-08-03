@@ -18,8 +18,9 @@ class Image
     protected $file;
     protected $url;
     protected $path;
+    protected $cacheUrl;
 
-    public function __construct($file, $uploads, $siteUrl)
+    public function __construct($file, $uploads, $siteUrl, $cacheUrl)
     {
         $this->input = \sanitize_text_field($file[0]);
         $this->file = array_slice(explode(DIRECTORY_SEPARATOR, $this->input), -1)[0];
@@ -32,6 +33,7 @@ class Image
             'height' => $file[3],
         ];
         $this->uploadDir = $uploads;
+	    $this->cachePath = $cacheUrl;
     }
 
     protected function setImageUrl($siteUrl)
@@ -59,6 +61,8 @@ class Image
 
     protected function setImageOriginal()
     {
-        return str_replace($this->file, $this->originalFile, $this->path);
+	    $origPath = str_replace($this->cacheUrl, $this->uploadDir['baseurl'], $this->path );
+
+        return str_replace($this->file, $this->originalFile, $origPath);
     }
 }
