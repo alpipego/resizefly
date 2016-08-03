@@ -32,7 +32,7 @@ namespace Alpipego\Resizefly\Pimple;
  * @author  Fabien Potencier
  */
 class Container implements \ArrayAccess {
-    protected $values = array();
+    private $values = array();
     private $factories;
     private $protected;
     private $frozen = array();
