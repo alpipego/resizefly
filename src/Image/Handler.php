@@ -15,10 +15,12 @@ class Handler {
 	protected $image;
 	protected $editor;
 	protected $aspect;
+	protected $cachePath;
 
-	public function __construct( Image $image, Editor $editor ) {
+	public function __construct( Image $image, Editor $editor, $cachePath ) {
 		$this->image  = $image;
 		$this->editor = $editor;
+		$this->cachePath = $cachePath;
 	}
 
 	public function run() {
@@ -38,11 +40,7 @@ class Handler {
 	private function setImage() {
 		$size     = $this->parseRequestedImageSize();
 		$pathinfo = pathinfo( $this->image->original );
-		$suffix   = apply_filters( 'resizefly_resized_path', '' );
-		$dir      = $pathinfo['dirname'];
-		if ( ! empty( $suffix ) ) {
-			$dir = str_replace( $this->image->uploadDir['basedir'], trailingslashit( $this->image->uploadDir['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR ), $pathinfo['dirname'] );
-		}
+		$dir = str_replace( $this->image->uploadDir['basedir'], $this->cachePath, $pathinfo['dirname'] );
 
 		return $this->file = sprintf( '%s/%s-%dx%d.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $pathinfo['extension'] );
 	}
