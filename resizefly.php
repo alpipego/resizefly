@@ -24,6 +24,7 @@ use Alpipego\Resizefly\Autoload;
 use Alpipego\Resizefly\Admin\OptionsPage;
 use Alpipego\Resizefly\Admin\BasicOptionsSection;
 use Alpipego\Resizefly\Admin\PathField;
+use Alpipego\Resizefly\Admin\Admin;
 
 if ( ! $check->errors() ) :
 	require_once __DIR__ . '/src/Autoload.php';
@@ -34,9 +35,10 @@ if ( ! $check->errors() ) :
 
 		$plugin->loadTextdomain( __DIR__ . '/languages' );
 
-		$plugin['path']    = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
-		$plugin['url']     = plugin_dir_url( __FILE__ );
-		$plugin['version'] = '1.2.2';
+		$plugin['path']     = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
+		$plugin['url']      = plugin_dir_url( __FILE__ );
+		$plugin['basename'] = plugin_basename( __FILE__ );
+		$plugin['version']  = '1.2.2';
 
 		$plugin['addons'] = apply_filters( 'resizefly_addons', [ ] );
 
@@ -56,7 +58,7 @@ if ( ! $check->errors() ) :
 		// set the cache path throughout the plugin
 		$suffix               = apply_filters( 'resizefly_resized_path', get_option( 'resizefly_resized_path', '' ) );
 		$plugin['cache_path'] = trailingslashit( $plugin['uploads']['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
-		$plugin['cache_url'] = trailingslashit( $plugin['uploads']['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
+		$plugin['cache_url']  = trailingslashit( $plugin['uploads']['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
 
 		if ( is_admin() ) {
 			$plugin['options_page'] = function ( $plugin ) {
@@ -69,6 +71,10 @@ if ( ! $check->errors() ) :
 
 			$plugin['options_field_path'] = function ( $plugin ) {
 				return new PathField( $plugin['options_page']->page, $plugin['options_basic_settings']->optionsGroup['id'], $plugin['path'] );
+			};
+
+			$plugin['admin'] = function ( $plugin ) {
+				return new Admin( $plugin );
 			};
 		}
 
