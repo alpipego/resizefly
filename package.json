@@ -1,6 +1,6 @@
 {
   "name": "ResizeFly",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "Resize all your WordPress images on the fly (works with `*.jp(e)g`, `*.png` or `*.gif` files).",
   "private": true,
   "repository": {
