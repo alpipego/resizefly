@@ -32,7 +32,7 @@ if ( ! $check->errors() ) :
 	\add_action( 'plugins_loaded', function () use ( $check ) {
 		$plugin = new Plugin();
 
-		$plugin->loadTextdomain( __DIR__ );
+		$plugin->loadTextdomain( __DIR__ . '/languages' );
 
 		$plugin['path']    = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 		$plugin['url']     = plugin_dir_url( __FILE__ );
