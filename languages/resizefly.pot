@@ -1,0 +1,69 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ResizeFly package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ResizeFly 1.0.0\n"
+"Report-Msgid-Bugs-To: alpipego@gmail.com\n"
+"POT-Creation-Date: 2016-08-04 08:27+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Admin/PathField.php:16
+msgid "Path for resized images"
+msgstr ""
+
+#: version-check.php:79
+msgid ""
+"ResizeFly requires at least PHP 5.4 to function properly. Please upgrade PHP "
+"to use ResizeFly."
+msgstr ""
+
+#: version-check.php:80
+msgid ""
+"ResizeFly requires at least WordPress 3.5 to function properly. Please "
+"upgrade WordPress to use ResizeFly."
+msgstr ""
+
+#: version-check.php:81
+msgid ""
+"ResizeFly could not find an Image Editor. Please make sure you have either "
+"GD or Imagick installed."
+msgstr ""
+
+#: views/field/resizefly-resized-path.php:14
+#, php-format
+msgid ""
+"Directory <code>%s</code> <span style=\"color: green\">is writeable</span>"
+msgstr ""
+
+#: views/field/resizefly-resized-path.php:16
+#, php-format
+msgid ""
+"Directory <code>%s</code> <span style=\"color: crimson\">is not writeable</"
+"span>"
+msgstr ""
+
+#: views/page/resizefly.php:17
+msgid "Update Options"
+msgstr ""
+
+#. /07/16
+#. * Time: 12:57
+#.
+#: views/section/resizefly-basic.php:9
+msgid ""
+"Add a path suffix to store the resized images. If left empty, the resized "
+"images will be stored in the same location as the original.<br><strong>Note:"
+"</strong> Only add one path fragment, i.e. <code>resizefly</code> without "
+"directory separators (<code>/</code>), otherwise the last fragment will be "
+"used."
+msgstr ""
