@@ -1,0 +1,8 @@
+README.md
+VERSION
+composer.json
+package.json
+Gruntfile.js
+.gitignore
+.svnignore
+.gitattributes
