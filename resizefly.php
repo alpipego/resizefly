@@ -50,10 +50,13 @@ if ( ! $check->errors() ) :
 			return new Fake();
 		};
 
+		// wordpress uploads array
+		$plugin['uploads'] = wp_upload_dir( null, false );
+
 		// set the cache path throughout the plugin
 		$suffix               = apply_filters( 'resizefly_resized_path', get_option( 'resizefly_resized_path', '' ) );
-		$plugin['cache_path'] = trailingslashit( wp_upload_dir( null, false )['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
-		$plugin['cache_url'] = trailingslashit( wp_upload_dir( null, false )['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
+		$plugin['cache_path'] = trailingslashit( $plugin['uploads']['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
+		$plugin['cache_url'] = trailingslashit( $plugin['uploads']['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
 
 		if ( is_admin() ) {
 			$plugin['options_page'] = function ( $plugin ) {
@@ -81,7 +84,7 @@ if ( ! $check->errors() ) :
 
 				// get the correct path ("regardless" of WordPress installation path etc)
 				$plugin['image'] = function ( $plugin ) {
-					return new Image( $plugin['requested_file'], wp_upload_dir( null, false ), get_bloginfo( 'url' ), $plugin['cache_url'] );
+					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_url'] );
 				};
 
 				// get wp image editor and handle errors
