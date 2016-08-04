@@ -44,10 +44,8 @@ Will be added after anything has been asked frequently. Please check [the suppor
 = 1.3.0 =
 * added settings page under "Media"
 * provided settings section and fields extensibility for add ons
-* added abstract add on class
 * added translations
 * better use of pimple api (instead of changing variable visibility)
-*
 
 = 1.2.2 =
 * added `AbstractAddon` class
