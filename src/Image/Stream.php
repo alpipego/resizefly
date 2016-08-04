@@ -11,7 +11,6 @@ namespace Alpipego\Resizefly\Image;
 
 /**
  * Stream the image instead of saving it
- * Unused
  *
  * @package Alpipego\Resizefly\Image
  */
