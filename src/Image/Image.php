@@ -8,19 +8,58 @@
 
 namespace Alpipego\Resizefly\Image;
 
+/**
+ * Holds all information relevant to the image
+ * @package Alpipego\Resizefly\Image
+ */
 class Image
 {
-    public $original;
-    public $originalFile;
-    public $resize;
-    public $uploadDir;
-    protected $input;
-    protected $file;
-    protected $url;
-    protected $path;
-    protected $cacheUrl;
+	/**
+	 * @var string original image path
+	 */
+	public $original;
+	/**
+	 * @var string original image file name
+	 */
+	public $originalFile;
+	/**
+	 * @var array requested size
+	 */
+	public $resize;
+	/**
+	 * @var array `wp_upload_dir` array
+	 */
+	public $uploadDir;
+	/**
+	 * @var string relative path requested file
+	 */
+	protected $input;
+	/**
+	 * @var string requested file name
+	 */
+	protected $file;
+	/**
+	 * @var string full requested file url
+	 */
+	protected $url;
+	/**
+	 * @var string full requested file path
+	 */
+	protected $path;
+	/**
+	 * @var string full url to resizefly cache folder
+	 */
+	protected $cacheUrl;
 
-    public function __construct($file, $uploads, $siteUrl, $cacheUrl)
+	/**
+	 * Image constructor. Sets up member variables
+	 *
+	 * @param string $file The requested image
+	 * @param array $uploads `wp_upload_dir` array
+	 * @param string $siteUrl the full website url
+	 * @param string $cacheUrl the full path to resizefly cache dir
+	 */
+	public function __construct($file, $uploads, $siteUrl, $cacheUrl)
     {
         $this->input = \sanitize_text_field($file[0]);
         $this->file = array_slice(explode(DIRECTORY_SEPARATOR, $this->input), -1)[0];
@@ -33,21 +72,36 @@ class Image
             'height' => $file[3],
         ];
         $this->uploadDir = $uploads;
-	    $this->cachePath = $cacheUrl;
+	    $this->cacheUrl = $cacheUrl;
     }
 
-    protected function setImageUrl($siteUrl)
+	/**
+	 * Needs doc
+	 * @param string $siteUrl
+	 *
+	 * @return string new image url
+	 */
+	protected function setImageUrl($siteUrl)
     {
         $urlArr = explode(DIRECTORY_SEPARATOR, $siteUrl);
         unset($urlArr[3]);
         $url = implode(DIRECTORY_SEPARATOR, $urlArr);
 
-        return $url . $this->input;
+	    return $url . $this->input;
     }
 
-    protected function setImagePath($uploads, $siteUrl)
+	/**
+	 * Get the correct path to the image, regardless of WordPress setup
+	 *
+	 * @param array $uploads `wp_uploads_dir` array
+	 * @param string $siteUrl WordPress site url
+	 *
+	 * @return string path to image
+	 */
+	protected function setImagePath($uploads, $siteUrl)
     {
         if (strpos($this->url, $uploads['baseurl']) !== false) {
+
             return $uploads['basedir'] . str_replace($uploads['baseurl'], '', $this->url);
         } else {
             $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
@@ -59,7 +113,12 @@ class Image
         }
     }
 
-    protected function setImageOriginal()
+	/**
+	 * Set the url of the original (unresized) image
+	 *
+	 * @return string image url
+	 */
+	protected function setImageOriginal()
     {
 	    $origPath = str_replace($this->cacheUrl, $this->uploadDir['baseurl'], $this->path );
 

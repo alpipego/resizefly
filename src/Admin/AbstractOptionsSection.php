@@ -9,23 +9,48 @@
 namespace Alpipego\Resizefly\Admin;
 
 
+/**
+ * Class AbstractOptionsSection
+ * @package Alpipego\Resizefly\Admin
+ */
 abstract class AbstractOptionsSection {
+	/**
+	 * @var array
+	 */
 	public $optionsGroup = [
 		'id'   => null,
 		'name' => null,
 	];
+	/**
+	 * @var
+	 */
 	protected $optionsPage;
+	/**
+	 * @var string
+	 */
 	protected $viewsPath;
 
+	/**
+	 * AbstractOptionsSection constructor.
+	 *
+	 * @param $page
+	 * @param $pluginPath
+	 */
 	public function __construct( $page, $pluginPath ) {
 		$this->viewsPath   = $pluginPath . 'views/';
 		$this->optionsPage = $page;
 	}
 
+	/**
+	 *
+	 */
 	public function run() {
 		\add_action( 'admin_init', [ $this, 'addSection' ] );
 	}
 
+	/**
+	 *
+	 */
 	public function addSection() {
 		\add_settings_section( $this->optionsGroup['id'], $this->optionsGroup['name'], [
 			$this,
@@ -33,8 +58,10 @@ abstract class AbstractOptionsSection {
 		], $this->optionsPage );
 	}
 
-//	abstract public function callback();
-
+	/**
+	 * @param $name
+	 * @param $args
+	 */
 	protected function includeView( $name, $args ) {
 		$fileArr = preg_split( '/(?=[A-Z-_])/', $name );
 		$fileArr = array_map( function ( &$value ) {

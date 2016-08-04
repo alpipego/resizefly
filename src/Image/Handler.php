@@ -10,19 +10,50 @@ namespace Alpipego\Resizefly\Image;
 
 use Exception;
 
+/**
+ * Handle the requested image
+ *
+ * @package Alpipego\Resizefly\Image
+ */
 class Handler {
+	/**
+	 * @var string
+	 */
 	public $file;
+	/**
+	 * @var Image
+	 */
 	protected $image;
+	/**
+	 * @var Editor
+	 */
 	protected $editor;
+	/**
+	 * @var array containing width and height
+	 */
 	protected $aspect;
+	/**
+	 * @var string full path to resizefly cache
+	 */
 	protected $cachePath;
 
+	/**
+	 * Handler constructor.
+	 *
+	 * @param Image $image
+	 * @param Editor $editor
+	 * @param $cachePath
+	 */
 	public function __construct( Image $image, Editor $editor, $cachePath ) {
 		$this->image  = $image;
 		$this->editor = $editor;
 		$this->cachePath = $cachePath;
 	}
 
+	/**
+	 * @return array|\WP_Error
+	 * @throws Exception if image can't be resized
+	 */
 	public function run() {
 		if ( ! file_exists( $this->setImage() ) ) {
 			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'] ) ) {
@@ -37,6 +68,11 @@ class Handler {
 		return $image;
 	}
 
+	/**
+	 * Sets the image path to-save
+	 *
+	 * @return string full image path
+	 */
 	private function setImage() {
 		$size     = $this->parseRequestedImageSize();
 		$pathinfo = pathinfo( $this->image->original );
@@ -45,6 +81,11 @@ class Handler {
 		return $this->file = sprintf( '%s/%s-%dx%d.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $pathinfo['extension'] );
 	}
 
+	/**
+	 * Parse the requested image size
+	 *
+	 * @return array ['width' => int, 'height' => int]
+	 */
 	private function parseRequestedImageSize() {
 		$origWidth  = $this->editor->getWidth();
 		$origHeight = $this->editor->getHeight();
@@ -54,6 +95,7 @@ class Handler {
 		$width  = $this->image->resize['width'] > $origWidth ? $origWidth : $this->image->resize['width'];
 		$height = $this->image->resize['height'] > $origHeight ? $origHeight : $this->image->resize['height'];
 
+		// if either width or height is 0, resize to original aspect ratio
 		if ( $width == 0 && $height == 0 ) {
 			$width  = $origWidth;
 			$height = $origHeight;

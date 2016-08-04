@@ -9,21 +9,45 @@
 namespace Alpipego\Resizefly\Upload;
 
 
+/**
+ * Make WordPress think image sizes have been created
+ * @package Alpipego\Resizefly\Upload
+ */
 class Fake {
 
+	/**
+	 * @var array $sizes array to hold registered image sizes
+	 */
 	private $sizes;
 
+	/**
+	 * register filters
+	 */
 	public function run() {
 		\add_filter( 'intermediate_image_sizes_advanced', [ $this, 'getRegisteredImageSizes' ] );
 		\add_filter( 'wp_generate_attachment_metadata', [ $this, 'fakeImageResize' ] );
 	}
 
+	/**
+	 * get the registered image sizes and return an empty set
+	 *
+	 * @param array $sizes filter param - registered sizes
+	 *
+	 * @return array always return empty array
+	 */
 	public function getRegisteredImageSizes( $sizes ) {
 		$this->sizes = $sizes;
 
 		return [ ];
 	}
 
+	/**
+	 * Create a fake meta entry so WordPress thinks, the image size has been created
+	 *
+	 * @param array $metadata filter param - image size metadata
+	 *
+	 * @return array either the original array or a manipulated one
+	 */
 	public function fakeImageResize( $metadata ) {
 		foreach ( $this->sizes as $name => $size ) {
 			// figure out what size WP would make this:
