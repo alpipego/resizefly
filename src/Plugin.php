@@ -11,8 +11,11 @@ namespace Alpipego\Resizefly;
 use Alpipego\Resizefly\Pimple\Container;
 use ReflectionClass;
 
+/**
+ * Extends Pimple Container
+ * @package Alpipego\Resizefly
+ */
 class Plugin extends Container {
-
 
 	/**
 	 * Calls `run()` method on all objects registered on plugin container
@@ -30,8 +33,12 @@ class Plugin extends Container {
 		}
 	}
 
-
-    public function loadTextdomain($dir) {
-        \load_plugin_textdomain('resizefly', false, $dir);
-    }
+	/**
+	 * wrapper for `load_plugin_textdomain`
+	 *
+	 * @param $dir path to languages dir
+	 */
+	public function loadTextdomain( $dir ) {
+		\load_plugin_textdomain( 'resizefly', false, $dir );
+	}
 }
