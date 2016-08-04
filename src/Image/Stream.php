@@ -9,9 +9,17 @@
 namespace Alpipego\Resizefly\Image;
 
 
+/**
+ * Stream the image instead of saving it
+ *
+ * @package Alpipego\Resizefly\Image
+ */
 class Stream extends Editor {
 
-    function run() {
+	/**
+	 * run this when object called
+	 */
+	function run() {
         $this->streamImage();
     }
 }

@@ -8,17 +8,36 @@
 
 namespace Alpipego\Resizefly;
 
+/**
+ * custom autoloader for now, available to add ons as well
+ * @package Alpipego\Resizefly
+ */
 class Autoload {
-    private $dir;
-    private $ns;
+	/**
+	 * @var string $dir directory to load
+	 */
+	private $dir;
+	/**
+	 * @var string $ns namespace to load
+	 */
+	private $ns;
 
-    public function __construct( $dir = __DIR__, $ns = __NAMESPACE__ ) {
+	/**
+	 * Autoload constructor.
+	 *
+	 * @param string $dir pass dir, default to current dir
+	 * @param string $ns pass namespace, default to current namespace
+	 */
+	public function __construct( $dir = __DIR__, $ns = __NAMESPACE__ ) {
         $this->dir = $dir;
         $this->ns  = $ns;
         $this->load();
     }
 
-    public function load() {
+	/**
+	 * load classes
+	 */
+	public function load() {
         \spl_autoload_register( function ( $class ) {
             $class = ltrim( $class, '\\' );
 

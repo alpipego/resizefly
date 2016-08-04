@@ -10,15 +10,29 @@ namespace Alpipego\Resizefly\Addon;
 
 use Alpipego\Resizefly\Plugin;
 
+/**
+ * Class AbstractAddon
+ * @package Alpipego\Resizefly\Addon
+ */
 abstract class AbstractAddon {
-	protected $addon;
+	/**
+	 * @var array defined addon data
+	 */
 	protected $addonData;
 
+	/**
+	 * AbstractAddon constructor.
+	 *
+	 * @param Plugin $plugin the plugin container
+	 * @param $addon the addon name
+	 */
 	public function __construct( Plugin $plugin, $addon ) {
-		$this->addon     = $addon;
 		$this->addonData = $plugin['addons'][ $addon ];
 	}
 
+	/**
+	 * `run()` method for plugin container
+	 */
 	abstract public function run();
 
 }
