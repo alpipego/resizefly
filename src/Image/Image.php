@@ -104,6 +104,12 @@ class Image
 
             return $uploads['basedir'] . str_replace($uploads['baseurl'], '', $this->url);
         } else {
+	        while (strpos($uploads['basedir'], '/./')) {
+		        $uploads['basedir'] = preg_replace( '%(?:/\.{1}/)%', '/', $uploads['basedir'] );
+	        }
+	        while (strpos($uploads['basedir'], '/../')) {
+		        $uploads['basedir'] = preg_replace( '%(?:([^/]+?)/\.{2}/)%', '', $uploads['basedir']);
+	        }
             $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
             $uploadsArr = explode(DIRECTORY_SEPARATOR, $uploads['basedir']);
             $pathArr = array_intersect($abspathArr, $uploadsArr);
