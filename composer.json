@@ -5,7 +5,7 @@
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
-            "Alpipego\\Resizefly": "src/"
+            "Alpipego\\Resizefly\\": "src/"
         }
     },
     "require": {
