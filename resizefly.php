@@ -4,7 +4,7 @@
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
  * Plugin URI:  http://resizefly.com/
- * Version:     1.3.2
+ * Version:     1.3.3
  * Author:      alpipego
  * Author URI:  http://alpipego.com/
  * Text Domain: resizefly
@@ -38,9 +38,9 @@ if ( ! $check->errors() ) :
 		$plugin['path']     = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 		$plugin['url']      = plugin_dir_url( __FILE__ );
 		$plugin['basename'] = plugin_basename( __FILE__ );
-		$plugin['version']  = '1.3.0';
+		$plugin['version']  = '1.3.3';
 
-		$plugin['addons'] = apply_filters( 'resizefly_addons', [ ] );
+		$plugin['addons'] = apply_filters( 'resizefly_addons', [] );
 
 		foreach ( $plugin['addons'] as $addonName => $addon ) {
 			add_filter( "resizefly_plugin_{$addonName}", function () use ( $plugin ) {
@@ -85,7 +85,7 @@ if ( ! $check->errors() ) :
 				return;
 			}
 
-			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', $_SERVER['REQUEST_URI'], $matches ) ) {
+			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
 				$plugin['requested_file'] = $matches;
 
 				// get the correct path ("regardless" of WordPress installation path etc)
