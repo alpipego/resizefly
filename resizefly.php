@@ -40,7 +40,7 @@ if ( ! $check->errors() ) :
 		$plugin['basename'] = plugin_basename( __FILE__ );
 		$plugin['version']  = '1.3.3';
 
-		$plugin['addons'] = apply_filters( 'resizefly_addons', [ ] );
+		$plugin['addons'] = apply_filters( 'resizefly_addons', [] );
 
 		foreach ( $plugin['addons'] as $addonName => $addon ) {
 			add_filter( "resizefly_plugin_{$addonName}", function () use ( $plugin ) {
@@ -85,7 +85,7 @@ if ( ! $check->errors() ) :
 				return;
 			}
 
-			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', $_SERVER['REQUEST_URI'], $matches ) ) {
+			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
 				$plugin['requested_file'] = $matches;
 
 				// get the correct path ("regardless" of WordPress installation path etc)
