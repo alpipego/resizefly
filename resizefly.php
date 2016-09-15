@@ -85,13 +85,23 @@ if ( ! $check->errors() ) :
 				return;
 			}
 
-			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', $_SERVER['REQUEST_URI'], $matches ) ) {
-				$plugin['requested_file'] = $matches;
+			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
+				$plugin['requested_file'] = array_map( function ( $val ) {
+					while ( strpos( $val, '/./' ) ) {
+						$val = preg_replace( '%(?:/\.{1}/)%', '/', $val );
+					}
+					while ( strpos( $val, '/../' ) ) {
+						$val = preg_replace( '%(?:([^/]+?)/\.{2}/)%', '', $val );
+					}
+
+					return $val;
+				}, $matches );
 
 				// get the correct path ("regardless" of WordPress installation path etc)
 				$plugin['image'] = function ( $plugin ) {
-					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_url'] );
+					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_path'] );
 				};
+
 
 				// get wp image editor and handle errors
 				$plugin['wp_image_editor'] = wp_get_image_editor( $plugin['image']->original );

@@ -96,12 +96,12 @@ class Handler {
 		$height = $this->image->resize['height'] > $origHeight ? $origHeight : $this->image->resize['height'];
 
 		// if either width or height is 0, resize to original aspect ratio
-		if ( $width == 0 && $height == 0 ) {
+		if ( $width === 0 && $height === 0 ) {
 			$width  = $origWidth;
 			$height = $origHeight;
-		} elseif ( $width == 0 ) {
+		} elseif ( $width === 0 ) {
 			$width = round( $height * $this->editor->getRatio( 'width' ) );
-		} elseif ( $height == 0 ) {
+		} elseif ( $height === 0 ) {
 			$height = round( $width * $this->editor->getRatio( 'height' ) );
 		}
 
