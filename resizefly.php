@@ -109,7 +109,7 @@ if ( ! $check->errors() ) :
 
 				// get the correct path ("regardless" of WordPress installation path etc)
 				$plugin['image'] = function ( $plugin ) {
-					return new Image( $plugin['requested_file'], $plugin['uploads']->uploads, get_bloginfo( 'url' ), $plugin['cache_url'] );
+					return new Image( $plugin['requested_file'], $plugin['uploads']->uploads, get_bloginfo( 'url' ), $plugin['cache_path'] );
 				};
 
 				// get wp image editor and handle errors
