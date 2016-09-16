@@ -36,7 +36,7 @@ class Plugin extends Container {
 	/**
 	 * wrapper for `load_plugin_textdomain`
 	 *
-	 * @param $dir path to languages dir
+	 * @param $dir string path to languages dir
 	 */
 	public function loadTextdomain( $dir ) {
 		\load_plugin_textdomain( 'resizefly', false, $dir );
