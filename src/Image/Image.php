@@ -49,7 +49,7 @@ class Image
 	/**
 	 * @var string full url to resizefly cache folder
 	 */
-	protected $cacheUrl;
+	protected $cachePath;
 
 	/**
 	 * Image constructor. Sets up member variables
@@ -59,20 +59,20 @@ class Image
 	 * @param string $siteUrl the full website url
 	 * @param string $cacheUrl the full path to resizefly cache dir
 	 */
-	public function __construct($file, $uploads, $siteUrl, $cacheUrl)
+	public function __construct($file, $uploads, $siteUrl, $cachePath)
     {
         $this->input = \sanitize_text_field($file[0]);
         $this->file = array_slice(explode(DIRECTORY_SEPARATOR, $this->input), -1)[0];
         $this->originalFile = array_slice(explode(DIRECTORY_SEPARATOR, $file[1]), -1)[0] . '.' . $file[4];
         $this->url = $this->setImageUrl($siteUrl);
         $this->path = $this->setImagePath($uploads, $siteUrl);
-        $this->original = $this->setImageOriginal();
         $this->resize = [
             'width' => $file[2],
             'height' => $file[3],
         ];
         $this->uploadDir = $uploads;
-	    $this->cacheUrl = $cacheUrl;
+	    $this->cachePath = $cachePath;
+        $this->original = $this->setImageOriginal();
     }
 
 	/**
@@ -104,12 +104,6 @@ class Image
 
             return $uploads['basedir'] . str_replace($uploads['baseurl'], '', $this->url);
         } else {
-	        while (strpos($uploads['basedir'], '/./')) {
-		        $uploads['basedir'] = preg_replace( '%(?:/\.{1}/)%', '/', $uploads['basedir'] );
-	        }
-	        while (strpos($uploads['basedir'], '/../')) {
-		        $uploads['basedir'] = preg_replace( '%(?:([^/]+?)/\.{2}/)%', '', $uploads['basedir']);
-	        }
             $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
             $uploadsArr = explode(DIRECTORY_SEPARATOR, $uploads['basedir']);
             $pathArr = array_intersect($abspathArr, $uploadsArr);
@@ -120,13 +114,13 @@ class Image
     }
 
 	/**
-	 * Set the url of the original (unresized) image
+	 * Set the path of the original (unresized) image
 	 *
-	 * @return string image url
+	 * @return string image path
 	 */
 	protected function setImageOriginal()
     {
-	    $origPath = str_replace($this->cacheUrl, $this->uploadDir['baseurl'], $this->path );
+	    $origPath = str_replace($this->cachePath, $this->uploadDir['basedir'], $this->path );
 
         return str_replace($this->file, $this->originalFile, $origPath);
     }

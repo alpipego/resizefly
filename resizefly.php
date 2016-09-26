@@ -17,6 +17,7 @@ use Alpipego\Resizefly\Image\Editor as ImageEditor;
 use Alpipego\Resizefly\Image\Handler as ImageHandler;
 use Alpipego\Resizefly\Image\Image;
 use Alpipego\Resizefly\Image\Stream;
+use Alpipego\Resizefly\Upload\Dir;
 use Alpipego\Resizefly\Upload\Fake;
 use Alpipego\Resizefly\Plugin;
 use Alpipego\Resizefly\Autoload;
@@ -53,12 +54,20 @@ if ( ! $check->errors() ) :
 		};
 
 		// wordpress uploads array
-		$plugin['uploads'] = wp_upload_dir( null, false );
+		$plugin['uploads'] = function () {
+			return new Dir( wp_upload_dir( null, false ) );
+		};
+
+		$plugin->extend( 'uploads', function ( $uploads ) {
+			$uploads->setUploads( wp_upload_dir( null, false ) );
+
+			return $uploads;
+		} );
 
 		// set the cache path throughout the plugin
 		$suffix               = apply_filters( 'resizefly_resized_path', get_option( 'resizefly_resized_path', '' ) );
-		$plugin['cache_path'] = trailingslashit( $plugin['uploads']['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
-		$plugin['cache_url']  = trailingslashit( $plugin['uploads']['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
+		$plugin['cache_path'] = trailingslashit( $plugin['uploads']->uploads['basedir'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
+		$plugin['cache_url']  = trailingslashit( $plugin['uploads']->uploads['baseurl'] ) . trim( $suffix, DIRECTORY_SEPARATOR );
 
 		if ( is_admin() ) {
 			$plugin['options_page'] = function ( $plugin ) {
@@ -86,11 +95,21 @@ if ( ! $check->errors() ) :
 			}
 
 			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
+//				$plugin['requested_file'] = array_map( function ( $val ) {
+//					while ( strpos( $val, '/./' ) ) {
+//						$val = preg_replace( '%(?:/\.{1}/)%', '/', $val );
+//					}
+//					while ( strpos( $val, '/../' ) ) {
+//						$val = preg_replace( '%(?:([^/]+?)/\.{2}/)%', '', $val );
+//					}
+//
+//					return $val;
+//				}, $matches );
 				$plugin['requested_file'] = $matches;
 
 				// get the correct path ("regardless" of WordPress installation path etc)
 				$plugin['image'] = function ( $plugin ) {
-					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_url'] );
+					return new Image( $plugin['requested_file'], $plugin['uploads']->uploads, get_bloginfo( 'url' ), $plugin['cache_path'] );
 				};
 
 				// get wp image editor and handle errors
