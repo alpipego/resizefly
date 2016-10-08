@@ -7,7 +7,7 @@
  */
 ?>
 
-<input type="text" name="<?= $args['id']; ?>" id="<?= $args['id']; ?>" value="<?= get_option( $args['id'], '' ); ?>">
+<input type="text" name="<?= $args['id']; ?>" id="<?= $args['id']; ?>" value="<?= get_option( $args['id'], '' ); ?>" required>
 <p>
 	<?php
 	if ($args['permissions']) {

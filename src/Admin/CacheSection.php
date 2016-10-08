@@ -13,7 +13,7 @@ namespace Alpipego\Resizefly\Admin;
  * Class BasicOptionsSection
  * @package Alpipego\Resizefly\Admin
  */
-class BasicOptionsSection extends AbstractOptionsSection implements OptionsSectionInterface {
+class CacheSection extends AbstractOptionsSection implements OptionsSectionInterface {
 
 	/**
 	 * BasicOptionsSection constructor.
@@ -23,8 +23,8 @@ class BasicOptionsSection extends AbstractOptionsSection implements OptionsSecti
 	 */
 	public function __construct( $plugin, $page ) {
 		$this->optionsGroup = [
-			'id'   => 'resizefly_basic',
-			'name' => 'Basic Options',
+			'id'   => 'resizefly_cache',
+			'name' => __('Cache Settings', 'resizefly'),
 		];
 		parent::__construct( $plugin, $page );
 	}
