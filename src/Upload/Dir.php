@@ -17,7 +17,17 @@ class Dir {
 	/**
 	 * @var
 	 */
-	public $uploads;
+	private $uploads;
+
+	/**
+	 * Dir constructor.
+	 *
+	 * @param array $uploads wp_uploads_dir()
+	 */
+	public function __construct( $uploads ) {
+		\add_filter( 'upload_dir', [ $this, 'resolvePath' ] );
+		\add_filter( 'upload_dir', [ $this, 'resolveUrl' ] );
+	}
 
 	/**
 	 * Wrap `wp_uploads_dir`
@@ -30,9 +40,11 @@ class Dir {
 		return $this->uploads = $uploads;
 	}
 
-	public function __construct( $uploads ) {
-		add_filter( 'upload_dir', [ $this, 'resolvePath' ] );
-		add_filter( 'upload_dir', [ $this, 'resolveUrl' ] );
+	/**
+	 * @return array wp_uploads_dir()
+	 */
+	public function getUploads() {
+		return $this->uploads;
 	}
 
 	/**
