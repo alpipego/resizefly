@@ -20,6 +20,12 @@ class Fake {
 	 */
 	private $sizes;
 
+	private $uploads;
+
+	public function __construct(Dir $uploads) {
+		$this->uploads = $uploads->getUploads();
+	}
+
 	/**
 	 * register filters
 	 */
@@ -54,8 +60,7 @@ class Fake {
 			$newsize = \image_resize_dimensions( $metadata['width'], $metadata['height'], $size['width'], $size['height'], $size['crop'] );
 
 			if ( $newsize ) {
-				$uploads = \wp_upload_dir( null, false );
-				$file    = pathinfo( realpath( $uploads['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'] ) );
+				$file    = pathinfo( realpath( $this->uploads['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'] ) );
 
 				// build the fake meta entry for the size in question
 				$metadata['sizes'][ $name ] = [
