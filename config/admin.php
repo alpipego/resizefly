@@ -15,7 +15,6 @@ use Alpipego\Resizefly\Admin\RemoveResizedField;
 use Alpipego\Resizefly\Upload\Cache;
 use Alpipego\Resizefly\Upload\RemoveResized;
 use Alpipego\Resizefly\Upload\Fake;
-use Alpipego\Resizefly\Upload\DuplicateOriginal;
 
 $plugin['options_page'] = function ( $plugin ) {
 	return new OptionsPage( $plugin['path'] );
@@ -72,9 +71,4 @@ $plugin->extend( 'admin', function ( $admin, $plugin ) {
 // fake the resized images to WordPress
 $plugin['fake'] = function ( $plugin ) {
 	return new Fake( $plugin['uploads'] );
-};
-
-// duplicate every uploaded image, so that the cropping happens on an already optimized (i.e. small image)
-$plugin['duplicate_original'] = function ( $plugin ) {
-	return new DuplicateOriginal( $plugin['uploads'], $plugin['duplicate_suffix'] );
 };

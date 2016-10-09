@@ -9,18 +9,20 @@
  * Author URI:  http://alpipego.com/
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
+ * GitHub Branch: develop
  */
 
 require_once dirname( __FILE__ ) . '/version-check.php';
 $check = new RzfVersionCheck( __FILE__ );
 
+use Alpipego\Resizefly\Autoload;
+use Alpipego\Resizefly\Plugin;
 use Alpipego\Resizefly\Image\Editor as ImageEditor;
 use Alpipego\Resizefly\Image\Handler as ImageHandler;
 use Alpipego\Resizefly\Image\Image;
 use Alpipego\Resizefly\Image\Stream;
 use Alpipego\Resizefly\Upload\Dir;
-use Alpipego\Resizefly\Plugin;
-use Alpipego\Resizefly\Autoload;
+use Alpipego\Resizefly\Upload\DuplicateOriginal;
 
 
 if ( ! $check->errors() ) {
@@ -75,6 +77,11 @@ if ( ! $check->errors() ) {
 
 			return $editors;
 		} );
+
+		// duplicate every uploaded image, so that the cropping happens on an already optimized (i.e. small image)
+		$plugin['duplicate_original'] = function ( $plugin ) {
+			return new DuplicateOriginal( $plugin['uploads'], $plugin['duplicate_suffix'] );
+		};
 
 		if ( is_admin() ) {
 			require_once __DIR__ . '/config/admin.php';
