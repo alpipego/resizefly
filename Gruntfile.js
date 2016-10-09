@@ -1,6 +1,43 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        uglify: {
+            dev: {
+                options: {
+                    mangle: false,
+                    sourceMap: true
+
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'js/src',
+                        src: ['**/*.js'],
+                        dest: 'js/',
+                        ext: '.min.js'
+                    }
+                ]
+            },
+            dist: {
+                options: {
+                    mangle: true,
+                    preserveComments: 'some',
+                    compress: {
+                        drop_console: true
+                    }
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'js/src',
+                        src: ['**/*.js'],
+                        dest: 'js/',
+                        ext: '.min.js'
+                    }
+                ]
+            }
+        },
 
         pot: {
             admin: {
@@ -25,17 +62,27 @@ module.exports = function(grunt) {
                         '_n_noop:1,2',
                         '_nx_noop:1,2,3c'
                     ],
-                    msgid_bugs_address: 'alpipego@gmail.com'
+                    msgid_bugs_address: 'hi@resizefly.com'
                 },
                 files: [{
                     expand: true,
                     src: ['**/*.php', '!node_modules/**']
                 }]
             }
+        },
+
+        watch: {
+            js: {
+                files: ['Gruntfile.js', 'js/src/**/*.js'],
+                tasks: ['uglify:dev']
+            }
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-pot');
 
-    grunt.registerTask('default', ['pot']);
+    grunt.registerTask('default', ['uglify:dev', 'watch']);
+    grunt.registerTask('build', ['pot', 'uglify:dist']);
 };
