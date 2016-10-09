@@ -57,6 +57,8 @@ class Image {
 	 */
 	private $original;
 
+	protected $density;
+
 	/**
 	 * Image constructor. Sets up member variables
 	 *
@@ -75,8 +77,9 @@ class Image {
 			'width'  => $file[2],
 			'height' => $file[3],
 		];
+		$this->density        = strlen($file[4]) ? $file[4] : 1;
 		$this->file           = array_slice( explode( DIRECTORY_SEPARATOR, $this->input ), - 1 )[0];
-		$this->originalFile   = array_slice( explode( DIRECTORY_SEPARATOR, $file[1] ), - 1 )[0] . '.' . $file[4];
+		$this->originalFile   = array_slice( explode( DIRECTORY_SEPARATOR, $file[1] ), - 1 )[0] . '.' . $file[5];
 		$this->url            = $this->setImageUrl( $siteUrl );
 		$this->path           = $this->setImagePath( $siteUrl );
 	}
@@ -133,5 +136,9 @@ class Image {
 		$origPath = str_replace( $this->cachePath, $this->uploadDir['basedir'], $this->path );
 
 		return str_replace( $this->file, $this->originalFile, $origPath );
+	}
+
+	public function getDensity() {
+		return $this->density;
 	}
 }
