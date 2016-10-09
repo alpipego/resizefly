@@ -131,7 +131,7 @@ class DuplicateOriginal {
 				}
 			}
 
-			return ! \is_wp_error( $this->create( $image ) );
+			return ! \is_wp_error( $save );
 		}
 
 		return false;
