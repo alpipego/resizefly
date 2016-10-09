@@ -8,6 +8,7 @@
  * Author:      alpipego
  * Author URI:  http://alpipego.com/
  * Text Domain: resizefly
+ * GitHub Plugin URI: https://github.com/alpipego/resizefly
  */
 
 require_once dirname( __FILE__ ) . '/version-check.php';
