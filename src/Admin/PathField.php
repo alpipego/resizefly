@@ -34,7 +34,7 @@ class PathField extends AbstractOption implements OptionInterface {
 	 */
 	public function callback() {
 		$uploadDir   = \wp_upload_dir( null, false );
-		$path        = \trailingslashit( \trailingslashit( $uploadDir['basedir'] ) . \get_option( 'resizefly_resized_path', '' ) );
+		$path        = \trailingslashit( \trailingslashit( $uploadDir['basedir'] ) . \get_option( 'resizefly_resized_path', 'resizefly' ) );
 		$permissions = is_writeable( $path );
 
 		if ( ! is_dir( $path ) ) {
@@ -56,7 +56,7 @@ class PathField extends AbstractOption implements OptionInterface {
 	 */
 	public function sanitize( $path ) {
 		$path         = \sanitize_text_field( $path );
-		$previousPath = \get_option( 'resizefly_resized_path', '' );
+		$previousPath = \get_option( 'resizefly_resized_path', 'resizefly' );
 
 		if ( strpos( $path, '/' ) !== false ) {
 			$pathArr = explode( '/', $path );
@@ -91,7 +91,7 @@ class PathField extends AbstractOption implements OptionInterface {
 	 */
 	private function renameDir( $path ) {
 		$uploadDir = \wp_upload_dir( null, false );
-		$oldPath   = \trailingslashit( \trailingslashit( $uploadDir['basedir'] ) . \get_option( 'resizefly_resized_path', '' ) );
+		$oldPath   = \trailingslashit( \trailingslashit( $uploadDir['basedir'] ) . \get_option( 'resizefly_resized_path', 'resizefly' ) );
 		$newPath   = \trailingslashit( \trailingslashit( $uploadDir['basedir'] ) . $path );
 
 		if ( ! is_dir( $newPath ) ) {

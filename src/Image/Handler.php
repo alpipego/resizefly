@@ -9,6 +9,7 @@
 namespace Alpipego\Resizefly\Image;
 
 use Exception;
+use Alpipego\Resizefly\Upload\Dir;
 
 /**
  * Handle the requested image
@@ -19,7 +20,7 @@ class Handler {
 	/**
 	 * @var string
 	 */
-	public $file;
+	protected $file;
 	/**
 	 * @var Image
 	 */
@@ -38,16 +39,23 @@ class Handler {
 	protected $cachePath;
 
 	/**
+	 * @var string full path to duplicates dir
+	 */
+	protected $duplicatePath;
+
+	/**
 	 * Handler constructor.
 	 *
 	 * @param Image $image
 	 * @param Editor $editor
-	 * @param $cachePath
+	 * @param string $cachePath
+	 * @param Dir $upload
 	 */
-	public function __construct( Image $image, Editor $editor, $cachePath ) {
+	public function __construct( Image $image, Editor $editor, $cachePath, $duplicatePath ) {
 		$this->image  = $image;
 		$this->editor = $editor;
 		$this->cachePath = $cachePath;
+		$this->duplicatePath = $duplicatePath;
 	}
 
 	/**
@@ -59,7 +67,7 @@ class Handler {
 			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'] ) ) {
 				$image = $this->editor->saveImage( $this->file );
 			} else {
-				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->original, $this->file ) );
+				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->getOriginal(), $this->file ) );
 			}
 		} else {
 			$image['path'] = $this->file;
@@ -73,12 +81,16 @@ class Handler {
 	 *
 	 * @return string full image path
 	 */
-	private function setImage() {
+	protected function setImage() {
 		$size     = $this->parseRequestedImageSize();
-		$pathinfo = pathinfo( $this->image->original );
-		$dir = str_replace( $this->image->uploadDir['basedir'], $this->cachePath, $pathinfo['dirname'] );
+		$pathinfo = pathinfo( $this->image->getDuplicate() );
+		$dir = str_replace( $this->duplicatePath, $this->cachePath, $pathinfo['dirname'] );
 
 		return $this->file = sprintf( '%s/%s-%dx%d.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $pathinfo['extension'] );
+	}
+
+	public function getImage() {
+		return $this->setImage();
 	}
 
 	/**
@@ -86,7 +98,7 @@ class Handler {
 	 *
 	 * @return array ['width' => int, 'height' => int]
 	 */
-	private function parseRequestedImageSize() {
+	protected function parseRequestedImageSize() {
 		$origWidth  = $this->editor->getWidth();
 		$origHeight = $this->editor->getHeight();
 
