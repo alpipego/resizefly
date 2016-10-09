@@ -94,7 +94,7 @@ if ( ! $check->errors() ) {
 				return;
 			}
 
-			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
+			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)@?(\d)?\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
 
 				$plugin['requested_file'] = $matches;
 
@@ -102,6 +102,13 @@ if ( ! $check->errors() ) {
 				$plugin['image'] = function ( $plugin ) {
 					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_path'], $plugin['duplicates_path'] );
 				};
+git 
+				if ( ! file_exists( $plugin['image']->getOriginal() ) ) {
+					status_header( '404' );
+					@include_once get_404_template();
+
+					exit;
+				}
 
 				if ( ! file_exists( $plugin['image']->getDuplicate() ) ) {
 					$plugin['duplicate_original']->rebuild( $plugin['image']->getOriginal() );
@@ -109,7 +116,7 @@ if ( ! $check->errors() ) {
 
 				// get wp image editor and handle errors
 				$plugin['wp_image_editor'] = wp_get_image_editor( $plugin['image']->getDuplicate() );
-				if ( ! file_exists( $plugin['image']->getOriginal() ) || is_wp_error( $plugin['wp_image_editor'] ) ) {
+				if ( is_wp_error( $plugin['wp_image_editor'] ) ) {
 					status_header( '404' );
 					@include_once get_404_template();
 
