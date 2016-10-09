@@ -19,4 +19,11 @@ class EditorImagick extends WP_Image_Editor_Imagick {
 		return $this->file;
 	}
 
+	public function blurImage($radius, $float) {
+		return $this->image->blurImage($radius, $float);
+	}
+
+	public function getImageBlob() {
+		return $this->image->getImageBlob();
+	}
 }
