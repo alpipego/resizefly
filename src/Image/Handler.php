@@ -63,8 +63,8 @@ class Handler {
 	 * @throws Exception if image can't be resized
 	 */
 	public function run() {
-		if ( ! file_exists( $this->setImage() ) ) {
-			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'] ) ) {
+		if ( ! file_exists( $this->setImageName() ) ) {
+			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'], 50, 50 ) ) {
 				$image = $this->editor->saveImage( $this->file );
 			} else {
 				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->getOriginal(), $this->file ) );
@@ -81,16 +81,16 @@ class Handler {
 	 *
 	 * @return string full image path
 	 */
-	protected function setImage() {
+	protected function setImageName() {
 		$size     = $this->parseRequestedImageSize();
 		$pathinfo = pathinfo( $this->image->getDuplicate() );
 		$dir = str_replace( $this->duplicatePath, $this->cachePath, $pathinfo['dirname'] );
 
-		return $this->file = sprintf( '%s/%s-%dx%d.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $pathinfo['extension'] );
+		return $this->file = sprintf( '%s/%s-%dx%d@%s.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $size['density'], $pathinfo['extension'] );
 	}
 
 	public function getImage() {
-		return $this->setImage();
+		return $this->setImageName();
 	}
 
 	/**
@@ -106,6 +106,7 @@ class Handler {
 		// TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio
 		$width  = $this->image->resize['width'] > $origWidth ? $origWidth : $this->image->resize['width'];
 		$height = $this->image->resize['height'] > $origHeight ? $origHeight : $this->image->resize['height'];
+		$density = $this->image->getDensity();
 
 		// if either width or height is 0, resize to original aspect ratio
 		if ( $width == 0 && $height == 0 ) {
@@ -117,7 +118,7 @@ class Handler {
 			$height = round( $width * $this->editor->getRatio( 'height' ) );
 		}
 
-		return $this->aspect = [ 'width' => (int) $width, 'height' => (int) $height ];
+		return $this->aspect = \apply_filters('resizefly_aspect', [ 'width' => (int) $width, 'height' => (int) $height, 'density' => (int) $density ]);
 	}
 
 }
