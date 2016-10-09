@@ -88,7 +88,7 @@ class Editor {
 	 * @see WP_Image_Editor::crop()
 	 * @return bool|\WP_Error true on success | \WP_Error on error
 	 */
-	public function resizeImage( $width, $height, $focalX = 50, $focalY = 50 ) {
+	public function resizeImage( $width, $height, $focalX, $focalY ) {
 		$origWidth  = $this->getWidth();
 		$origHeight = $this->getHeight();
 		$ratio      = max( $width / $origWidth, $height / $origHeight );
@@ -107,6 +107,8 @@ class Editor {
 	 * @return array|\WP_Error {'path'=>string, 'file'=>string, 'width'=>int, 'height'=>int, 'mime-type'=>string}
 	 */
 	public function saveImage( $file ) {
+		\do_action( 'resizefly_before_save', $file, $this->editor );
+
 		return $this->editor->save( $file );
 	}
 
@@ -125,12 +127,12 @@ class Editor {
 
 	/**
 	 * Stream the image
-	 * Cache for a day
+	 * Cache for a year
 	 *
 	 * @return void
 	 */
 	protected function streamImage() {
-		$cacheAge = \apply_filters('resizefly_cache_age', 31536000 );
+		$cacheAge = \apply_filters( 'resizefly_cache_age', 31536000 );
 		http_response_code( 200 );
 		header( 'Pragma: public' );
 		header( 'Cache-Control: max-age=' . $cacheAge . ', public' );
