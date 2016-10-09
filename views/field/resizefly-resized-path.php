@@ -7,7 +7,7 @@
  */
 ?>
 
-<input type="text" name="<?= $args['id']; ?>" id="<?= $args['id']; ?>" value="<?= get_option( $args['id'], '' ); ?>" required>
+<input type="text" name="<?= $args['id']; ?>" id="<?= $args['id']; ?>" value="<?= get_option( $args['id'], 'resizefly' ); ?>" required>
 <p>
 	<?php
 	if ($args['permissions']) {
