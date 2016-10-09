@@ -102,7 +102,7 @@ if ( ! $check->errors() ) {
 				$plugin['image'] = function ( $plugin ) {
 					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_path'], $plugin['duplicates_path'] );
 				};
-git 
+
 				if ( ! file_exists( $plugin['image']->getOriginal() ) ) {
 					status_header( '404' );
 					@include_once get_404_template();
