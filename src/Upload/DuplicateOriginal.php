@@ -8,6 +8,8 @@
 
 namespace Alpipego\Resizefly\Upload;
 
+use WP_Image_Editor;
+use Imagick;
 
 /**
  * Class DuplicateOriginal
@@ -18,6 +20,11 @@ class DuplicateOriginal {
 	 * @var array
 	 */
 	private $uploads;
+
+	/**
+	 * @var int
+	 */
+	private $recursion = 0;
 
 	/**
 	 * DuplicateOriginal constructor.
@@ -85,14 +92,14 @@ class DuplicateOriginal {
 	 */
 	protected function create( $image ) {
 		$editor = \wp_get_image_editor( $image );
-		if ( ! is_wp_error( $editor ) ) {
+		if ( ! \is_wp_error( $editor ) ) {
 			$duplicate = str_replace( \trailingslashit( $this->uploads['basedir'] ), $this->path, $image );
 
-			if ( (bool) apply_filters( 'resizefly_smaller_image', true ) && method_exists( $editor, 'getImagick' ) ) {
+			if ( (bool) \apply_filters( 'resizefly_smaller_image', true ) && method_exists( $editor, 'getImagick' ) ) {
 				$sizes  = $editor->get_size();
 				$larger = false;
 				foreach ( $sizes as $size ) {
-					if ( $size > (int) apply_filters( 'resizefly_smaller_image_threshold', 1200 ) ) {
+					if ( $size > (int) \apply_filters( 'resizefly_smaller_image_threshold', 1200 ) ) {
 						$larger = true;
 						break;
 					}
@@ -102,11 +109,29 @@ class DuplicateOriginal {
 				}
 			}
 
+			$editor->set_quality( 70 );
+
 			if ( method_exists( $editor, 'getImagick' ) ) {
 				$editor->getImagick()->stripImage();
 			}
 
-			return (bool) $editor->save( $duplicate );
+			// check if image could be saved
+			$save = $editor->save( $duplicate );
+			if ( \is_wp_error( $save ) ) {
+				// delete the zero byte file
+				if ( file_exists( $duplicate ) ) {
+					unlink( $duplicate );
+				}
+
+				// try setting resources and try once more
+				if ( $this->trySettingResources( $editor ) && $this->recursion < 1 ) {
+					$this->recursion ++;
+
+					$this->create( $image );
+				}
+			}
+
+			return ! \is_wp_error( $this->create( $image ) );
 		}
 
 		return false;
@@ -120,11 +145,27 @@ class DuplicateOriginal {
 	 *
 	 * @return bool
 	 */
-	private function calculateMemory(array $sizes, \WP_Image_Editor $editor) {
-		$bytesImage = $sizes['width'] * $sizes['height'] * 64;
-		$bytesImagick = $editor->getImagick()->getResourceLimit(\Imagick::RESOURCETYPE_MEMORY);
+	private function calculateMemory( array $sizes, WP_Image_Editor $editor ) {
+		$bytesImage   = $sizes['width'] * $sizes['height'] * 64;
+		$bytesImagick = $editor->getImagick()->getResourceLimit( Imagick::RESOURCETYPE_MEMORY );
 
 		return $bytesImage < $bytesImagick;
+	}
+
+	/**
+	 * Try tweaking the resources to save an image (that could not be saved before)
+	 * @param WP_Image_Editor $editor
+	 *
+	 * @return bool
+	 */
+	private function trySettingResources( WP_Image_Editor $editor ) {
+		if ( method_exists( $editor, 'getImagick' ) ) {
+			$editor->getImagick()->setResourceLimit( Imagick::RESOURCETYPE_AREA, 1 );
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -147,6 +188,9 @@ class DuplicateOriginal {
 	 * @param integer $id Attachment Id
 	 */
 	public function delete( $id ) {
-		unlink( str_replace( \trailingslashit( $this->uploads['basedir'] ), $this->path, \get_attached_file( $id ) ) );
+		$file = str_replace( \trailingslashit( $this->uploads['basedir'] ), $this->path, \get_attached_file( $id ) );
+		if ( file_exists( $file ) ) {
+			unlink( $file );
+		}
 	}
 }
