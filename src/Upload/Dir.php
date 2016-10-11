@@ -21,12 +21,41 @@ class Dir {
 
 	/**
 	 * Dir constructor.
-	 *
-	 * @param array $uploads wp_uploads_dir()
 	 */
-	public function __construct( $uploads ) {
+	public function __construct() {
 		\add_filter( 'upload_dir', [ $this, 'resolvePath' ] );
 		\add_filter( 'upload_dir', [ $this, 'resolveUrl' ] );
+	}
+
+	public function run() {
+		\add_filter( 'resizefly_filter_url', [ $this, 'filterImageUrl' ] );
+		\add_filter( 'wp_prepare_attachment_for_js', function ( $response ) {
+			$response['url'] = $this->filterImageUrl( $response['url'] );
+
+			return $response;
+		} );
+
+		\add_filter( 'wp_get_attachment_image_src', function ( $image ) {
+			$image[0] = $this->filterImageUrl( $image[0] );
+
+			return $image;
+		} );
+	}
+
+	public function filterImageUrl( $url ) {
+		$resizeUrl = \trailingslashit( $this->uploads['baseurl'] ) . trim( get_option( 'resizefly_resized_path', 'resizefly' ), DIRECTORY_SEPARATOR );
+		if ( strpos( $url, $resizeUrl ) === false ) {
+			$url = str_replace( $this->uploads['baseurl'], $resizeUrl, $url );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * @return array wp_uploads_dir()
+	 */
+	public function getUploads() {
+		return $this->uploads;
 	}
 
 	/**
@@ -38,13 +67,6 @@ class Dir {
 	 */
 	public function setUploads( $uploads ) {
 		return $this->uploads = $uploads;
-	}
-
-	/**
-	 * @return array wp_uploads_dir()
-	 */
-	public function getUploads() {
-		return $this->uploads;
 	}
 
 	/**
