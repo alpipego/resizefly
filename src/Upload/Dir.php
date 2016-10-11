@@ -43,6 +43,9 @@ class Dir {
 	}
 
 	public function filterImageUrl( $url ) {
+		if (!preg_match('%(png|jpe?g|gif)%', $url)) {
+			return $url;
+		}
 		$resizeUrl = \trailingslashit( $this->uploads['baseurl'] ) . trim( get_option( 'resizefly_resized_path', 'resizefly' ), DIRECTORY_SEPARATOR );
 		if ( strpos( $url, $resizeUrl ) === false ) {
 			$url = str_replace( $this->uploads['baseurl'], $resizeUrl, $url );
