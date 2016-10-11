@@ -54,7 +54,7 @@ if ( ! $check->errors() ) {
 
 		// wordpress uploads array
 		$plugin['uploads'] = function () {
-			return new Dir( wp_upload_dir( null, false ) );
+			return new Dir();
 		};
 
 		$plugin->extend( 'uploads', function ( $uploads ) {
