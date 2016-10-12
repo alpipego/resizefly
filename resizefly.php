@@ -94,7 +94,12 @@ if ( ! $check->errors() ) {
 				return;
 			}
 
-			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)@?(\d)?\.(jpe?g|png|gif)/i', urldecode( $_SERVER['REQUEST_URI'] ), $matches ) ) {
+			$requested = urldecode( $_SERVER['REQUEST_URI'] );
+			if ( strpos( $plugin['cache_url'], $requested ) === 0 ) {
+				$requested = str_replace( $plugin['cache_url'], $plugin['uploads']->getUploads()['baseurl'], $requested );
+			}
+
+			if ( preg_match( '/(.*?)-([0-9]+)x([0-9]+)@?(\d)?\.(jpe?g|png|gif)/i', $requested, $matches ) ) {
 
 				$plugin['requested_file'] = $matches;
 
