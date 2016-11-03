@@ -43,7 +43,7 @@ class Dir {
 	}
 
 	public function filterImageUrl( $url ) {
-		if (!preg_match('%\d+?x\d+?@?\d?\.(png|jpe?g|gif)%', $url)) {
+		if ( ! preg_match( '%\d+?x\d+?@?\d?\.(png|jpe?g|gif)%', $url ) ) {
 			return $url;
 		}
 		$resizeUrl = \trailingslashit( $this->uploads['baseurl'] ) . trim( get_option( 'resizefly_resized_path', 'resizefly' ), DIRECTORY_SEPARATOR );

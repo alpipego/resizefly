@@ -25,7 +25,7 @@ class Admin extends AbstractAdmin implements AdminInterface {
 	}
 
 	public function enqueueScripts( $page ) {
-		if ( $page == $this->optionsPage->page ) {
+		if ( $page === $this->optionsPage->page ) {
 			\wp_enqueue_script( 'resizefly-admin', $this->plugin['url'] . 'js/resizefly-admin.min.js', [ 'jquery' ], '1.0.0', true );
 			// add strings to translate
 			$this->localizeScript( [
