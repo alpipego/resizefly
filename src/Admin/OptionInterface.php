@@ -15,27 +15,37 @@ namespace Alpipego\Resizefly\Admin;
  */
 interface OptionInterface {
 	/**
-	 * @return mixed
+	 * run actions and filters
+	 *
+	 * @return void
 	 */
 	public function run();
 
 	/**
-	 * @return mixed
+	 * Register the setting
+	 *
+	 * @return void
 	 */
 	public function registerSetting();
 
 	/**
-	 * @return mixed
+	 * Add the settings field
+	 *
+	 * @return void
 	 */
 	public function addField();
 
 	/**
-	 * @return mixed
+	 * Add a callback to settings field
+	 *
+	 * @return void
 	 */
 	public function callback();
 
 	/**
-	 * @param $value
+	 * Sanitize values added to this settings field
+	 *
+	 * @param mixed $value value to sanititze
 	 *
 	 * @return mixed
 	 */

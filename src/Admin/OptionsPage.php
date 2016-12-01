@@ -14,18 +14,19 @@ namespace Alpipego\Resizefly\Admin;
  */
 class OptionsPage {
 	/**
-	 * @var string
+	 * @var string $page id of this settings page
 	 */
 	public $page;
+
 	/**
-	 * @var string
+	 * @var string $viewsPath path to views dir
 	 */
 	protected $viewsPath;
 
 	/**
 	 * OptionsPage constructor.
 	 *
-	 * @param $pluginPath
+	 * @param string $pluginPath plugin base path
 	 */
 	function __construct( $pluginPath ) {
 		$this->viewsPath = $pluginPath . 'views/';
@@ -40,6 +41,8 @@ class OptionsPage {
 	}
 
 	/**
+	 * Wrapper for add_media_section
+	 *
 	 * Add the page in media section
 	 */
 	function addPage() {

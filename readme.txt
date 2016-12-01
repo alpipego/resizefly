@@ -1,23 +1,23 @@
 === ResizeFly ===
 Contributors: alpipego, otto42
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv3
 Requires at least: 3.5.0
-Tested up to: 4.6.1
+Tested up to: 4.7
 
 Dynamically resize your WordPress images on the fly. Upload your images once and don't worry about missing or new image sizes.
 
 == Description ==
 Instead of creating image sizes on upload, this plugin only creates them when requested.
 
-Normally after activating a new theme or plugin that adds new image sizes you will have to use a tool like [Regenerate Thumbnails](https://wordpress.org/plugins/regenerate-thumbnails/) to create the newly registered image sizes. Depending on the size of media library and the power of your server. this might take a while or even take several tries to process all your images; and in the end you don't even know if you'll need all of the resized images.
+Normally after activating a new theme or plugin that adds new image sizes you will have to use a tool like [Regenerate Thumbnails](https://wordpress.org/plugins/regenerate-thumbnails/) to create the newly registered image sizes. Depending on the size of media library and the power of your server, this might take a while or even take several tries to process all your images; and in the end you don't even know if you'll need all of the resized images.
 
 This plugins takes care of the resizing dynamically and creates the requested size the moment it is first requested &ndash; and only when it is requested.
 
 = Support =
 For users: Please use the support forums on [wordpress.org](https://wordpress.org/support/plugin/resizefly)<br>
-For developers: Head over to the [Github Repository](https://github.com/alpipego/resizefly/)<br>
+For developers: Head over to the [Github repository](https://github.com/alpipego/resizefly/)<br>
 For everything else, find me on [twitter](https://twitter.com/alpipego) or on slack
 
 == Installation ==
@@ -25,7 +25,7 @@ For everything else, find me on [twitter](https://twitter.com/alpipego) or on sl
 2. Make sure you have Pretty Permalinks enabled
 3. Activate the plugin
 
-The plugin handles the images from here on. There is no administrative menu.
+The plugin handles the images from here on. There is an option to save resized images in a subfolder inside your uploads directory.
 
 = Prerequisites =
 
@@ -41,26 +41,12 @@ Will be added after anything has been asked frequently. Please check [the suppor
 
 == Changelog ==
 
+= 1.3.4 =
+* better code documentation
+* tested compatibility with WordPress 4.7
+
 = 1.3.0 =
 * added settings page under "Media"
 * provided settings section and fields extensibility for add ons
 * added translations
 * better use of pimple api (instead of changing variable visibility)
-
-= 1.2.2 =
-* added `AbstractAddon` class
-* changed image resizing from simple `resize` method to `crop`
-* tested against WordPress 4.6 beta 3
-
-= 1.2.1 =
-* better version checking (including PHP version, WordPress version, GD or Imagick installed)
-
-= 1.2.0 =
-* introduced new filter `resizefly_resize_path`
-
-= 1.1.5 =
-* Check for php version >= 5.4
-
-= 1.1.0 =
-* Introduced filters for addons
-

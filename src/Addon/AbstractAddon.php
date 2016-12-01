@@ -16,7 +16,7 @@ use Alpipego\Resizefly\Plugin;
  */
 abstract class AbstractAddon {
 	/**
-	 * @var array defined addon data
+	 * @var array $addonData defined addon data
 	 */
 	protected $addonData;
 
@@ -24,7 +24,7 @@ abstract class AbstractAddon {
 	 * AbstractAddon constructor.
 	 *
 	 * @param Plugin $plugin the plugin container
-	 * @param $addon the addon name
+	 * @param string $addon the addon name
 	 */
 	public function __construct( Plugin $plugin, $addon ) {
 		$this->addonData = $plugin['addons'][ $addon ];

@@ -16,6 +16,8 @@ namespace Alpipego\Resizefly\Admin;
 interface OptionsSectionInterface {
 
 	/**
+	 * actions and filters to be added
+	 *
 	 * @return void
 	 */
 	function run();
@@ -28,7 +30,9 @@ interface OptionsSectionInterface {
 	function addSection();
 
 	/**
-	 * @return mixed
+	 * Callback function
+	 *
+	 * @return void
 	 */
 	function callback();
 
