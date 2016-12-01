@@ -17,9 +17,7 @@ class PathField extends AbstractOption implements OptionInterface {
 	/**
 	 * PathField constructor.
 	 *
-	 * @param string $page The parent page
-	 * @param string $section The containing section
-	 * @param string $plugin Plugin base path
+	 * {@inheritDoc}
 	 */
 	public function __construct( $page, $section, $plugin ) {
 		$this->optionsField = [
@@ -31,6 +29,8 @@ class PathField extends AbstractOption implements OptionInterface {
 
 	/**
 	 * Include view
+	 *
+	 * Check if the provided path is writeable - pass permissions back to view
 	 */
 	public function callback() {
 		$uploadDir   = \wp_upload_dir( null, false );
@@ -87,7 +87,7 @@ class PathField extends AbstractOption implements OptionInterface {
 	 *
 	 * @param string $path The new cache dir name
 	 *
-	 * @return string|bool
+	 * @return string
 	 */
 	private function renameDir( $path ) {
 		$uploadDir = \wp_upload_dir( null, false );
@@ -100,7 +100,7 @@ class PathField extends AbstractOption implements OptionInterface {
 			return $path;
 		}
 
-		return false;
+		return '';
 	}
 
 }

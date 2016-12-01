@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 1.3.3\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2016-10-08 16:11+0200\n"
+"POT-Creation-Date: 2016-12-01 10:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,24 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Admin/Admin.php:32
+#: src/Admin/Admin.php:35
 #, php-format
 msgid "%s file(s) have been removed and %s of disk space has been freed."
 msgstr ""
 
-#: src/Admin/Admin.php:33
+#: src/Admin/Admin.php:36
 msgid "No files were removed because the cache was already empty."
 msgstr ""
 
-#: src/Admin/Admin.php:42
+#: src/Admin/Admin.php:52
 msgid "ResizeFly Settings"
 msgstr ""
 
-#: src/Admin/CacheSection.php:27
+#: src/Admin/CacheSection.php:26
 msgid "Cache Settings"
 msgstr ""
 
-#: src/Admin/PathField.php:27
+#: src/Admin/PathField.php:25
 msgid "Path for resized images"
 msgstr ""
 
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Remove All Resized Images"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:61
+#: src/Upload/DuplicateOriginal.php:68
 #, php-format
 msgid ""
 "The directory %s is not writeable by ResizeFly. Please correct the "

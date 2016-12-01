@@ -18,8 +18,7 @@ class CacheSection extends AbstractOptionsSection implements OptionsSectionInter
 	/**
 	 * BasicOptionsSection constructor.
 	 *
-	 * @param $plugin
-	 * @param $page
+	 * {@inheritDoc}
 	 */
 	public function __construct( $plugin, $page ) {
 		$this->optionsGroup = [
@@ -30,7 +29,7 @@ class CacheSection extends AbstractOptionsSection implements OptionsSectionInter
 	}
 
 	/**
-	 * callback for section
+	 * Callback for section - include the view
 	 */
 	public function callback() {
 		$this->includeView($this->optionsGroup['id'], $this->optionsGroup);

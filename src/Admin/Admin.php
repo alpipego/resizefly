@@ -19,6 +19,9 @@ class Admin extends AbstractAdmin implements AdminInterface {
 		$this->optionsPage = $optionsPage;
 	}
 
+	/**
+	 * Add plugin action links on plugin page
+	 */
 	public function run() {
 		\add_filter( 'plugin_action_links_' . $this->plugin['basename'], [ $this, 'addActionLinks' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueueScripts' ] );
@@ -38,6 +41,13 @@ class Admin extends AbstractAdmin implements AdminInterface {
 		}
 	}
 
+	/**
+	 * Add a link to the settings on plugin page
+	 *
+	 * @param array $links array with existing plugin actions
+	 *
+	 * @return array
+	 */
 	public function addActionLinks( $links ) {
 		$links[] = sprintf( '<a href="%1$s" title="%2$s">%2$s</a>', \get_admin_url( null, 'upload.php?page=resizefly' ), __( 'ResizeFly Settings', 'resizefly' ) );
 
