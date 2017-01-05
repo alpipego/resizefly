@@ -29,10 +29,12 @@ class Dir {
 
 	public function run() {
 		\add_filter( 'resizefly_filter_url', [ $this, 'filterImageUrl' ] );
-		\add_filter( 'wp_prepare_attachment_for_js', function ( $response ) {
-			$response['url'] = $this->filterImageUrl( $response['url'] );
+		\add_filter( 'wp_prepare_attachment_for_js', function ( $post ) {
+			foreach ($post['sizes'] as $key => $size) {
+				$post['sizes'][$key]['url'] = $this->filterImageUrl( $size['url'] );
+			}
 
-			return $response;
+			return $post;
 		} );
 
 		\add_filter( 'wp_get_attachment_image_src', function ( $image ) {
