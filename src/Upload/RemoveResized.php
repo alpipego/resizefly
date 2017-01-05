@@ -39,6 +39,9 @@ class RemoveResized {
 
 	private function unlinkAll( $originals ) {
 		foreach ( $originals as $image ) {
+			if ( empty( $image ) ) {
+				continue;
+			}
 			$file  = new SplFileInfo( $image );
 			$dir   = new RecursiveDirectoryIterator( $file->getPathInfo() );
 			$match = '%^' . $file->getBasename( '.' . $file->getExtension() ) . '-[0-9]+x[0-9]+\.' . $file->getExtension() . '$%i';
