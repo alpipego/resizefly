@@ -57,7 +57,7 @@ class DuplicateOriginal {
 	private function dirExists() {
 		$permissions = is_writeable( $this->path );
 
-		if ( ! is_dir( $this->path ) ) {
+		if ( ! is_dir( $this->path ) && $permissions ) {
 			$permissions = mkdir( $this->path, 0755, true );
 		}
 
