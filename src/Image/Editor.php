@@ -140,5 +140,6 @@ class Editor {
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time() + $cacheAge ) );
 
 		$this->editor->stream();
+    exit;
 	}
 }
