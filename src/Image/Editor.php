@@ -131,7 +131,7 @@ class Editor {
 	 *
 	 * @return void
 	 */
-	protected function streamImage() {
+	public function streamImage() {
 		$cacheAge = \apply_filters( 'resizefly_cache_age', 31536000 );
 		http_response_code( 200 );
 		header( 'HTTP/1.1 200 OK' );
@@ -139,7 +139,10 @@ class Editor {
 		header( 'Cache-Control: max-age=' . $cacheAge . ', public' );
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time() + $cacheAge ) );
 
+		if ( method_exists( $this->editor, 'getImagick' ) ) {
+			header( 'Content-Length: ' . strlen( $this->editor->getImagick()->getImageBlob() ) );
+		}
 		$this->editor->stream();
-    exit;
+		exit;
 	}
 }

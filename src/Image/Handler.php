@@ -66,6 +66,7 @@ class Handler {
 		if ( ! file_exists( $this->setImageName() ) ) {
 			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'], 50, 50 ) ) {
 				$image = $this->editor->saveImage( $this->file );
+				$this->editor->streamImage();
 			} else {
 				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->getOriginal(), $this->file ) );
 			}

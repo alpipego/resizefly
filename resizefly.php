@@ -107,20 +107,22 @@ if ( ! $check->errors() ) {
 				$plugin['image'] = function ( $plugin ) {
 					return new Image( $plugin['requested_file'], $plugin['uploads'], get_bloginfo( 'url' ), $plugin['cache_path'], $plugin['duplicates_path'] );
 				};
+				/** @var Image $image */
+				$image = $plugin['image'];
 
-				if ( ! file_exists( $plugin['image']->getOriginal() ) ) {
+				if ( ! file_exists( $image->getOriginal() ) ) {
 					status_header( '404' );
 					@include_once get_404_template();
 
 					exit;
 				}
 
-				if ( ! file_exists( $plugin['image']->getDuplicate() ) ) {
-					$plugin['duplicate_original']->rebuild( $plugin['image']->getOriginal() );
+				if ( ! file_exists( $image->getDuplicate() ) ) {
+					$plugin['duplicate_original']->rebuild( $image->getOriginal() );
 				}
 
 				// get wp image editor and handle errors
-				$plugin['wp_image_editor'] = wp_get_image_editor( $plugin['image']->getDuplicate() );
+				$plugin['wp_image_editor'] = wp_get_image_editor( $image->getDuplicate() );
 				if ( is_wp_error( $plugin['wp_image_editor'] ) ) {
 					status_header( '404' );
 					@include_once get_404_template();
@@ -136,11 +138,6 @@ if ( ! $check->errors() ) {
 				// create image handling instance
 				$plugin['image_handler'] = function ( $plugin ) {
 					return new ImageHandler( $plugin['image'], $plugin['image_editor'], $plugin['cache_path'], $plugin['duplicates_path'] );
-				};
-
-				// output stream the resized image
-				$plugin['output'] = function ( $plugin ) {
-					return new Stream( wp_get_image_editor( $plugin['image_handler']->getImage() ) );
 				};
 
 				$plugin->run();
