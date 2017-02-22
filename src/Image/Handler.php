@@ -59,22 +59,18 @@ class Handler {
 	}
 
 	/**
-	 * @return array|\WP_Error
 	 * @throws Exception if image can't be resized
 	 */
 	public function run() {
 		if ( ! file_exists( $this->setImageName() ) ) {
 			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'], 50, 50 ) ) {
-				$image = $this->editor->saveImage( $this->file );
-				$this->editor->streamImage();
+				$this->editor->saveImage( $this->file );
 			} else {
 				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->getOriginal(), $this->file ) );
 			}
-		} else {
-			$image['path'] = $this->file;
 		}
 
-		return $image;
+		$this->editor->streamImage();
 	}
 
 	/**
