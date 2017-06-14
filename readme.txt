@@ -1,10 +1,10 @@
 === ResizeFly ===
 Contributors: alpipego, otto42
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv3
 Requires at least: 3.5.0
-Tested up to: 4.7
+Tested up to: 4.8
 
 Dynamically resize your WordPress images on the fly. Upload your images once and don't worry about missing or new image sizes.
 
@@ -13,7 +13,7 @@ Instead of creating image sizes on upload, this plugin only creates them when re
 
 Normally after activating a new theme or plugin that adds new image sizes you will have to use a tool like [Regenerate Thumbnails](https://wordpress.org/plugins/regenerate-thumbnails/) to create the newly registered image sizes. Depending on the size of media library and the power of your server, this might take a while or even take several tries to process all your images; and in the end you don't even know if you'll need all of the resized images.
 
-This plugins takes care of the resizing dynamically and creates the requested size the moment it is first requested &ndash; and only when it is requested.
+This plugins takes care of the resizing dynamically and creates the requested size the moment it is first requested&mdash;and only when it is requested.
 
 = Support =
 For users: Please use the support forums on [wordpress.org](https://wordpress.org/support/plugin/resizefly)<br>
@@ -41,9 +41,8 @@ Will be added after anything has been asked frequently. Please check [the suppor
 
 == Changelog ==
 
-= 1.3.4 =
-* better code documentation
-* tested compatibility with WordPress 4.7
+= 1.3.5 =
+* tested compatibility with WordPress 4.8
 
 = 1.3.0 =
 * added settings page under "Media"
