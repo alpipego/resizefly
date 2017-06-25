@@ -20,7 +20,6 @@ use Alpipego\Resizefly\Plugin;
 use Alpipego\Resizefly\Image\Editor as ImageEditor;
 use Alpipego\Resizefly\Image\Handler as ImageHandler;
 use Alpipego\Resizefly\Image\Image;
-use Alpipego\Resizefly\Image\Stream;
 use Alpipego\Resizefly\Upload\Dir;
 use Alpipego\Resizefly\Upload\DuplicateOriginal;
 
@@ -37,7 +36,7 @@ if ( ! $check->errors() ) {
 		$plugin['path']     = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
 		$plugin['url']      = plugin_dir_url( __FILE__ );
 		$plugin['basename'] = plugin_basename( __FILE__ );
-		$plugin['version']  = '1.3.3';
+		$plugin['version']  = '1.3.5';
 
 		// filterable dir values
 		$plugin['cache_suffix']     = get_option( 'resizefly_resized_path', 'resizefly' );
