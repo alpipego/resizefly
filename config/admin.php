@@ -13,6 +13,7 @@ use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\PurgeCacheField;
 use Alpipego\Resizefly\Admin\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\RemoveResizedField;
+use Alpipego\Resizefly\Admin\RestrictSizesField;
 use Alpipego\Resizefly\Upload\Cache;
 use Alpipego\Resizefly\Upload\RemoveResized;
 use Alpipego\Resizefly\Upload\Fake;
@@ -57,6 +58,10 @@ $plugin[ 'controller_remove_resized' ] = function ( $plugin ) {
 
 $plugin['section_registered_sizes'] = function ( $plugin ) {
 	return new RegisteredSizesSection( $plugin['options_page']->page, $plugin['path'] );
+};
+
+$plugin['option_restrict_sizes'] = function ( $plugin ) {
+	return new RestrictSizesField( $plugin['options_page']->page, $plugin['section_registered_sizes']->optionsGroup['id'], $plugin['path'] );
 };
 
 
