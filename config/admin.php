@@ -11,6 +11,7 @@ use Alpipego\Resizefly\Admin\CacheSection;
 use Alpipego\Resizefly\Admin\PathField;
 use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\PurgeCacheField;
+use Alpipego\Resizefly\Admin\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\RemoveResizedField;
 use Alpipego\Resizefly\Upload\Cache;
 use Alpipego\Resizefly\Upload\RemoveResized;
@@ -53,6 +54,11 @@ $plugin[ 'controller_remove_resized' ] = function ( $plugin ) {
 
 	return new RemoveResized( $removeResizedOption->optionsField['id'], $plugin['uploads'] );
 };
+
+$plugin['section_registered_sizes'] = function ( $plugin ) {
+	return new RegisteredSizesSection( $plugin['options_page']->page, $plugin['path'] );
+};
+
 
 $plugin->extend( 'admin', function ( $admin, $plugin ) {
 	/** @var PurgeCacheField $purgeOption */
