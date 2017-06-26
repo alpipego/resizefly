@@ -11,9 +11,11 @@ use Alpipego\Resizefly\Admin\CacheSection;
 use Alpipego\Resizefly\Admin\PathField;
 use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\PurgeCacheField;
-use Alpipego\Resizefly\Admin\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\RemoveResizedField;
-use Alpipego\Resizefly\Admin\RestrictSizesField;
+use Alpipego\Resizefly\Admin\Sizes\UserSizesField;
+use Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection;
+use Alpipego\Resizefly\Admin\Sizes\RestrictSizesField;
+use Alpipego\Resizefly\Admin\Sizes\SizesField;
 use Alpipego\Resizefly\Upload\Cache;
 use Alpipego\Resizefly\Upload\RemoveResized;
 use Alpipego\Resizefly\Upload\Fake;
@@ -34,24 +36,24 @@ $plugin['admin'] = function ( $plugin ) {
 	return new Admin( $plugin, $plugin['options_page'] );
 };
 
-$plugin[ 'option_purge_cache' ] = function ( $plugin ) {
-	return new PurgeCacheField( $plugin['options_page']->page, $plugin[ 'cache_section' ]->optionsGroup['id'], $plugin['path'] );
+$plugin['option_purge_cache'] = function ( $plugin ) {
+	return new PurgeCacheField( $plugin['options_page']->page, $plugin['cache_section']->optionsGroup['id'], $plugin['path'] );
 };
 
-$plugin[ 'option_remove_resized' ] = function ( $plugin ) {
-	return new RemoveResizedField( $plugin['options_page']->page, $plugin[ 'cache_section' ]->optionsGroup['id'], $plugin['path'] );
+$plugin['option_remove_resized'] = function ( $plugin ) {
+	return new RemoveResizedField( $plugin['options_page']->page, $plugin['cache_section']->optionsGroup['id'], $plugin['path'] );
 };
 
-$plugin[ 'controller_purge_cache' ] = function ( $plugin ) {
+$plugin['controller_purge_cache'] = function ( $plugin ) {
 	/** @var  PurgeCacheField $purgeOption */
-	$purgeOption = $plugin[ 'option_purge_cache' ];
+	$purgeOption = $plugin['option_purge_cache'];
 
 	return new Cache( $plugin['uploads'], $purgeOption->optionsField['id'], $plugin['cache_path'] );
 };
 
-$plugin[ 'controller_remove_resized' ] = function ( $plugin ) {
+$plugin['controller_remove_resized'] = function ( $plugin ) {
 	/** @var  RemoveResizedField $removeResizedOption */
-	$removeResizedOption = $plugin[ 'option_remove_resized' ];
+	$removeResizedOption = $plugin['option_remove_resized'];
 
 	return new RemoveResized( $removeResizedOption->optionsField['id'], $plugin['uploads'] );
 };
@@ -64,20 +66,19 @@ $plugin['option_restrict_sizes'] = function ( $plugin ) {
 	return new RestrictSizesField( $plugin['options_page']->page, $plugin['section_registered_sizes']->optionsGroup['id'], $plugin['path'] );
 };
 
+$plugin['option_sizes'] = function ( $plugin ) {
+	return new SizesField( $plugin['options_page']->page, $plugin['section_registered_sizes']->optionsGroup['id'], $plugin['path'] );
+};
 
-$plugin->extend( 'admin', function ( $admin, $plugin ) {
-	/** @var PurgeCacheField $purgeOption */
-	$purgeOption = $plugin[ 'option_purge_cache' ];
+$plugin['option_add_size'] = function ( $plugin ) {
+	return new UserSizesField( $plugin['options_page']->page, $plugin['section_registered_sizes']->optionsGroup['id'], $plugin['path'] );
+};
 
-	/** @var RemoveResizedField $removeResizedOption */
-	$removeResizedOption = $plugin[ 'option_remove_resized' ];
 
-	/** @var Admin $admin */
-	$admin->localizeScript( [ 'purge_id' => $purgeOption->optionsField['id'] ] );
-	$admin->localizeScript( [ 'resized_id' => $removeResizedOption->optionsField['id'] ] );
-
-	return $admin;
-} );
+//$plugin->extend( 'admin', function ( $admin, $plugin ) {
+//
+//	return $admin;
+//} );
 
 // fake the resized images to WordPress
 $plugin['fake'] = function ( $plugin ) {
