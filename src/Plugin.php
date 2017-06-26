@@ -21,13 +21,13 @@ class Plugin extends Container {
 	 * Calls `run()` method on all objects registered on plugin container
 	 */
 	public function run() {
-		foreach ( $this->keys() as $key ) { // Loop on contents
+		foreach ( $this->keys() as $key ) {
 			$content = $this->offsetGet( $key );
 
 			if ( is_object( $content ) ) {
 				$reflection = new ReflectionClass( $content );
 				if ( $reflection->hasMethod( 'run' ) ) {
-					$content->run(); // Call run method on object
+					$content->run();
 				}
 			}
 		}
@@ -36,9 +36,9 @@ class Plugin extends Container {
 	/**
 	 * wrapper for `load_plugin_textdomain`
 	 *
-	 * @param $dir string path to languages dir
+	 * @param string $dir path to languages dir
 	 */
 	public function loadTextdomain( $dir ) {
-		\load_plugin_textdomain( 'resizefly', false, $dir );
+		load_plugin_textdomain( 'resizefly', false, $dir );
 	}
 }
