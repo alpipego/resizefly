@@ -2,22 +2,32 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        sass: {
+            options: {
+                sourceMap: 'string',
+                outputStyle: 'compressed'
+            },
+            dist: {
+                files: {
+                    'css/resizefly-admin.css': 'css/src/*.scss'
+                }
+            }
+        },
+
         uglify: {
             dev: {
                 options: {
                     mangle: false,
-                    sourceMap: true
-
+                    sourceMap: true,
+                    // sourceMapIn: 'js/resizefly-admin.js.map',
+                    banner: '(function ($) {',
+                    footer: '\n})(jQuery);',
+                    preserveComments: 'some'
                 },
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'js/src',
-                        src: ['**/*.js'],
-                        dest: 'js/',
-                        ext: '.min.js'
-                    }
-                ]
+                files: {
+                    'js/resizefly-admin.min.js': 'js/src/*.js'
+                }
+
             },
             dist: {
                 options: {
@@ -27,15 +37,9 @@ module.exports = function (grunt) {
                         drop_console: true
                     }
                 },
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'js/src',
-                        src: ['**/*.js'],
-                        dest: 'js/',
-                        ext: '.min.js'
-                    }
-                ]
+                files: {
+                    'js/src/resizefly-admin.js.min': 'js/src/resizefly-admin.js'
+                }
             }
         },
 
@@ -74,15 +78,20 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['Gruntfile.js', 'js/src/**/*.js'],
-                tasks: ['uglify:dev']
+                tasks: 'uglify:dev'
+            },
+            sass: {
+                files: ['Gruntfile.js', 'css/src/**/*.scss'],
+                tasks: 'sass'
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-pot');
 
-    grunt.registerTask('default', ['uglify:dev', 'watch']);
-    grunt.registerTask('build', ['pot', 'uglify:dist']);
+    grunt.registerTask('default', ['uglify:dev', 'sass', 'watch']);
+    grunt.registerTask('build', ['pot', 'uglify:dist', 'sass']);
 };
