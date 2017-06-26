@@ -6,8 +6,11 @@
  * Time: 12:12
  */
 
-namespace Alpipego\Resizefly\Admin;
+namespace Alpipego\Resizefly\Admin\Sizes;
 
+
+use Alpipego\Resizefly\Admin\AbstractOptionsSection;
+use Alpipego\Resizefly\Admin\OptionsSectionInterface;
 
 class RegisteredSizesSection extends AbstractOptionsSection implements OptionsSectionInterface {
 
