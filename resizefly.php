@@ -26,12 +26,6 @@ if ( ! $check->errors() ) {
 	require_once __DIR__ . '/src/Autoload.php';
 	new Autoload();
 
-	// register user added image sizes
-	require_once __DIR__ . '/actions/register-image-sizes.php';
-
-	// handle image resizing
-	require_once __DIR__ . '/actions/template-redirect.php';
-
 	// setup the plugin after
 	add_action( 'plugins_loaded', function () use ( $check ) {
 		$plugin = new Plugin();
@@ -92,5 +86,12 @@ if ( ! $check->errors() ) {
 		}
 
 		$plugin->run();
+
+		// register user added image sizes
+		require_once __DIR__ . '/actions/register-image-sizes.php';
+
+		// handle image resizing
+		require_once __DIR__ . '/actions/template-redirect.php';
+
 	} );
 }
