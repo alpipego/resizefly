@@ -8,11 +8,14 @@
  */
 class Resizefly_Version_Check
 {
-    private $versions = array(
+    const PHP_VERSION = '5.5';
+    const WP_VERSION = '3.5';
+
+    private $versions = [
         'php'    => true,
         'wp'     => true,
         'editor' => true,
-    );
+    ];
     private $file;
 
     public function __construct($file)
@@ -30,11 +33,11 @@ class Resizefly_Version_Check
                 require_once ABSPATH . 'wp-admin/includes/plugin.php';
             }
 
-            add_action('admin_notices', array($this, 'notice'));
-            add_action('plugins_loaded', array($this, 'deactivate'));
-            add_action('admin_init', array($this, 'deactivate'));
-            add_action('init', array($this, 'deactivate'));
-            register_activation_hook($this->file, array($this, 'deactivate'));
+            add_action('admin_notices', [$this, 'notice']);
+            add_action('plugins_loaded', [$this, 'deactivate']);
+            add_action('admin_init', [$this, 'deactivate']);
+            add_action('init', [$this, 'deactivate']);
+            register_activation_hook($this->file, [$this, 'deactivate']);
         }
     }
 
@@ -47,7 +50,7 @@ class Resizefly_Version_Check
 
     private function checkPHPVersion()
     {
-        if (version_compare(PHP_VERSION, '5.5', '<')) {
+        if (version_compare(PHP_VERSION, self::PHP_VERSION, '<')) {
             $this->versions['php'] = false;
         }
 
@@ -56,7 +59,7 @@ class Resizefly_Version_Check
 
     private function checkWPVersion()
     {
-        if (version_compare(get_bloginfo('version'), '3.5', '<=')) {
+        if (version_compare(get_bloginfo('version'), self::WP_VERSION, '<=')) {
             $this->versions['wp'] = false;
         }
 
@@ -66,7 +69,7 @@ class Resizefly_Version_Check
     private function checkImageEditor()
     {
         if ($this->versions['wp'] && $this->versions['php']) {
-            $editor = wp_get_image_editor(__DIR__ . '/rzf-test.jpg', array('mime_type' => 'image/jpeg'));
+            $editor = wp_get_image_editor(__DIR__ . '/rzf-test.jpg', ['mime_type' => 'image/jpeg']);
 
             if (is_wp_error($editor)) {
                 $this->versions['editor'] = false;
@@ -83,14 +86,23 @@ class Resizefly_Version_Check
 
     public function notice()
     {
-        $notices = array(
-            'php'    => __('ResizeFly requires at least PHP 5.5 to function properly. Please upgrade PHP to use ResizeFly.',
-                'resizefly'),
-            'wp'     => __('ResizeFly requires at least WordPress 3.5 to function properly. Please upgrade WordPress to use ResizeFly.',
-                'resizefly'),
-            'editor' => __('ResizeFly could not find an Image Editor. Please make sure you have either GD or Imagick installed.',
-                'resizefly'),
-        );
+        $notices = [
+            'php'    => sprintf(
+                __('Resizefly requires at least PHP %s to function properly. Please upgrade PHP to use Resizefly.',
+                    'resizefly'
+                ),
+                self::PHP_VERSION
+            ),
+            'wp'     => sprintf(
+                __('Resizefly requires at least WordPress %s to function properly. Please upgrade WordPress to use Resizefly.',
+                    'resizefly'
+                ),
+                self::WP_VERSION
+            ),
+            'editor' => __('Resizefly could not find an Image Editor. Please make sure you have either GD or Imagick installed.',
+                'resizefly'
+            ),
+        ];
 
         foreach ($this->versions as $key => $version) {
             if ( ! $version) {
