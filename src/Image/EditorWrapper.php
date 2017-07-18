@@ -31,14 +31,7 @@ final class EditorWrapper implements EditorWrapperInterface
         $this->editor = $editor;
     }
 
-    /**
-     * Get the image ratio
-     *
-     * @param array $aspect if width or height should be calculated; accepts 'width', 'w', 'height', 'h'
-     *
-     * @return float|int
-     */
-    public function getRatio(array $aspect)
+    public function getRatio($aspect)
     {
         if (in_array($aspect, ['width', 'w'])) {
             return $this->getWidth() / $this->getHeight();

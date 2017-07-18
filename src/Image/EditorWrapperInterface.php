@@ -35,11 +35,11 @@ interface EditorWrapperInterface
     /**
      * Wrapper to return image ratio
      *
-     * @param array $aspect containing either w|width or h|height or both
+     * @param string $aspect specify if ration based on width or height
      *
      * @return float
      */
-    public function getRatio(array $aspect);
+    public function getRatio($aspect);
 
     /**
      * Crop the image to requested size
