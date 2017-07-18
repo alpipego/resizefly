@@ -11,10 +11,12 @@ namespace Alpipego\Resizefly\Admin\Sizes;
 
 use Alpipego\Resizefly\Admin\AbstractOption;
 use Alpipego\Resizefly\Admin\OptionInterface;
+use Alpipego\Resizefly\Admin\OptionsSectionInterface;
+use Alpipego\Resizefly\Admin\PageInterface;
 
 class UserSizesField extends AbstractOption implements OptionInterface {
 
-	public function __construct( $page, $section, $pluginPath ) {
+	public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath ) {
 		$this->optionsField = [
 			'id'    => 'resizefly_user_sizes',
 			'title' => esc_attr__( 'Add Image Size', 'resizefly' ),
@@ -51,7 +53,12 @@ class UserSizesField extends AbstractOption implements OptionInterface {
 		foreach ( $userSizes as $name => &$size ) {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
-			$size['crop']   = ! empty( $size['crop'] );
+			$crop           = explode( ', ', $size['crop'] );
+			if ( is_array( $crop ) && count( $crop ) === 2 ) {
+				$size['crop'] = array_values( $crop );
+			} else {
+				$size['crop'] = (bool) $crop[0];
+			}
 		}
 
 		return $userSizes;

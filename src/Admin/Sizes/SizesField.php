@@ -11,20 +11,35 @@ namespace Alpipego\Resizefly\Admin\Sizes;
 
 use Alpipego\Resizefly\Admin\AbstractOption;
 use Alpipego\Resizefly\Admin\OptionInterface;
+use Alpipego\Resizefly\Admin\OptionsSectionInterface;
+use Alpipego\Resizefly\Admin\PageInterface;
 
 class SizesField extends AbstractOption implements OptionInterface {
+	private $registeredSizes = [];
+	private $savedSizes = [];
 
-	/**
-	 * RestrictSizesField constructor.
-	 *
-	 * @param string $page
-	 * @param string $section
-	 * @param string $pluginPath
-	 */
-	public function __construct( $page, $section, $pluginPath ) {
-		// set default
+    /**
+     * RestrictSizesField constructor.
+     *
+     * @param PageInterface|string $page
+     * @param OptionsSectionInterface|string $section
+     * @param string $pluginPath
+     */
+	public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath ) {
 		add_action( 'after_setup_theme', function () {
-			add_option( 'resizefly_sizes', $this->getRegisteredImageSizes() );
+			// get registered and saved image sizes
+			$this->savedSizes      = (array) get_option( 'resizefly_sizes', [] );
+			$this->registeredSizes = $this->getRegisteredImageSizes();
+
+			// set default
+			add_option( 'resizefly_sizes', $this->registeredSizes );
+		}, 11 );
+
+		// check if saved and registered image sizes are in sync
+		add_action( 'current_screen', function ( \WP_Screen $screen ) use ( $page ) {
+			if ( $screen->id === $page ) {
+				$this->imageSizesSynced();
+			}
 		} );
 
 		// add inline styles
@@ -49,12 +64,12 @@ class SizesField extends AbstractOption implements OptionInterface {
 			if ( ! array_key_exists( $size, $additional ) ) {
 				$sizes[ $size ]['width']  = (int) get_option( "{$size}_size_w" );
 				$sizes[ $size ]['height'] = (int) get_option( "{$size}_size_h" );
-				$sizes[ $size ]['crop']   = (bool) get_option( "{$size}_crop" );
+				$sizes[ $size ]['crop']   = get_option( "{$size}_crop" );
 			} elseif ( isset( $additional[ $size ] ) ) {
 				$sizes[ $size ] = [
 					'width'  => (int) $additional[ $size ]['width'],
 					'height' => (int) $additional[ $size ]['height'],
-					'crop'   => (bool) $additional[ $size ]['crop'],
+					'crop'   => $additional[ $size ]['crop'],
 				];
 			}
 
@@ -64,6 +79,40 @@ class SizesField extends AbstractOption implements OptionInterface {
 		}
 
 		return $sizes;
+	}
+
+	public function imageSizesSynced() {
+		$unsynced = array_udiff_uassoc( $this->savedSizes, $this->registeredSizes, function ( $saved, $registered ) {
+			foreach ( $saved as $key => $value ) {
+				if ( $key === 'active' ) {
+					continue;
+				}
+
+				if ( $key === 'crop' && ! is_array( $value ) ) {
+					$value              = (bool) $value;
+					$registered['crop'] = (bool) $registered['crop'];
+				}
+
+				if ( $value !== $registered[ $key ] ) {
+					error_log( date( 'd.m.Y H:i:s', strtotime( 'now' ) ) . ' ' . __FILE__ . "::" . __LINE__ . "\n" . var_export( [
+							$value,
+							$registered[ $key ]
+						], true ) . "\n" );
+
+					return - 1;
+				}
+			}
+
+			return 0;
+		},
+			function ( $saved, $registered ) {
+				return $saved === $registered ? 0 : - 1;
+			}
+		);
+
+		if ( ! empty( $unsynced ) ) {
+			add_settings_error( $this->optionsField['id'], $this->optionsField['id'], __( 'The registered and saved image sizes are out of sync. Please update the settings on this page.', 'resizefly' ) );
+		}
 	}
 
 	/**
@@ -79,10 +128,13 @@ class SizesField extends AbstractOption implements OptionInterface {
 	}
 
 	protected function getImageSizes() {
-		$sizes = get_option( 'resizefly_sizes', [] );
-		$sizes = array_intersect_key( $sizes, $this->getRegisteredImageSizes() );
+		array_walk( $this->registeredSizes, function ( &$size, $name ) {
+			if ( array_key_exists( $name, $this->savedSizes ) ) {
+				$size['active'] = $this->savedSizes[ $name ]['active'];
+			}
+		} );
 
-		return $this->sortImageSizes( array_merge( $this->getRegisteredImageSizes(), $sizes ) );
+		return $this->sortImageSizes( $this->registeredSizes );
 	}
 
 	protected function sortImageSizes( $sizes ) {
@@ -112,8 +164,13 @@ class SizesField extends AbstractOption implements OptionInterface {
 		foreach ( $sizes as $name => &$size ) {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
-			$size['crop']   = (bool) $size['crop'];
 			$size['active'] = isset( $size['active'] );
+			$crop           = explode( ', ', $size['crop'] );
+			if ( is_array( $crop ) && count( $crop ) === 2 ) {
+				$size['crop'] = array_values( $crop );
+			} else {
+				$size['crop'] = (bool) $crop[0];
+			}
 		}
 
 //		return $this->getRegisteredImageSizes();

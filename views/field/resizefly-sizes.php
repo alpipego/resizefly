@@ -44,8 +44,16 @@
                 <input type="hidden" name="resizefly_sizes[<?= $name; ?>][height]" value="<?= $size['height']; ?>">
             </td>
             <td>
-				<?= $size['crop'] ? __( 'true', 'resizefly' ) : __( 'false', 'resizefly' ); ?>
-                <input type="hidden" name="resizefly_sizes[<?= $name; ?>][crop]" value="<?= $size['crop']; ?>">
+				<?php
+				if ( $size['crop'] ) {
+					if ( is_array( $size['crop'] ) ) {
+						printf( '%s, %s', $size['crop'][0], $size['crop'][1] );
+					} else {
+						echo 'center, center';
+					}
+				}
+				?>
+                <input type="hidden" name="resizefly_sizes[<?= $name; ?>][crop]" value="<?= implode( ', ', (array) $size['crop'] ); ?>">
             </td>
             <td><?= $name; ?></td>
         </tr>
