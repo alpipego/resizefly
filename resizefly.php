@@ -9,89 +9,80 @@
  * Author URI:  http://alpipego.com/
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
- * GitHub Branch: develop
+ * GitHub Branch: master
  */
 
 // PHP 5.2 compatible version check
-require_once dirname( __FILE__ ) . '/version-check.php';
-$check = new RzfVersionCheck( __FILE__ );
+require_once dirname(__FILE__) . '/version-check.php';
+$check = new Resizefly_Version_Check(__FILE__);
 
-use Alpipego\Resizefly\Autoload;
 use Alpipego\Resizefly\Plugin;
-use Alpipego\Resizefly\Upload\Dir;
-use Alpipego\Resizefly\Upload\DuplicateOriginal;
+use Alpipego\Resizefly\Upload\Uploads;
 
-if ( ! $check->errors() ) {
-	// add autoloader
-	require_once __DIR__ . '/src/Autoload.php';
-	new Autoload();
+if ( ! $check->errors()) {
+    require_once __DIR__ . '/app/bootstrap.php';
+    require_once __DIR__ . '/app/functions.php';
 
-	// setup the plugin after
-	add_action( 'plugins_loaded', function () use ( $check ) {
-		$plugin = new Plugin();
+    add_action('plugins_loaded', function () {
+        $plugin = new Plugin();
+        $plugin->addDefiniton(__DIR__ . '/app/config/plugin.php');
+        $plugin->loadTextdomain(__DIR__ . '/languages');
 
-		$plugin->loadTextdomain( __DIR__ . '/languages' );
+        $plugin['config.path']     = trailingslashit(realpath(plugin_dir_path(__FILE__)));
+        $plugin['config.url']      = plugin_dir_url(__FILE__);
+        $plugin['config.basename'] = plugin_basename(__FILE__);
+        $plugin['config.siteurl'] = get_bloginfo('url');
+        $plugin['config.version']  = '1.3.5';
+        // settings/filterable configuration values
+        $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
+        $plugin['options.duplicate.suffix'] = apply_filters('resizefly_duplicate_dir', 'resizefly-duplicate');
 
-		$plugin['path']     = realpath( plugin_dir_path( __FILE__ ) ) . DIRECTORY_SEPARATOR;
-		$plugin['url']      = plugin_dir_url( __FILE__ );
-		$plugin['basename'] = plugin_basename( __FILE__ );
-		$plugin['version']  = '1.3.5';
+        // set the cache path throughout the plugin
+        $plugin['options.cache.path'] = function (Plugin $plugin) {
+            return trailingslashit($plugin->get(Uploads::class)->getBasePath()) . trim($plugin->get('options.cache.suffix'),
+                    DIRECTORY_SEPARATOR);
+        };
+        $plugin['options.cache.url']  = function (Plugin $plugin) {
+            return trailingslashit($plugin->get(Uploads::class)->getBaseUrl()) . trim($plugin->get('options.cache.suffix'),
+                    DIRECTORY_SEPARATOR);
+        };
+        // set the duplicates path
+        $plugin['options.duplicates.path'] = function (Plugin $plugin) {
+            return trailingslashit($plugin->get(Uploads::class)->getBasePath()) . trim($plugin->get('options.duplicate.suffix'),
+                    DIRECTORY_SEPARATOR);
+        };
 
-		// filterable dir values
-		$plugin['cache_suffix']     = get_option( 'resizefly_resized_path', 'resizefly' );
-		$plugin['duplicate_suffix'] = apply_filters( 'resizefly_duplicate_dir', 'resizefly-duplicate' );
+        // filter for addons to register themselves
+        $plugin['addons'] = apply_filters('resizefly_addons', []);
 
-		// filter for addons to register themselves
-		$plugin['addons'] = apply_filters( 'resizefly_addons', [] );
+        foreach ($plugin->get('addons') as $addonName => $addon) {
+            add_filter("resizefly_plugin_{$addonName}", function () use ($plugin) {
+                return $plugin;
+            });
+        }
 
-		foreach ( $plugin['addons'] as $addonName => $addon ) {
-			add_filter( "resizefly_plugin_{$addonName}", function () use ( $plugin ) {
-				return $plugin;
-			} );
-		}
+        // Add own implementation to image editors
+        add_filter('wp_image_editors', function (array $editors) {
+            array_unshift($editors, '\\Alpipego\\Resizefly\\Image\\EditorImagick');
 
-		// wordpress uploads array
-		$plugin['uploads'] = function () {
-			return new Dir();
-		};
+            return $editors;
+        });
 
-		$plugin->extend( 'uploads', function ( $uploads ) {
-			/** @var Dir $uploads */
-			$uploads->setUploads( wp_upload_dir( null, false ) );
+        if (is_admin()) {
+            $plugin->addDefiniton(__DIR__ . '/app/config/admin.php');
+        }
 
-			return $uploads;
-		} );
+        $plugin->run();
 
-		// set the cache path throughout the plugin
-		$plugin['cache_path'] = trailingslashit( $plugin['uploads']->getUploads()['basedir'] ) . trim( $plugin['cache_suffix'], DIRECTORY_SEPARATOR );
-		$plugin['cache_url']  = trailingslashit( $plugin['uploads']->getUploads()['baseurl'] ) . trim( $plugin['cache_suffix'], DIRECTORY_SEPARATOR );
+        // register user added image sizes
+        require_once __DIR__ . '/app/actions/after-setup-theme.php';
 
-		// set the duplicates path
-		$plugin['duplicates_path'] = trailingslashit( $plugin['uploads']->getUploads()['basedir'] ) . trim( $plugin['duplicate_suffix'], DIRECTORY_SEPARATOR );
+        // check if image size in attachment metadata
+        require_once __DIR__ . '/app/actions/wp-get-attachment-src.php';
 
-		// Add own implementation to image editors
-		add_filter( 'wp_image_editors', function ( $editors ) {
-			array_unshift( $editors, '\\Alpipego\\Resizefly\\Image\\EditorImagick' );
+        // handle image resizing
+        require_once __DIR__ . '/app/actions/template-redirect.php';
 
-			return $editors;
-		} );
-
-		// duplicate every uploaded image, so that the cropping happens on an already optimized (i.e. small image)
-		$plugin['duplicate_original'] = function ( $plugin ) {
-			return new DuplicateOriginal( $plugin['uploads'], $plugin['duplicate_suffix'] );
-		};
-
-		if ( is_admin() ) {
-			require_once __DIR__ . '/config/admin.php';
-		}
-
-		$plugin->run();
-
-		// register user added image sizes
-		require_once __DIR__ . '/actions/register-image-sizes.php';
-
-		// handle image resizing
-		require_once __DIR__ . '/actions/template-redirect.php';
-
-	} );
+    });
 }
+
