@@ -12,11 +12,14 @@
 
 use Alpipego\Resizefly\Plugin;
 
-add_action( 'after_setup_theme', function () use ( $plugin ) {
+add_action( 'after_setup_theme', function () {
 	$userSizes = get_option( 'resizefly_user_sizes', [] );
 	if ( ! empty( $userSizes ) ) {
 		foreach ( $userSizes as $size ) {
-			add_image_size( $size['name'], (int) $size['width'], (int) $size['height'], (bool) $size['crop'] );
+			if ( !is_array( $size['crop'] ) || count( $size['crop'] ) !== 2 ) {
+				$size['crop'] = (bool) $size['crop'];
+			}
+			add_image_size( $size['name'], (int) $size['width'], (int) $size['height'], $size['crop'] );
 		}
 	}
 } );
