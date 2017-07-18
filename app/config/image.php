@@ -13,6 +13,7 @@ return [
     EditorWrapper::class => Alpipego\Resizefly\object()
         ->constructorParam('editor', 'wp_image_editor'),
     Handler::class       => Alpipego\Resizefly\object()
+        ->constructorParam('editor', EditorWrapper::class)
         ->constructorParam('cachePath', 'options.cache.path')
         ->constructorParam('duplicatesPath', 'options.duplicates.path'),
 ];
