@@ -19,7 +19,7 @@ abstract class AbstractOptionsSection {
 	 */
 	public $optionsGroup = [
 		'id'   => null,
-		'name' => null,
+		'title' => null,
 	];
 
 	/**
@@ -35,29 +35,29 @@ abstract class AbstractOptionsSection {
 	/**
 	 * AbstractOptionsSection constructor.
 	 *
-	 * @param string $page settings page id
+	 * @param PageInterface $page
 	 * @param string $pluginPath base plugin path
 	 */
-	public function __construct( $page, $pluginPath ) {
-		$this->viewsPath   = $pluginPath . 'views/';
+	public function __construct( PageInterface $page, $pluginPath ) {
 		$this->optionsPage = $page;
+		$this->viewsPath   = $pluginPath . 'views/';
 	}
 
 	/**
 	 * Add section to WP Admin on admin_init hook
 	 */
 	public function run() {
-		\add_action( 'admin_init', [ $this, 'addSection' ] );
+		add_action( 'admin_init', [ $this, 'addSection' ] );
 	}
 
 	/**
 	 * Wrapper for add_settings_section
 	 */
 	public function addSection() {
-		\add_settings_section( $this->optionsGroup['id'], $this->optionsGroup['name'], [
+		add_settings_section( $this->optionsGroup['id'], $this->optionsGroup['title'], [
 			$this,
 			'callback'
-		], $this->optionsPage );
+		], $this->optionsPage->getId() );
 	}
 
 	/**
@@ -75,4 +75,12 @@ abstract class AbstractOptionsSection {
 
 		include $this->viewsPath . 'section/' . implode( '-', $fileArr ) . '.php';
 	}
+
+    public function getId() {
+	    return $this->optionsGroup['id'];
+    }
+
+    public function getTitle() {
+        return $this->optionsGroup['title'];
+    }
 }

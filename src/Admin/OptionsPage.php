@@ -12,32 +12,36 @@ namespace Alpipego\Resizefly\Admin;
  * Class OptionsPage
  * @package Alpipego\Resizefly\Admin
  */
-class OptionsPage {
+final class OptionsPage extends AbstractPage implements PageInterface {
 	/**
 	 * @var string $page id of this settings page
 	 */
-	public $page;
+	const PAGE = 'media_page_resizefly';
 
 	/**
 	 * @var string $viewsPath path to views dir
 	 */
 	protected $viewsPath;
+    private $pluginUrl;
+    private $pluginPath;
 
-	/**
+    /**
 	 * OptionsPage constructor.
 	 *
 	 * @param string $pluginPath plugin base path
 	 */
-	function __construct( $pluginPath ) {
+	function __construct( $pluginPath, $pluginUrl ) {
+	    $this->pluginPath = $pluginPath;
 		$this->viewsPath = $pluginPath . 'views/';
-		$this->page = 'media_page_resizefly';
+		$this->pluginUrl = $pluginUrl;
 	}
 
 	/**
 	 * Add the page to admin menu action
 	 */
 	public function run() {
-		\add_action( 'admin_menu', [ $this, 'addPage' ] );
+		add_action( 'admin_menu', [ $this, 'addPage' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAssets' ] );
 	}
 
 	/**
@@ -46,7 +50,7 @@ class OptionsPage {
 	 * Add the page in media section
 	 */
 	function addPage() {
-		\add_media_page(
+		add_media_page(
 			'Resizefly Settings',
 			'Resizefly',
 			'manage_options',
@@ -63,9 +67,27 @@ class OptionsPage {
 	 */
 	function callback() {
 		$args = [
-			'page' => $this->page,
+			'page' => self::PAGE,
 		];
 
 		include $this->viewsPath . 'page/resizefly.php';
 	}
+
+    public function enqueueAssets( $page ) {
+        if ( $page === self::PAGE ) {
+            wp_enqueue_script( 'resizefly-admin', $this->pluginUrl . 'js/resizefly-admin.min.js', [ 'jquery' ], '1.0.0', true );
+            wp_add_inline_style( 'wp-admin', file_get_contents( $this->pluginPath . '/css/resizefly-admin.css' ) );
+
+            wp_localize_script( 'resizefly-admin', 'resizefly', $this->localized );
+        }
+    }
+
+    public function localize(array $localizeArray) {
+	    return $this->localized = array_merge($this->localized, $localizeArray);
+    }
+
+    public function getId()
+    {
+        return self::PAGE;
+    }
 }

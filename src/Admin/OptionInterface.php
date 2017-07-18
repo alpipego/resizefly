@@ -14,6 +14,7 @@ namespace Alpipego\Resizefly\Admin;
  * @package Alpipego\Resizefly\Admin
  */
 interface OptionInterface {
+
 	/**
 	 * run actions and filters
 	 *
@@ -50,4 +51,8 @@ interface OptionInterface {
 	 * @return mixed
 	 */
 	public function sanitize( $value );
+
+	public function getId();
+
+	public function getTitle();
 }
