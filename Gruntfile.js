@@ -28,18 +28,19 @@ module.exports = function (grunt) {
                 files: {
                     'js/resizefly-admin.min.js': 'js/src/*.js'
                 }
-
             },
             dist: {
                 options: {
                     mangle: true,
                     preserveComments: 'some',
+                    banner: '(function ($) {',
+                    footer: '\n})(jQuery);',
                     compress: {
                         drop_console: true
                     }
                 },
                 files: {
-                    'js/src/resizefly-admin.js.min': 'js/src/resizefly-admin.js'
+                    'js/resizefly-admin.min.js': 'js/src/*.js'
                 }
             }
         },
@@ -76,6 +77,49 @@ module.exports = function (grunt) {
             }
         },
 
+        'string-replace': {
+            php: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/Common',
+                    src: ['**/*.php', '!**/composer/**'],
+                    dest: 'src/Common',
+                    filter: 'isFile'
+                }],
+                options: {
+                    replacements: [
+                        {
+                            pattern: /namespace\s+?([^;]+);/,
+                            replacement: 'namespace Alpipego\\Resizefly\\Common\\$1;'
+                        },
+                        {
+                            pattern: /use\s+?([^;]+)(?=\\)([^;]+);/g,
+                            replacement: 'use Alpipego\\Resizefly\\Common\\$1$2;'
+                        }
+                    ]
+                }
+            }
+        },
+
+        copy: {
+            php: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'vendor/pimple/pimple/src/Pimple',
+                        src: ['**', '!**/Tests/**'],
+                        dest: 'src/Common/Pimple'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'vendor/psr/container/src',
+                        src: '**',
+                        dest: 'src/Common/Psr/Container'
+                    }
+                ]
+            }
+        },
+
         watch: {
             js: {
                 files: ['Gruntfile.js', 'js/src/**/*.js'],
@@ -92,7 +136,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-pot');
+    grunt.loadNpmTasks('grunt-string-replace');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
+    grunt.registerTask('third-party', ['copy:php', 'string-replace:php']);
     grunt.registerTask('default', ['uglify:dev', 'sass', 'watch']);
     grunt.registerTask('build', ['pot', 'uglify:dist', 'sass']);
 };
