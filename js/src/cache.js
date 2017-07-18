@@ -9,23 +9,27 @@ var resizefly = window.resizefly,
 $(buttonIds.join(',')).on('click', function (e) {
     e.preventDefault();
 
-    var data = {
-            'action': $(this).attr('id'),
-            '_ajax_nonce': $(this).data('nonce')
+    var $this = $(this),
+        data = {
+            'action': $this.attr('id'),
+            '_ajax_nonce': $this.data('nonce')
         },
-        resultId = '#' + $(this).attr('id') + '-result';
+        resultId = '#' + $this.attr('id') + '-result';
 
-    $.post(ajaxurl, data, function (response) {
-        console.log(resultId);
-        if (response.files) {
-            $(resultId)
-                .html(resizefly.purge_result)
-                .children('.resizefly-files').text(response.files)
-                .parent().children('.resizefly-size').text(byteCalc.humanReadable(response.size));
-        } else {
-            $(resultId).text(resizefly.purge_empty);
-        }
-    });
+    $.post(ajaxurl, data)
+        .done(function (response) {
+            if (response.files) {
+                $(resultId)
+                    .html(resizefly.purge_result)
+                    .children('.resizefly-files').text(response.files)
+                    .parent().children('.resizefly-size').text(byteCalc.humanReadable(response.size));
+            } else {
+                $(resultId).text(resizefly.purge_empty);
+            }
+        })
+        .fail(function(xhr) {
+            alert(xhr.responseText);
+        });
 });
 
 
