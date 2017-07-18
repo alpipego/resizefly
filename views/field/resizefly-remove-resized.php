@@ -9,7 +9,7 @@
 
 	<p class="description">
 		<?php
-		_e( 'Remove all resized images in uploads (regardless whether created by ResizeFly or not).', 'resizefly' );
+		_e( 'Remove all resized images in uploads (regardless whether created by Resizefly or not).', 'resizefly' );
 
 		?>
 		<p id="<?= $args['id']; ?>-result"></p>
