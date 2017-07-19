@@ -8,6 +8,7 @@
 
 namespace Alpipego\Resizefly\Upload;
 
+use Alpipego\Resizefly\Admin\OptionInterface;
 use WP_Post;
 use SplFileInfo;
 use RecursiveDirectoryIterator;
@@ -19,21 +20,21 @@ class RemoveResized {
 	private $files = 0;
 	private $cropped = [];
 
-	public function __construct( $action, Dir $uploads ) {
-		$this->action  = $action;
-		$this->uploads = $uploads->getUploads();
+	public function __construct( UploadsInterface $uploads, OptionInterface $field ) {
+		$this->action  = $field->getId();
+		$this->uploads = $uploads;
 	}
 
 	public function run() {
-		\add_action( "wp_ajax_{$this->action}", [ $this, 'unlinkImages' ] );
+		add_action( "wp_ajax_{$this->action}", [ $this, 'unlinkImages' ] );
 	}
 
 	public function unlinkImages() {
-		if ( \check_ajax_referer( $this->action ) && \current_user_can( 'delete_posts' ) ) {
+		if ( check_ajax_referer( $this->action ) && current_user_can( apply_filters('resizefly/delete_attachment_cap', 'delete_posts') ) ) {
 			$freed = $this->unlinkAll( $this->getOriginals() );
-			\wp_send_json( $freed );
+			wp_send_json( $freed );
 		} else {
-			\wp_send_json( 'fail' );
+			wp_send_json( 'fail' );
 		}
 	}
 
