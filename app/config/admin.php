@@ -33,7 +33,7 @@ return [
     PurgeCacheField::class        => Alpipego\Resizefly\object()
         ->constructorParam('section', CacheSection::class),
     Cache::class                  => Alpipego\Resizefly\object()
-        ->constructorParam('action', PurgeCacheField::class)
+        ->constructorParam('field', PurgeCacheField::class)
         ->constructorParam('cachePath', 'options.cache.path'),
     RemoveResizedField::class     => Alpipego\Resizefly\object()
         ->constructorParam('section', CacheSection::class),
