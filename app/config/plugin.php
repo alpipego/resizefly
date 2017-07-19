@@ -7,6 +7,7 @@
  */
 
 use Alpipego\Resizefly\Image\Image;
+use Alpipego\Resizefly\Image\ImageInterface;
 use Alpipego\Resizefly\Upload\DuplicateOriginal;
 use Alpipego\Resizefly\Upload\Filter;
 use Alpipego\Resizefly\Upload\Uploads;
@@ -15,9 +16,9 @@ use Alpipego\Resizefly\Upload\UploadsInterface;
 
 return [
     UploadsInterface::class  => Uploads::class,
+    ImageInterface::class    => Image::class,
     'cacheUrl'               => 'options.cache.url',
-    Filter::class            => object()
-        ->constructorParam('image', Image::class),
+    Filter::class            => object(),
     Image::class             => object()
         ->constructorParam('siteUrl', 'config.siteurl')
         ->constructorParam('cachePath', 'options.cache.path')

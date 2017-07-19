@@ -8,7 +8,7 @@
 
 namespace Alpipego\Resizefly\Upload;
 
-use Alpipego\Resizefly\Image\Image;
+use Alpipego\Resizefly\Image\ImageInterface;
 
 
 /**
@@ -23,11 +23,14 @@ class Filter {
 	private $image;
 	private $cacheUrl;
 
-	/**
-	 * Filter constructor.
-	 *
-	 */
-	public function __construct( UploadsInterface $uploads, Image $image, $cacheUrl ) {
+    /**
+     * Filter constructor.
+     *
+     * @param UploadsInterface $uploads
+     * @param ImageInterface $image
+     * @param string $cacheUrl
+     */
+	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cacheUrl ) {
 		$this->uploads = $uploads;
 		$this->image   = $image;
 		$this->cacheUrl = $cacheUrl;
@@ -55,8 +58,6 @@ class Filter {
 		} );
 
 		add_filter( 'the_content', [ $this, 'urlInHtml' ] );
-		// TODO this is a bad idea as long as user is able to change cache directory
-//		add_filter( 'the_editor_content', [ $this, 'urlInHtml' ], 10 );
 		add_filter( 'post_thumbnail_html', [ $this, 'urlInHtml' ] );
 		add_filter( 'get_header_image_tag', [ $this, 'urlInHtml' ] );
 	}
