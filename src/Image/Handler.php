@@ -74,10 +74,7 @@ final class Handler implements HandlerInterface
                 $this->aspect['focal_y']
             )
             ) {
-                error_log(date('d.m.Y H:i:s', strtotime('now')
-                          ) . ' ' . __FILE__ . "::" . __LINE__ . "\n" . var_export($this->file, true) . "\n"
-                );
-//                $this->editor->saveImage($this->file);
+                $this->editor->saveImage($this->file);
             } else {
                 return new WP_Error('resizefly-error', sprintf('Could not resize image: %s. Destination was: %s.',
                         $this->image->getOriginalPath(), $this->file
@@ -159,9 +156,10 @@ final class Handler implements HandlerInterface
         return $this->setImageName();
     }
 
+    // TODO make this easier readable
     public function allowedImageSize(array $allowedSizes)
     {
-        foreach ($allowedSizes as $key => $size) {
+        foreach ($allowedSizes as $size) {
             if ( ! (bool) $size['active']) {
                 continue;
             }
