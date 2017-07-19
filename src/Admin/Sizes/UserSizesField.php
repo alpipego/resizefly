@@ -50,7 +50,7 @@ class UserSizesField extends AbstractOption implements OptionInterface {
 	 */
 	public function sanitize( $userSizes ) {
 		unset( $userSizes['clone'] );
-		foreach ( $userSizes as $name => &$size ) {
+		foreach ( $userSizes as &$size ) {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
 			$crop           = explode( ', ', $size['crop'] );

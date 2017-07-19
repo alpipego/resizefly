@@ -161,7 +161,7 @@ class SizesField extends AbstractOption implements OptionInterface {
 	 */
 	public function sanitize( $sizes ) {
 		// cast types
-		foreach ( $sizes as $name => &$size ) {
+		foreach ( $sizes as &$size ) {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
 			$size['active'] = isset( $size['active'] );
@@ -173,7 +173,6 @@ class SizesField extends AbstractOption implements OptionInterface {
 			}
 		}
 
-//		return $this->getRegisteredImageSizes();
 		return $sizes;
 	}
 }
