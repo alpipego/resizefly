@@ -9,13 +9,11 @@
 namespace Alpipego\Resizefly\Admin;
 
 
-class AbstractAdmin {
+class AbstractPage {
 	protected $localized = [];
 
-	public function localizeScript( $toLocalize ) {
-		foreach ( $toLocalize as $key => $value ) {
-			$this->localized[ $key ] = $value;
-		}
+	public function localize( array $toLocalize ) {
+		array_merge_recursive($this->localized, $toLocalize);
 
 		return $this->localized;
 	}

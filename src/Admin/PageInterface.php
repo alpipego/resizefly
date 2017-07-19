@@ -12,9 +12,14 @@ namespace Alpipego\Resizefly\Admin;
  * Interface AdminInterface
  * @package Alpipego\Resizefly\Admin
  */
-interface AdminInterface {
-	/**
-	 * @return mixed
-	 */
-	public function run();
+interface PageInterface
+{
+    /**
+     * @return mixed
+     */
+    public function run();
+
+    public function getId();
+
+    public function localize(array $toLocalize);
 }

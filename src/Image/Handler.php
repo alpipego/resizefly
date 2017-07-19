@@ -8,114 +8,205 @@
 
 namespace Alpipego\Resizefly\Image;
 
-use Exception;
-use Alpipego\Resizefly\Upload\Dir;
+use WP_Error;
 
 /**
  * Handle the requested image
  *
  * @package Alpipego\Resizefly\Image
  */
-class Handler {
-	/**
-	 * @var string
-	 */
-	protected $file;
-	/**
-	 * @var Image
-	 */
-	protected $image;
-	/**
-	 * @var Editor
-	 */
-	protected $editor;
-	/**
-	 * @var array containing width and height
-	 */
-	protected $aspect;
-	/**
-	 * @var string full path to resizefly cache
-	 */
-	protected $cachePath;
+final class Handler implements HandlerInterface
+{
+    /**
+     * @var string
+     */
+    protected $file;
+    /**
+     * @var Image
+     */
+    protected $image;
+    /**
+     * @var EditorWrapperInterface
+     */
+    protected $editor;
+    /**
+     * @var array containing width and height
+     */
+    protected $aspect = [];
+    /**
+     * @var string full path to resizefly cache
+     */
+    protected $cachePath;
 
-	/**
-	 * @var string full path to duplicates dir
-	 */
-	protected $duplicatePath;
+    /**
+     * @var string full path to duplicates dir
+     */
+    protected $duplicatesPath;
 
-	/**
-	 * Handler constructor.
-	 *
-	 * @param Image $image
-	 * @param Editor $editor
-	 * @param string $cachePath
-	 * @param Dir $upload
-	 */
-	public function __construct( Image $image, Editor $editor, $cachePath, $duplicatePath ) {
-		$this->image  = $image;
-		$this->editor = $editor;
-		$this->cachePath = $cachePath;
-		$this->duplicatePath = $duplicatePath;
-	}
+    /**
+     * Handler constructor.
+     *
+     * @param ImageInterface $image
+     * @param EditorWrapperInterface $editor
+     * @param string $cachePath
+     * @param string $duplicatesPath
+     */
+    public function __construct(ImageInterface $image, EditorWrapperInterface $editor, $cachePath, $duplicatesPath)
+    {
+        $this->image          = $image;
+        $this->editor         = $editor;
+        $this->cachePath      = $cachePath;
+        $this->duplicatesPath = $duplicatesPath;
+    }
 
-	/**
-	 * @throws Exception if image can't be resized
-	 */
-	public function run() {
-		if ( ! file_exists( $this->setImageName() ) ) {
-			if ( $this->editor->resizeImage( $this->aspect['width'], $this->aspect['height'], 50, 50 ) ) {
-				$this->editor->saveImage( $this->file );
-			} else {
-				throw new Exception( sprintf( 'Could not resize image: %s. Destination was: %s.', $this->image->getOriginal(), $this->file ) );
-			}
-		}
+    /**
+     * Try to resize and save the image, else return a WP_Error
+     *
+     * @return WP_Error | void
+     */
+    public function run()
+    {
+        if ( ! file_exists($this->setImageName())) {
+            if ($this->editor->resizeImage(
+                $this->aspect['width'],
+                $this->aspect['height'],
+                $this->aspect['focal_x'],
+                $this->aspect['focal_y']
+            )
+            ) {
+                error_log(date('d.m.Y H:i:s', strtotime('now')
+                          ) . ' ' . __FILE__ . "::" . __LINE__ . "\n" . var_export($this->file, true) . "\n"
+                );
+//                $this->editor->saveImage($this->file);
+            } else {
+                return new WP_Error('resizefly-error', sprintf('Could not resize image: %s. Destination was: %s.',
+                        $this->image->getOriginalPath(), $this->file
+                    )
+                );
+            }
+        }
 
-		$this->editor->streamImage();
-	}
+        $this->editor->streamImage();
+    }
 
-	/**
-	 * Sets the image path to-save
-	 *
-	 * @return string full image path
-	 */
-	protected function setImageName() {
-		$size     = $this->parseRequestedImageSize();
-		$pathinfo = pathinfo( $this->image->getDuplicate() );
-		$dir = str_replace( $this->duplicatePath, $this->cachePath, $pathinfo['dirname'] );
+    /**
+     * Sets the image path to-save
+     *
+     * @return string full image path
+     */
+    protected function setImageName()
+    {
+        $size = ! empty($this->aspect) ? $this->aspect : $this->parseRequestedImageSize();
+        $path = pathinfo($this->image->getDuplicatePath());
+        $dir  = str_replace($this->duplicatesPath, $this->cachePath, $path['dirname']);
 
-		return $this->file = sprintf( '%s/%s-%dx%d@%s.%s', untrailingslashit( $dir ), $pathinfo['filename'], $size['width'], $size['height'], $size['density'], $pathinfo['extension'] );
-	}
+        return $this->file = sprintf(
+            '%s/%s-%dx%d@%s.%s',
+            untrailingslashit($dir),
+            $path['filename'],
+            $size['width'],
+            $size['height'],
+            $size['density'],
+            $path['extension']
+        );
+    }
 
-	public function getImage() {
-		return $this->setImageName();
-	}
+    /**
+     * Parse the requested image size
+     *
+     * @param array $size
+     *
+     * @return array ['width' => int, 'height' => int]
+     */
+    protected function parseRequestedImageSize($size = [])
+    {
+        $origWidth  = $this->editor->getWidth();
+        $origHeight = $this->editor->getHeight();
 
-	/**
-	 * Parse the requested image size
-	 *
-	 * @return array ['width' => int, 'height' => int]
-	 */
-	protected function parseRequestedImageSize() {
-		$origWidth  = $this->editor->getWidth();
-		$origHeight = $this->editor->getHeight();
+        // if width or height is larger than the image itself, set it to the original width/height
+        // TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio
+        if ( ! isset($size['width'])) {
+            $size['width'] = $this->image->getWidth() > $origWidth ? $origWidth : $this->image->getWidth();
+        }
+        if ( ! isset($size['height'])) {
+            $size['height'] = $this->image->getHeight() > $origHeight ? $origHeight : $this->image->getHeight();
+        }
+        if ( ! isset($size['density'])) {
+            $size['density'] = $this->image->getDensity();
+        }
+        if ( ! isset($size['focal_x']) || $size['focal_x'] < 0 || $size['focal_x'] > 100) {
+            $size['focal_x'] = 50;
+        }
+        if ( ! isset($size['focal_y']) || $size['focal_y'] < 0 || $size['focal_y'] > 100) {
+            $size['focal_y'] = 50;
+        }
 
-		// if width or height is larger than the image itself, set it to the original width/height
-		// TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio
-		$width  = $this->image->resize['width'] > $origWidth ? $origWidth : $this->image->resize['width'];
-		$height = $this->image->resize['height'] > $origHeight ? $origHeight : $this->image->resize['height'];
-		$density = $this->image->getDensity();
+        // if either width or height is 0, resize to original aspect ratio
+        if ($size['width'] === 0 && $size['height'] === 0) {
+            $size['width']  = $origWidth;
+            $size['height'] = $origHeight;
+        } elseif ($size['width'] === 0) {
+            $size['width'] = round($size['height'] * $this->editor->getRatio('width'));
+        } elseif ($size['height'] === 0) {
+            $size['height'] = round($size['width'] * $this->editor->getRatio('height'));
+        }
 
-		// if either width or height is 0, resize to original aspect ratio
-		if ( $width == 0 && $height == 0 ) {
-			$width  = $origWidth;
-			$height = $origHeight;
-		} elseif ( $width == 0 ) {
-			$width = round( $height * $this->editor->getRatio( 'width' ) );
-		} elseif ( $height == 0 ) {
-			$height = round( $width * $this->editor->getRatio( 'height' ) );
-		}
+        return $this->aspect = $size;
+    }
 
-		return $this->aspect = \apply_filters('resizefly_aspect', [ 'width' => (int) $width, 'height' => (int) $height, 'density' => (int) $density ]);
-	}
+    public function getImage()
+    {
+        return $this->setImageName();
+    }
 
+    public function allowedImageSize(array $allowedSizes)
+    {
+        foreach ($allowedSizes as $key => $size) {
+            if ( ! (bool) $size['active']) {
+                continue;
+            }
+
+            $width  = (int) $size['width'];
+            $height = (int) $size['height'];
+
+            if ((bool) $size['crop']) {
+                if ($this->image->getWidth() === $width && $this->image->getHeight() === $height) {
+                    $aspect = ['width' => $width, 'height' => $height];
+                    if (is_array($size['crop'])) {
+                        $focal             = [
+                            'x' => [
+                                'left'   => 0,
+                                'center' => 50,
+                                'right'  => 100,
+                            ],
+                            'y' => [
+                                'top'    => 0,
+                                'center' => 50,
+                                'bottom' => 100,
+                            ],
+                        ];
+                        $aspect['focal_x'] = $focal['x'][$size['crop'][0]];
+                        $aspect['focal_y'] = $focal['y'][$size['crop'][1]];
+                    }
+                    $this->parseRequestedImageSize($aspect);
+
+                    return true;
+                }
+            } else {
+                if ($this->image->getWidth() === $width) {
+                    $this->parseRequestedImageSize(['width' => $width, 'height' => 0]);
+
+                    return true;
+                }
+
+                if ($this->image->getHeight() === $height) {
+                    $this->parseRequestedImageSize(['width' => 0, 'height' => $height]);
+
+                    return true;
+                }
+            }
+        }
+
+        return ! empty($this->aspect);
+    }
 }
