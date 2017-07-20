@@ -54,11 +54,10 @@ class UserSizesField extends AbstractOption implements OptionInterface {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
 			$crop           = explode( ', ', $size['crop'] );
-			if ( is_array( $crop ) && count( $crop ) === 2 ) {
-				$size['crop'] = array_values( $crop );
-			} else {
-				$size['crop'] = (bool) $crop[0];
-			}
+            $size['crop']   = (bool) $crop[0];
+            if (is_array($crop) && count($crop) === 2) {
+                $size['crop'] = array_values($crop);
+            }
 		}
 
 		return $userSizes;
