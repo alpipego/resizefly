@@ -56,7 +56,7 @@ class Fake {
 	 * @return array either the original array or a manipulated one
 	 */
 	public function fakeImageResize( $metadata ) {
-		$file = pathinfo( realpath( $this->uploads['basedir'] . '/' . $metadata['file'] ) );
+		$file = pathinfo( realpath( $this->uploads->getBasePath() . '/' . $metadata['file'] ) );
 
 		foreach ( $this->sizes as $name => $size ) {
 			// figure out what size WP would make this:
