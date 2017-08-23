@@ -105,7 +105,7 @@ final class Image implements ImageInterface
             'width'  => (int) $file['width'],
             'height' => (int) $file['height'],
         ];
-        $this->density          = empty($file['density']) ? 1 : (int) $file['density'];
+        $this->density          = !isset($file['density']) ? 1 : (int) $file['density'];
 
         return $this;
     }
