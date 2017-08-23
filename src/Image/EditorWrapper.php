@@ -86,8 +86,8 @@ final class EditorWrapper implements EditorWrapperInterface
         header('Cache-Control: max-age=' . $cacheAge . ', public');
         header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $cacheAge));
 
-        if (method_exists($this->editor, 'getImagick')) {
-            header('Content-Length: ' . strlen($this->editor->getImagick()->getImageBlob()));
+        if (method_exists($this->editor, 'getImageBlob')) {
+            header('Content-Length: ' . strlen($this->editor->getImageBlob()));
         }
         $this->editor->stream();
         exit;
