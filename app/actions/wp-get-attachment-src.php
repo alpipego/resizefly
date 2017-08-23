@@ -36,8 +36,8 @@ add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
 
         $image = [
             $file['dirname'] . '/' . $imageMeta['sizes'][$size]['file'],
-            $imageMeta['sizes']['width'],
-            $imageMeta['sizes']['height'],
+            $imageMeta['sizes'][$size]['width'],
+            $imageMeta['sizes'][$size]['height'],
             $size !== 'full',
         ];
 
