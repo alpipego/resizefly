@@ -82,7 +82,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: 'src/Common',
-                    src: ['**/*.php', '!**/composer/**'],
+                    src: ['**/*.php'],
                     dest: 'src/Common',
                     filter: 'isFile'
                 }],
@@ -115,6 +115,10 @@ module.exports = function (grunt) {
                         cwd: 'vendor/psr/container/src',
                         src: '**',
                         dest: 'src/Common/Psr/Container'
+                    },
+                    {
+                        src: 'vendor/composer/ClassLoader.php',
+                        dest: 'src/Common/Composer/Autoload/ClassLoader.php'
                     }
                 ]
             }
