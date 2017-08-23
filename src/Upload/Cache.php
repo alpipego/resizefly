@@ -37,7 +37,12 @@ class Cache
     {
         $file  = new SplFileInfo(get_attached_file($id));
         $path  = str_replace($this->uploads->getBasePath(), $this->cachePath, $file->getPathInfo());
-        $dir   = new RecursiveDirectoryIterator($path);
+        try {
+            $dir   = new RecursiveDirectoryIterator($path);
+        } catch (\Exception $e) {
+            // probably the directory does not exist
+            return false;
+        }
         $match = sprintf(
             '/^%s-[0-9]+x[0-9]+\.%s$/i',
             $file->getBasename('.' . $file->getExtension()),
