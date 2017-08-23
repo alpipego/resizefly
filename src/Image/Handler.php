@@ -66,14 +66,13 @@ final class Handler implements HandlerInterface
      */
     public function run()
     {
-        if ( ! file_exists($this->setImageName())) {
+        if (! file_exists($this->setImageName())) {
             if ($this->editor->resizeImage(
                 $this->aspect['width'],
                 $this->aspect['height'],
                 $this->aspect['focal_x'],
                 $this->aspect['focal_y']
-            )
-            ) {
+            )) {
                 $this->editor->saveImage($this->file);
             } else {
                 return new WP_Error('resizefly-error', sprintf('Could not resize image: %s. Destination was: %s.',
@@ -122,19 +121,19 @@ final class Handler implements HandlerInterface
 
         // if width or height is larger than the image itself, set it to the original width/height
         // TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio
-        if ( ! isset($size['width'])) {
+        if (! isset($size['width'])) {
             $size['width'] = $this->image->getWidth() > $origWidth ? $origWidth : $this->image->getWidth();
         }
-        if ( ! isset($size['height'])) {
+        if (! isset($size['height'])) {
             $size['height'] = $this->image->getHeight() > $origHeight ? $origHeight : $this->image->getHeight();
         }
-        if ( ! isset($size['density'])) {
+        if (! isset($size['density'])) {
             $size['density'] = $this->image->getDensity();
         }
-        if ( ! isset($size['focal_x']) || $size['focal_x'] < 0 || $size['focal_x'] > 100) {
+        if (! isset($size['focal_x']) || $size['focal_x'] < 0 || $size['focal_x'] > 100) {
             $size['focal_x'] = 50;
         }
-        if ( ! isset($size['focal_y']) || $size['focal_y'] < 0 || $size['focal_y'] > 100) {
+        if (! isset($size['focal_y']) || $size['focal_y'] < 0 || $size['focal_y'] > 100) {
             $size['focal_y'] = 50;
         }
 
@@ -160,14 +159,14 @@ final class Handler implements HandlerInterface
     public function allowedImageSize(array $allowedSizes)
     {
         foreach ($allowedSizes as $size) {
-            if ( ! (bool) $size['active']) {
+            if (! (bool)$size['active']) {
                 continue;
             }
 
-            $width  = (int) $size['width'];
-            $height = (int) $size['height'];
+            $width  = (int)$size['width'];
+            $height = (int)$size['height'];
 
-            if ((bool) $size['crop']) {
+            if ((bool)$size['crop']) {
                 if ($this->image->getWidth() === $width && $this->image->getHeight() === $height) {
                     $aspect = ['width' => $width, 'height' => $height];
                     if (is_array($size['crop'])) {
