@@ -22,6 +22,7 @@ class Filter {
 	private $uploads;
 	private $image;
 	private $cacheUrl;
+    private $regex;
 
     /**
      * Filter constructor.
@@ -29,11 +30,13 @@ class Filter {
      * @param UploadsInterface $uploads
      * @param ImageInterface $image
      * @param string $cacheUrl
+     * @param string $imgRegex
      */
-	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cacheUrl ) {
+	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cacheUrl, $imgRegex ) {
 		$this->uploads = $uploads;
 		$this->image   = $image;
 		$this->cacheUrl = $cacheUrl;
+		$this->regex = $imgRegex;
 	}
 
 	/**
@@ -87,7 +90,7 @@ class Filter {
 	 * @return bool
 	 */
 	private function isValidUrl( $url, &$matches = [] ) {
-		$valid = preg_match( '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@?(?<density>[1-3])?\.(?<ext>jpe?g|png|gif)/i', $url, $matches );
+		$valid = preg_match( $this->regex, $url, $matches );
 
 		// if this is a valid URL, check if it's the original image
 		if ( $valid ) {
