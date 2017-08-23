@@ -119,14 +119,14 @@ class DuplicateOriginal
                     }
                 }
                 if ($larger && $this->calculateMemory($sizes, $editor)) {
-                    $editor->getImagick()->blurImage(1, .5);
+                    $editor->blurImage(1, .5);
                 }
             }
 
             $editor->set_quality(70);
 
             if ($editor instanceof EditorImagick) {
-                $editor->getImagick()->stripImage();
+                $editor->stripImage();
             }
 
             // crop the image
@@ -168,7 +168,7 @@ class DuplicateOriginal
     private function calculateMemory(array $sizes, EditorImagick $editor)
     {
         $bytesImage   = $sizes['width'] * $sizes['height'] * 64;
-        $bytesImagick = $editor->getImagick()->getResourceLimit(Imagick::RESOURCETYPE_MEMORY);
+        $bytesImagick = $editor->getResourceLimit(Imagick::RESOURCETYPE_MEMORY);
 
         return $bytesImage < $bytesImagick;
     }
@@ -182,7 +182,7 @@ class DuplicateOriginal
      */
     private function trySettingResources(EditorImagick $editor)
     {
-        $editor->getImagick()->setResourceLimit(Imagick::RESOURCETYPE_AREA, 1);
+        $editor->setResourceLimit(Imagick::RESOURCETYPE_AREA, 1);
 
         return true;
     }
