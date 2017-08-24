@@ -105,7 +105,7 @@ final class EditorWrapper implements EditorWrapperInterface
 
     public function saveImage($file)
     {
-        do_action('resizefly_before_save', $file, $this->editor);
+        do_action('resizefly/before_save', $file, $this->editor);
 
         return $this->editor->save($file);
     }
@@ -119,7 +119,7 @@ final class EditorWrapper implements EditorWrapperInterface
      */
     public function streamImage($image = '')
     {
-        $cacheAge = apply_filters('resizefly_cache_age', 31536000);
+        $cacheAge = apply_filters('resizefly/cache_age', 31536000);
         http_response_code(200);
         header('HTTP/1.1 200 OK');
         header('Pragma: public');

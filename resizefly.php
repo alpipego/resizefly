@@ -36,7 +36,7 @@ if (! $check->errors()) {
 
         // settings/filterable configuration values
         $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
-        $plugin['options.duplicate.suffix'] = apply_filters('resizefly_duplicate_dir', 'resizefly-duplicate');
+        $plugin['options.duplicate.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
 
         // set the cache path throughout the plugin
         $plugin['options.cache.path'] = function (Plugin $plugin) {
@@ -59,10 +59,10 @@ if (! $check->errors()) {
         $plugin->offsetSet('loader', $classLoader);
 
         // filter for addons to register themselves
-        $plugin->offsetSet('addons', apply_filters('resizefly_addons', []));
+        $plugin->offsetSet('addons', apply_filters('resizefly/addons', []));
 
         foreach ($plugin->get('addons') as $addonName => $addon) {
-            add_filter("resizefly_plugin_{$addonName}", function () use ($plugin) {
+            add_filter('resizefly/addons/' . $addonName, function () use ($plugin) {
                 return $plugin;
             });
         }

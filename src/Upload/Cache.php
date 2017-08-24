@@ -86,14 +86,15 @@ class Cache
      */
     private function purgeAll($dir)
     {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS));
-        if ((bool)$_POST['smart-purge']) {
+        $iterator   = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS));
+        $smartPurge = filter_var($_POST['smart-purge'], FILTER_VALIDATE_BOOLEAN);
+        if ($smartPurge) {
             $retain = $this->smartPurge();
         }
         foreach ($iterator as $path) {
             if (! $path->isDir()) {
                 $file = $path->__toString();
-                if ((bool)$_POST['smart-purge'] && preg_match($retain, $file)) {
+                if ($smartPurge && preg_match($retain, $file)) {
                     continue;
                 }
                 $this->filesize += filesize($file);

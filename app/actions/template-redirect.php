@@ -39,7 +39,7 @@ add_action('template_redirect', function () use ($plugin) {
         }
 
         // check if to resize from duplicate
-        if ((bool)apply_filters('resizefly_smaller_image', true)) {
+        if ((bool)apply_filters('resizefly/duplicate', true)) {
             if (! file_exists($image->getDuplicatePath())) {
                 $plugin->get(DuplicateOriginal::class)->rebuild($image->getOriginalPath());
             }
@@ -55,7 +55,7 @@ add_action('template_redirect', function () use ($plugin) {
         }
 
         // check if image size is allowed
-        if ((bool)get_option('resizefly_restrict_sizes', apply_filters('resizefly_restrict_sizes', true))) {
+        if ((bool)get_option('resizefly_restrict_sizes', apply_filters('resizefly/restrict_sizes', true))) {
             if (! $plugin->get(Handler::class)->allowedImageSize(get_option('resizefly_sizes', []))) {
                 \Alpipego\Resizefly\throw404();
             }
