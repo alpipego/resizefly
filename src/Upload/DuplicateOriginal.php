@@ -9,7 +9,6 @@
 namespace Alpipego\Resizefly\Upload;
 
 use Alpipego\Resizefly\Image\EditorImagick;
-use WP_Image_Editor;
 use Imagick;
 
 /**
@@ -63,11 +62,11 @@ class DuplicateOriginal
     {
         $permissions = is_writeable($this->path);
 
-        if ( ! is_dir($this->path) && $permissions) {
+        if (! is_dir($this->path) && $permissions) {
             $permissions = mkdir($this->path, 0755, true);
         }
 
-        if ( ! $permissions) {
+        if (! $permissions) {
             add_action('admin_init', function () {
                 add_action('admin_notices', function () {
                     echo '<div class="error"><p>';
@@ -106,14 +105,14 @@ class DuplicateOriginal
     protected function create($image)
     {
         $editor = wp_get_image_editor($image);
-        if ( ! is_wp_error($editor)) {
+        if (! is_wp_error($editor)) {
             $duplicate = str_replace(trailingslashit($this->uploads->getBasePath()), $this->path, $image);
 
-            if ((bool) apply_filters('resizefly_smaller_image', true) && $editor instanceof EditorImagick) {
+            if ((bool)apply_filters('resizefly/duplicate', true) && $editor instanceof EditorImagick) {
                 $sizes  = $editor->get_size();
                 $larger = false;
                 foreach ($sizes as $size) {
-                    if ($size > (int) apply_filters('resizefly_smaller_image_threshold', 1200)) {
+                    if ($size > (int)apply_filters('resizefly/duplicate/threshold', 1200)) {
                         $larger = true;
                         break;
                     }
@@ -123,17 +122,21 @@ class DuplicateOriginal
                 }
             }
 
-            $editor->set_quality(70);
+            // resize the image
+            $longEdge = (int)apply_filters('resizefly/duplicate/long_edge', 2560);
+            $longEdge = $longEdge > 0 ? $longEdge : 2560;
+            $editor->resize($longEdge, $longEdge);
 
             if ($editor instanceof EditorImagick) {
                 $editor->stripImage();
+                $editor->setColorspace(\Imagick::COLORSPACE_SRGB);
             }
 
-            // crop the image
-            $longEdge = (int) apply_filters('resizefly_smaller_image_long_edge', 2560);
-            if ($longEdge > 0) {
-                $editor->resize($longEdge, $longEdge);
-            }
+            // set quality
+            $quality = (int)apply_filters('resizefly/duplicate/quality', 70);
+            $quality = $quality > 0 ? $quality : 70;
+            $editor->set_quality($quality);
+
             // check if image could be saved
             $save = $editor->save($duplicate);
             if (is_wp_error($save)) {
