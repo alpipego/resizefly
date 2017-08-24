@@ -15,14 +15,14 @@ use Alpipego\Resizefly\Image\ImageInterface;
  * Class Filter
  * @package Alpipego\Resizefly\Upload
  */
-class Filter {
-	/**
-	 * @var array
-	 */
-	private $uploads;
-	private $image;
-	private $cacheUrl;
-    private $regex;
+class Filter
+{
+    /**
+     * @var array
+     */
+    private $uploads;
+    private $image;
+    private $cacheUrl;
 
     /**
      * Filter constructor.
@@ -30,109 +30,114 @@ class Filter {
      * @param UploadsInterface $uploads
      * @param ImageInterface $image
      * @param string $cacheUrl
-     * @param string $imgRegex
      */
-	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cacheUrl, $imgRegex ) {
-		$this->uploads = $uploads;
-		$this->image   = $image;
-		$this->cacheUrl = $cacheUrl;
-		$this->regex = $imgRegex;
-	}
+    public function __construct(UploadsInterface $uploads, ImageInterface $image, $cacheUrl)
+    {
+        $this->uploads  = $uploads;
+        $this->image    = $image;
+        $this->cacheUrl = $cacheUrl;
+    }
 
-	/**
-	 * Run filters
-	 */
-	public function run() {
-		add_filter( 'resizefly_filter_url', [ $this, 'imageUrl' ] );
-		add_filter( 'wp_prepare_attachment_for_js', function ( $post ) {
-			if ( isset( $post['sizes'] ) ) {
-				foreach ( $post['sizes'] as $key => $size ) {
-					$post['sizes'][ $key ]['url'] = $this->addDensity( $this->imageUrl( $size['url'] ), 1 );
-				}
-			}
+    /**
+     * Run filters
+     */
+    public function run()
+    {
+        add_filter('resizefly_filter_url', [$this, 'imageUrl']);
+        add_filter('wp_prepare_attachment_for_js', function ($post) {
+            if (isset($post['sizes'])) {
+                foreach ($post['sizes'] as $key => $size) {
+                    $post['sizes'][$key]['url'] = $this->addDensity($this->imageUrl($size['url']), 1);
+                }
+            }
 
-			return $post;
-		} );
+            return $post;
+        });
 
-		add_filter( 'wp_get_attachment_image_src', function ( $image ) {
-			$image[0] = $this->addDensity( $this->imageUrl( $image[0] ), 1 );
+        add_filter('wp_get_attachment_image_src', function ($image) {
+            $image[0] = $this->addDensity($this->imageUrl($image[0]), 1);
 
-			return $image;
-		} );
+            return $image;
+        });
 
-		add_filter( 'the_content', [ $this, 'urlInHtml' ] );
-		add_filter( 'post_thumbnail_html', [ $this, 'urlInHtml' ] );
-		add_filter( 'get_header_image_tag', [ $this, 'urlInHtml' ] );
-	}
+        add_filter('the_content', [$this, 'urlInHtml']);
+        add_filter('post_thumbnail_html', [$this, 'urlInHtml']);
+        add_filter('get_header_image_tag', [$this, 'urlInHtml']);
+    }
 
-	/**
-	 * @param string $url
-	 * @param integer $density
-	 *
-	 * @return string
-	 */
-	public function addDensity( $url, $density ) {
-		if ( ! $this->isValidUrl( $url, $matches ) ) {
-			return $url;
-		}
+    /**
+     * @param string $url
+     * @param integer $density
+     *
+     * @return string
+     */
+    public function addDensity($url, $density)
+    {
+        if (! $this->isValidUrl($url, $matches)) {
+            return $url;
+        }
 
-		if ( empty( $matches['density'] ) ) {
-			$url = sprintf( '%s-%dx%d@%d.%s', $matches['file'], $matches['width'], $matches['height'], $density, $matches['ext'] );
-		}
+        if (empty($matches['density'])) {
+            $url = sprintf('%s-%dx%d@%d.%s', $matches['file'], $matches['width'], $matches['height'], $density, $matches['ext']);
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
-	/**
-	 * @param string $url
-	 * @param array $matches Passed by reference - same as `preg_match`
-	 *
-	 * @return bool
-	 */
-	private function isValidUrl( $url, &$matches = [] ) {
-		$valid = preg_match( $this->regex, $url, $matches );
+    /**
+     * @param string $url
+     * @param array $matches Passed by reference - same as `preg_match`
+     *
+     * @return bool
+     */
+    private function isValidUrl($url, &$matches = [])
+    {
+        $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@?(?<density>[0-3])?\.(?<ext>jpe?g|png|gif)/i';
+        $valid = preg_match($regex, $url, $matches);
 
-		// if this is a valid URL, check if it's the original image
-		if ( $valid ) {
-			if ( $this->image->setImage( $matches )->getOriginalUrl() === $url ) {
-				return false;
-			}
-		}
+        // if this is a valid URL, check if it's the original image
+        if ($valid) {
+            if ($this->image->setImage($matches)->getOriginalUrl() === $url) {
+                return false;
+            }
+        }
 
-		return $valid;
-	}
+        return $valid;
+    }
 
-	/**
-	 * @param string $url
-	 *
-	 * @return string
-	 */
-	public function imageUrl( $url ) {
-		if ( ! $this->isValidUrl( $url ) ) {
-			return $url;
-		}
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    public function imageUrl($url)
+    {
+        if (! $this->isValidUrl($url)) {
+            return $url;
+        }
 
-		if ( strpos( $url, $this->cacheUrl ) === false ) {
-			$url = str_replace( $this->uploads->getBaseUrl(), $this->cacheUrl, $url );
-		}
+        if (strpos($url, $this->cacheUrl) === false) {
+            $url = str_replace($this->uploads->getBaseUrl(), $this->cacheUrl, $url);
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
-	/**
-	 * @param string $content
-	 *
-	 * @return string
-	 */
-	public function urlInHtml( $content ) {
-		$content = preg_replace_callback( "%{$this->uploads->getBaseUrl()}(?:[^\",\s]*?)(?:\d+x\d+)(?:@\d)?\.(?:png|jpe?g|gif)%",
-			function ( $matches ) {
-				return $this->addDensity( $this->imageUrl( $matches[0] ), 1 );
-			},
-			$content
-		);
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    public function urlInHtml($content)
+    {
+        $content = preg_replace_callback("%{$this->uploads->getBaseUrl()}(?:[^\",\s]*?)(?:\d+x\d+)(?:@\d)?\.(?:png|jpe?g|gif)%",
+            function ($matches) {
+                return $this->addDensity($this->imageUrl($matches[0]), 1);
+            },
+            $content
+        );
 
-		return $content;
-	}
+        return $content;
+    }
 
 }

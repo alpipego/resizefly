@@ -33,10 +33,7 @@ if (! $check->errors()) {
         $plugin['config.basename'] = plugin_basename(__FILE__);
         $plugin['config.siteurl']  = get_bloginfo('url');
         $plugin['config.version']  = '1.3.5';
-        $plugin['config.imgregex']    = apply_filters(
-            'resizefly/config/imgregex',
-            '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@?(?<density>[0-3])?\.(?<ext>jpe?g|png|gif)/i'
-        );
+
         // settings/filterable configuration values
         $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
         $plugin['options.duplicate.suffix'] = apply_filters('resizefly_duplicate_dir', 'resizefly-duplicate');

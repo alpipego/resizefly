@@ -25,7 +25,8 @@ add_action('template_redirect', function () use ($plugin) {
         $requested = str_replace($plugin->get('config.cache.url'), $plugin->get('uploads')->getBaseUrl(), $requested);
     }
 
-    if (preg_match($plugin->get('config.imgregex'), $requested, $matches)) {
+    $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@(?<density>[0-3])\.(?<ext>jpe?g|png|gif)/i';
+    if (preg_match($plugin->get($regex), $requested, $matches)) {
         $plugin['request.file'] = $matches;
         $plugin->addDefiniton($plugin->get('config.path') . '/app/config/image.php');
 
@@ -52,7 +53,7 @@ add_action('template_redirect', function () use ($plugin) {
         if (is_wp_error($plugin['wp_image_editor'])) {
             \Alpipego\Resizefly\throw404();
         }
-        
+
         // check if image size is allowed
         if ((bool)get_option('resizefly_restrict_sizes', apply_filters('resizefly_restrict_sizes', true))) {
             if (! $plugin->get(Handler::class)->allowedImageSize(get_option('resizefly_sizes', []))) {
