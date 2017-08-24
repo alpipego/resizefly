@@ -70,15 +70,11 @@ final class Handler implements HandlerInterface
             if ($this->editor->resizeImage(
                 $this->aspect['width'],
                 $this->aspect['height'],
+                $this->aspect['density'],
                 $this->aspect['focal_x'],
                 $this->aspect['focal_y']
             )) {
                 $this->editor->saveImage($this->file);
-            } else {
-                return new WP_Error('resizefly-error', sprintf('Could not resize image: %s. Destination was: %s.',
-                        $this->image->getOriginalPath(), $this->file
-                    )
-                );
             }
         }
 
