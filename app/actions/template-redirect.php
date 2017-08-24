@@ -26,7 +26,7 @@ add_action('template_redirect', function () use ($plugin) {
     }
 
     $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@(?<density>[0-3])\.(?<ext>jpe?g|png|gif)/i';
-    if (preg_match($plugin->get($regex), $requested, $matches)) {
+    if (preg_match($regex, $requested, $matches)) {
         $plugin['request.file'] = $matches;
         $plugin->addDefiniton($plugin->get('config.path') . '/app/config/image.php');
 
