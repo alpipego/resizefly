@@ -12,7 +12,8 @@ $(buttonIds.join(',')).on('click', function (e) {
     var $this = $(this),
         data = {
             'action': $this.attr('id'),
-            '_ajax_nonce': $this.data('nonce')
+            '_ajax_nonce': $this.data('nonce'),
+            'smart-purge': $('#' + $this.attr('id') + '-smart').is(':checked')
         },
         resultId = '#' + $this.attr('id') + '-result';
 
@@ -27,7 +28,7 @@ $(buttonIds.join(',')).on('click', function (e) {
                 $(resultId).text(resizefly.purge_empty);
             }
         })
-        .fail(function(xhr) {
+        .fail(function (xhr) {
             alert(xhr.responseText);
         });
 });

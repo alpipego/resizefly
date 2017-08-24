@@ -9,9 +9,14 @@
 namespace Alpipego\Resizefly\Upload;
 
 use Alpipego\Resizefly\Admin\OptionInterface;
-use SplFileInfo;
 use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
+/**
+ * Class Cache
+ * @package Alpipego\Resizefly\Upload
+ */
 class Cache
 {
     private $uploads;
@@ -19,12 +24,14 @@ class Cache
     private $cachePath;
     private $filesize = 0;
     private $files = 0;
+    private $addons;
 
-    public function __construct(UploadsInterface $uploads, OptionInterface $field, $cachePath)
+    public function __construct(UploadsInterface $uploads, OptionInterface $field, $cachePath, $addons)
     {
         $this->uploads   = $uploads;
         $this->action    = $field->getId();
         $this->cachePath = $cachePath;
+        $this->addons    = $addons;
     }
 
     public function run()
@@ -35,10 +42,10 @@ class Cache
 
     public function purgeSingle($id)
     {
-        $file  = new SplFileInfo(get_attached_file($id));
-        $path  = str_replace($this->uploads->getBasePath(), $this->cachePath, $file->getPathInfo());
+        $file = new SplFileInfo(get_attached_file($id));
+        $path = str_replace($this->uploads->getBasePath(), $this->cachePath, $file->getPathInfo());
         try {
-            $dir   = new RecursiveDirectoryIterator($path);
+            $dir = new RecursiveDirectoryIterator($path);
         } catch (\Exception $e) {
             // probably the directory does not exist
             return false;
@@ -68,12 +75,27 @@ class Cache
         }
     }
 
+    /**
+     * Purge ResizeFly cache - all (or smart)
+     *
+     * @param string $dir ResizeFly cache dir
+     *
+     * @return array
+     *      'files' => int number of files cleared,
+     *      'size' => float sum of freed space
+     */
     private function purgeAll($dir)
     {
-        foreach (glob("{$dir}/*") as $file) {
-            if (is_dir($file)) {
-                $this->purgeAll($file);
-            } else {
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS));
+        if ((bool)$_POST['smart-purge']) {
+            $retain = $this->smartPurge();
+        }
+        foreach ($iterator as $path) {
+            if (! $path->isDir()) {
+                $file = $path->__toString();
+                if ((bool)$_POST['smart-purge'] && preg_match($retain, $file)) {
+                    continue;
+                }
                 $this->filesize += filesize($file);
                 $this->files++;
                 unlink($file);
@@ -81,5 +103,58 @@ class Cache
         }
 
         return ['files' => $this->files, 'size' => $this->filesize];
+    }
+
+    /**
+     * Gather filesizes to keep
+     *
+     * @return string
+     */
+    private function smartPurge()
+    {
+        $retain   = $this->getThumbnails();
+        $retain[] = $this->getLqir();
+
+        $retain = array_unique(array_filter($retain));
+
+        return '/-(' . implode('|', $retain) . ')\.(jpe?g|png|gif)$/i';
+    }
+
+    /**
+     * Get built in thumbnail sizes
+     *
+     * @return array
+     */
+    private function getThumbnails()
+    {
+        $intermediate = get_intermediate_image_sizes();
+        $sizes        = [];
+        foreach (['thumbnail', 'medium'] as $size) {
+            if (! in_array($size, $intermediate)) {
+                print $size . ' does not exist';
+                continue;
+            }
+            $regex = (int)get_option("{$size}_size_w") . 'x';
+            $regex .= (bool)get_option("{$size}_crop") ? (int)get_option("{$size}_size_h") : '\d+?';
+            $regex .= '@[1-9]';
+
+            $sizes[$size] = $regex;
+        }
+
+        return $sizes;
+    }
+
+    /**
+     * If lqir addon present, keep the currently set filesize
+     *
+     * @return string
+     */
+    private function getLqir()
+    {
+        if (! array_key_exists('lqir', $this->addons)) {
+            return '';
+        }
+
+        return ((int)get_option('resizefly_lqir_size', apply_filters('resizefly/lqir/size', 150))) . 'x\d+?@0';
     }
 }

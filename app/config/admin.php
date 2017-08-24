@@ -6,20 +6,20 @@
  * Time: 12:32
  */
 
-use Alpipego\Resizefly\Admin\OptionsPage;
+use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\Cache\CacheSection;
 use Alpipego\Resizefly\Admin\Cache\PathField;
-use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\Cache\PurgeCacheField;
 use Alpipego\Resizefly\Admin\Cache\RemoveResizedField;
+use Alpipego\Resizefly\Admin\OptionsPage;
 use Alpipego\Resizefly\Admin\PageInterface;
-use Alpipego\Resizefly\Admin\Sizes\UserSizesField;
 use Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\Sizes\RestrictSizesField;
 use Alpipego\Resizefly\Admin\Sizes\SizesField;
+use Alpipego\Resizefly\Admin\Sizes\UserSizesField;
 use Alpipego\Resizefly\Upload\Cache;
-use Alpipego\Resizefly\Upload\RemoveResized;
 use Alpipego\Resizefly\Upload\Fake;
+use Alpipego\Resizefly\Upload\RemoveResized;
 
 return [
     PageInterface::class          => OptionsPage::class,
@@ -34,7 +34,8 @@ return [
         ->constructorParam('section', CacheSection::class),
     Cache::class                  => Alpipego\Resizefly\object()
         ->constructorParam('field', PurgeCacheField::class)
-        ->constructorParam('cachePath', 'options.cache.path'),
+        ->constructorParam('cachePath', 'options.cache.path')
+        ->constructorParam('addons', 'addons'),
     RemoveResizedField::class     => Alpipego\Resizefly\object()
         ->constructorParam('section', CacheSection::class),
     RemoveResized::class          => Alpipego\Resizefly\object()
