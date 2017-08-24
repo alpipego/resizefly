@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 1.3.3\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2017-07-19 10:38+0200\n"
+"POT-Creation-Date: 2017-08-24 09:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,11 +67,11 @@ msgstr ""
 msgid "Restrict Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:52
+#: src/Admin/Sizes/SizesField.php:57
 msgid "Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:114
+#: src/Admin/Sizes/SizesField.php:125
 msgid ""
 "The registered and saved image sizes are out of sync. Please update the "
 "settings on this page."
