@@ -47,13 +47,14 @@ interface EditorWrapperInterface
      *
      * @param int $width
      * @param int $height
+     * @param int $density
      * @param int $focalX
      * @param int $focalY
      *
-     * @see WP_Image_Editor::crop()
      * @return bool|\WP_Error true on success | \WP_Error on error
+     * @see WP_Image_Editor::crop()
      */
-    public function resizeImage($width, $height, $focalX, $focalY);
+    public function resizeImage($width, $height, $density, $focalX, $focalY);
 
     /**
      * @param string $file full path to save image file

@@ -46,15 +46,15 @@ final class EditorWrapper implements EditorWrapperInterface
 
     public function getWidth()
     {
-        return (int) $this->editor->get_size()['width'];
+        return (int)$this->editor->get_size()['width'];
     }
 
     public function getHeight()
     {
-        return (int) $this->editor->get_size()['height'];
+        return (int)$this->editor->get_size()['height'];
     }
 
-    public function resizeImage($width, $height, $focalX, $focalY)
+    public function resizeImage($width, $height, $density, $focalX, $focalY)
     {
         $origWidth  = $this->getWidth();
         $origHeight = $this->getHeight();
@@ -62,12 +62,50 @@ final class EditorWrapper implements EditorWrapperInterface
         $srcX       = round(($origWidth - $width / $ratio) * $focalX / 100);
         $srcY       = round(($origHeight - $height / $ratio) * $focalY / 100);
 
+        list($quality, $width, $height) = $this->parseDensity($width, $height, $density);
+        $this->editor->set_quality($quality);
+
+        // make sure not to request an image larger than the original
+        $width  = $width > $origWidth ? $width : $origWidth;
+        $height = $height > $origHeight ? $height : $origHeight;
+
+
         return $this->editor->crop($srcX, $srcY, $width / $ratio, $height / $ratio, $width, $height);
+    }
+
+    /**
+     * Parse density and set quality, width and height accordingly
+     *
+     * @param int $width
+     * @param int $height
+     * @param int $density
+     *
+     * @return array
+     *      0 => int $quality
+     *      1 => int $width
+     *      2 => int $height
+     */
+    private function parseDensity($width, $height, $density)
+    {
+        $width   = $width * $density;
+        $height  = $height * $density;
+        $quality = 20;
+        if ($density === 1) {
+            $quality = $this->getQuality();
+        }
+
+        return [$quality, $width, $height];
+    }
+
+    public function getQuality()
+    {
+        return (int)$this->editor->get_quality();
     }
 
     public function saveImage($file)
     {
         do_action('resizefly_before_save', $file, $this->editor);
+        $this->editor->set_quality($this->editor->get_quality());
 
         return $this->editor->save($file);
     }
@@ -91,10 +129,5 @@ final class EditorWrapper implements EditorWrapperInterface
         }
         $this->editor->stream();
         exit;
-    }
-
-    public function getQuality()
-    {
-        return (int) $this->editor->get_quality();
     }
 }
