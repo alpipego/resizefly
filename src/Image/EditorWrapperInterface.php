@@ -67,7 +67,9 @@ interface EditorWrapperInterface
     /**
      * Stream the image
      *
+     * @param string $image
+     *
      * @return void
      */
-    public function streamImage();
+    public function streamImage($image = '');
 }

@@ -76,9 +76,10 @@ final class Handler implements HandlerInterface
             )) {
                 $this->editor->saveImage($this->file);
             }
+            $this->editor->streamImage();
         }
 
-        $this->editor->streamImage();
+        $this->editor->streamImage($this->setImageName());
     }
 
     /**

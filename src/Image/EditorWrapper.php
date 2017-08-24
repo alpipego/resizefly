@@ -66,9 +66,8 @@ final class EditorWrapper implements EditorWrapperInterface
         $this->editor->set_quality($quality);
 
         // make sure not to request an image larger than the original
-        $width  = $width > $origWidth ? $width : $origWidth;
-        $height = $height > $origHeight ? $height : $origHeight;
-
+        $width  = $width > $origWidth ? $origWidth : $width;
+        $height = $height > $origHeight ? $origHeight : $height;
 
         return $this->editor->crop($srcX, $srcY, $width / $ratio, $height / $ratio, $width, $height);
     }
@@ -94,7 +93,7 @@ final class EditorWrapper implements EditorWrapperInterface
             $quality = $this->getQuality();
         }
 
-        return [$quality, $width, $height];
+        return array_map('intVal', [$quality, $width, $height]);
     }
 
     public function getQuality()
@@ -110,12 +109,19 @@ final class EditorWrapper implements EditorWrapperInterface
         return $this->editor->save($file);
     }
 
+    public function getImageBlob()
+    {
+        return $this->editor->getImageBlob();
+    }
+
     /**
      * Stream the image
      *
+     * @param string $image
+     *
      * @return void
      */
-    public function streamImage()
+    public function streamImage($image = '')
     {
         $cacheAge = apply_filters('resizefly_cache_age', 31536000);
         http_response_code(200);
@@ -124,10 +130,17 @@ final class EditorWrapper implements EditorWrapperInterface
         header('Cache-Control: max-age=' . $cacheAge . ', public');
         header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $cacheAge));
 
-        if (method_exists($this->editor, 'getImageBlob')) {
-            header('Content-Length: ' . strlen($this->editor->getImageBlob()));
+        if (empty($image)) {
+            if (method_exists($this->editor, 'getImageBlob')) {
+                header('Content-Length: ' . strlen($this->editor->getImageBlob()));
+            }
+            $this->editor->stream();
+        } else {
+            $imgString = file_get_contents($image);
+            header('Content-Length: ' . strlen($imgString));
+            header('Content-Type: ' . mime_content_type($image));
+            print $imgString;
         }
-        $this->editor->stream();
         exit;
     }
 }
