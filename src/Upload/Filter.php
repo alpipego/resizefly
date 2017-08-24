@@ -21,7 +21,13 @@ class Filter
      * @var array
      */
     private $uploads;
+    /**
+     * @var ImageInterface
+     */
     private $image;
+    /**
+     * @var string
+     */
     private $cacheUrl;
 
     /**
@@ -43,8 +49,13 @@ class Filter
      */
     public function run()
     {
+        // filter urls for usage with resizefly
         add_filter('resizefly/filter/url', [$this, 'imageUrl']);
         add_filter('resizefly/filter/add_cache', [$this, 'addCache']);
+        add_filter('resizefly/filter/metadata_file', [$this, 'wpFileName']);
+        add_filter('resizefly/filter/metadata_basename', [$this, 'wpBaseName']);
+
+        // add density to js attachments
         add_filter('wp_prepare_attachment_for_js', function ($post) {
             if (isset($post['sizes'])) {
                 foreach ($post['sizes'] as $key => $size) {
@@ -55,12 +66,14 @@ class Filter
             return $post;
         });
 
+        // add density to all image sources
         add_filter('wp_get_attachment_image_src', function ($image) {
             $image[0] = $this->addDensity($this->imageUrl($image[0]), 1);
 
             return $image;
         });
 
+        // add density to urls already in html content somewhere
         add_filter('the_content', [$this, 'urlInHtml']);
         add_filter('post_thumbnail_html', [$this, 'urlInHtml']);
         add_filter('get_header_image_tag', [$this, 'urlInHtml']);
@@ -109,6 +122,8 @@ class Filter
     }
 
     /**
+     * Filter the passed URL and add cache fragment if not present
+     *
      * @param string $url
      *
      * @return string
@@ -141,6 +156,46 @@ class Filter
     }
 
     /**
+     * Get the filename as stored in post meta data
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public function wpFileName($url)
+    {
+        return $this->wpName('/@\d/', $url);
+    }
+
+    /**
+     * Gets filename to match post meta data
+     *
+     * @param string $regex
+     * @param string $url
+     *
+     * @return string
+     */
+    private function wpName($regex, $url)
+    {
+        return preg_replace($regex, '', pathinfo($url)['basename']);
+    }
+
+    /**
+     * Get the filename for the full image as stored in post meta data
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public function wpBaseName($url)
+    {
+        return $this->wpName('/-\d+x\d+@\d/', $url);
+    }
+
+    /**
+     * Add density to resizefly url if not already present
+     * Matches URLs inside html
+     *
      * @param string $content
      *
      * @return string
