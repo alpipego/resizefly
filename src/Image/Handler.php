@@ -66,19 +66,16 @@ final class Handler implements HandlerInterface
      */
     public function run()
     {
-        if (! file_exists($this->setImageName())) {
-            if ($this->editor->resizeImage(
+        if (! file_exists($this->setImageName()) && $this->editor->resizeImage(
                 $this->aspect['width'],
                 $this->aspect['height'],
                 $this->aspect['density'],
                 $this->aspect['focal_x'],
                 $this->aspect['focal_y']
             )) {
-                $this->editor->saveImage($this->file);
-            }
+            $this->editor->saveImage($this->file);
             $this->editor->streamImage();
         }
-
         $this->editor->streamImage($this->setImageName());
     }
 
