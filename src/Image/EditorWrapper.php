@@ -62,8 +62,10 @@ final class EditorWrapper implements EditorWrapperInterface
         $srcX       = round(($origWidth - $width / $ratio) * $focalX / 100);
         $srcY       = round(($origHeight - $height / $ratio) * $focalY / 100);
 
-        list($quality, $width, $height) = $this->parseDensity($width, $height, $density);
-        $this->editor->set_quality($quality);
+        if ($density > 0) {
+            list($quality, $width, $height) = $this->parseDensity($width, $height, $density);
+            $this->editor->set_quality($quality);
+        }
 
         // make sure not to request an image larger than the original
         $width  = $width > $origWidth ? $origWidth : $width;
@@ -104,14 +106,8 @@ final class EditorWrapper implements EditorWrapperInterface
     public function saveImage($file)
     {
         do_action('resizefly_before_save', $file, $this->editor);
-        $this->editor->set_quality($this->editor->get_quality());
 
         return $this->editor->save($file);
-    }
-
-    public function getImageBlob()
-    {
-        return $this->editor->getImageBlob();
     }
 
     /**
@@ -139,7 +135,7 @@ final class EditorWrapper implements EditorWrapperInterface
             $imgString = file_get_contents($image);
             header('Content-Length: ' . strlen($imgString));
             header('Content-Type: ' . mime_content_type($image));
-            print $imgString;
+            echo $imgString;
         }
         exit;
     }
