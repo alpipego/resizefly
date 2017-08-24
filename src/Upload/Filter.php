@@ -43,7 +43,8 @@ class Filter
      */
     public function run()
     {
-        add_filter('resizefly_filter_url', [$this, 'imageUrl']);
+        add_filter('resizefly/filter/url', [$this, 'imageUrl']);
+        add_filter('resizefly/filter/add_cache', [$this, 'addCache']);
         add_filter('wp_prepare_attachment_for_js', function ($post) {
             if (isset($post['sizes'])) {
                 foreach ($post['sizes'] as $key => $size) {
@@ -85,6 +86,8 @@ class Filter
     }
 
     /**
+     * Check if this is a valid image url and not the original image
+     *
      * @param string $url
      * @param array $matches Passed by reference - same as `preg_match`
      *
@@ -116,6 +119,20 @@ class Filter
             return $url;
         }
 
+        $url = $this->addCache($url);
+
+        return $url;
+    }
+
+    /**
+     * Add cache fragment if not already present
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public function addCache($url)
+    {
         if (strpos($url, $this->cacheUrl) === false) {
             $url = str_replace($this->uploads->getBaseUrl(), $this->cacheUrl, $url);
         }
