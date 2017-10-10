@@ -102,10 +102,10 @@ final class Image implements ImageInterface
         $this->originalFilename = array_slice(explode(DIRECTORY_SEPARATOR, $file['file']), -1)[0];
         $this->originalPath     = $this->setOriginalFile($file);
         $this->resize           = [
-            'width'  => (int)$file['width'],
-            'height' => (int)$file['height'],
+            'width'  => (int) $file['width'],
+            'height' => (int) $file['height'],
         ];
-        $this->density          = ! isset($file['density']) ? 1 : (int)$file['density'];
+        $this->density          = !isset($file['density']) ? 1 : (int) $file['density'];
 
         return $this;
     }
@@ -135,10 +135,10 @@ final class Image implements ImageInterface
         if (strpos($this->input, $this->uploads->getBaseUrl()) === 0) {
             $filePath = $this->uploads->getBasePath() . str_replace($this->uploads->getBaseUrl(), '', $this->url);
         } else {
-            $abspathArr = explode('/', ABSPATH);
-            $uploadsArr = explode('/', $this->uploads->getBasePath());
+            $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
+            $uploadsArr = explode(DIRECTORY_SEPARATOR, $this->uploads->getBasePath());
             $pathArr    = array_intersect($abspathArr, $uploadsArr);
-            $path       = implode('/', array_slice($uploadsArr, 0, count($pathArr)));
+            $path       = implode(DIRECTORY_SEPARATOR, $pathArr);
             $filePath   = $path . str_replace(trailingslashit($this->siteUrl), '', $this->url);
         }
 
@@ -203,16 +203,16 @@ final class Image implements ImageInterface
 
     public function getDensity()
     {
-        return (int)$this->density;
+        return (int) $this->density;
     }
 
     public function getWidth()
     {
-        return (int)$this->resize['width'];
+        return (int) $this->resize['width'];
     }
 
     public function getHeight()
     {
-        return (int)$this->resize['height'];
+        return (int) $this->resize['height'];
     }
 }
