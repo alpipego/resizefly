@@ -77,6 +77,11 @@ class Filter
         add_filter('the_content', [$this, 'urlInHtml']);
         add_filter('post_thumbnail_html', [$this, 'urlInHtml']);
         add_filter('get_header_image_tag', [$this, 'urlInHtml']);
+
+
+        // add resizefly url before loaded into editor, remove before saving
+        add_filter('content_edit_pre', [$this, 'urlInHtml']);
+        add_filter('content_save_pre', [$this, 'revertOriginalContent']);
     }
 
     /**
@@ -153,6 +158,25 @@ class Filter
         }
 
         return $url;
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    public function revertOriginalContent($content)
+    {
+        preg_replace_callback(
+            "%{$this->cacheUrl}(?<image>[^\",\s]*?)(?<dim>-\d+x\d+)?(?:@\d)?\.(?<ext>png|jpe?g|gif)%",
+            function ($matches) {
+                return sprintf('%s%s%s.%s', $this->uploads->getBaseUrl(), $matches['image'], $matches['dim'],
+                    $matches['ext']);
+            },
+            $content
+        );
+
+        return $content;
     }
 
     /**
