@@ -1,11 +1,12 @@
 <?php
 
 add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
-    $imageMeta = wp_get_attachment_metadata($imageId);
-
-    if (is_array($size)) {
+    if (! $image || is_array($size)) {
         return $image;
     }
+
+    $imageMeta = wp_get_attachment_metadata($imageId);
+
     // does our custom size even exist in the image meta data?
     // if not, then we will have to create it
     if (empty($imageMeta['sizes'][$size])) {
