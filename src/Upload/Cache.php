@@ -9,6 +9,7 @@
 namespace Alpipego\Resizefly\Upload;
 
 use Alpipego\Resizefly\Admin\OptionInterface;
+use Alpipego\Resizefly\Image\ImageInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -124,20 +125,23 @@ class Cache
     /**
      * Get built in thumbnail sizes
      *
+     * @param bool $density
+     *
      * @return array
      */
-    private function getThumbnails()
+    private function getThumbnails($density = true)
     {
         $intermediate = get_intermediate_image_sizes();
         $sizes        = [];
         foreach (['thumbnail', 'medium'] as $size) {
             if (! in_array($size, $intermediate)) {
-                print $size . ' does not exist';
                 continue;
             }
             $regex = (int)get_option("{$size}_size_w") . 'x';
             $regex .= (bool)get_option("{$size}_crop") ? (int)get_option("{$size}_size_h") : '\d+?';
-            $regex .= '@[1-9]';
+            if ($density) {
+                $regex .= '@[1-9]';
+            }
 
             $sizes[$size] = $regex;
         }
@@ -157,5 +161,58 @@ class Cache
         }
 
         return ((int)get_option('resizefly_lqir_size', apply_filters('resizefly/lqir/size', 150))) . 'x\d+?@0';
+    }
+
+    public function populateOnInstall(ImageInterface $image)
+    {
+        $thumbnails = $this->getThumbnails(false);
+        if (empty($thumbnails)) {
+            return;
+        }
+        $thumbRegex = '/-(' . implode('|', $thumbnails) . ')\.(jpe?g|png|gif)$/i';
+        $iterator   = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->uploads->getBasePath(), RecursiveDirectoryIterator::SKIP_DOTS));
+
+        foreach ($iterator as $path) {
+            if (! $path->isDir()) {
+                $file = $path->__toString();
+
+                // if this is not a thumbnail size skip
+                if (! preg_match($thumbRegex, $file)) {
+                    continue;
+                }
+
+                // if this is not either in uploads directly or in a year/month based folder skip
+                if (! preg_match('%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%', $file)) {
+                    continue;
+                }
+
+                // if this is an original skip
+                $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)\.(?<ext>jpe?g|png|gif)/i';
+                $url   = str_replace($this->uploads->getBasePath(), $this->uploads->getBaseUrl(), $file);
+                preg_match($regex, $url, $matches);
+
+                if ($image->setImage($matches)->getOriginalPath() === $file) {
+                    continue;
+                }
+
+                $newFile = sprintf(
+                    '%s-%dx%d@%d.%s',
+                    str_replace($this->uploads->getBaseUrl(), $this->cachePath, $matches['file']),
+                    $matches['width'],
+                    $matches['height'],
+                    1,
+                    $matches['ext']
+                );
+
+                // skip if a file with the name already exists
+                if (file_exists($newFile)) {
+                    continue;
+                }
+
+                // actually move the file
+                rename($file, $newFile);
+            }
+        }
+
     }
 }

@@ -35,7 +35,7 @@ if (! $check->errors()) {
         $plugin['config.version']  = '1.3.5';
 
         // settings/filterable configuration values
-        $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
+        $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
         $plugin['options.duplicates.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
 
         // set the cache path throughout the plugin
@@ -76,6 +76,15 @@ if (! $check->errors()) {
 
         if (is_admin()) {
             $plugin->addDefiniton(__DIR__ . '/app/config/admin.php');
+
+            // try to move thumbnail files
+            if (get_option('resizefly_version') !== $plugin['config.version']) {
+                $plugin
+                    ->get(\Alpipego\Resizefly\Upload\Cache::class)
+                    ->populateOnInstall($plugin->get(\Alpipego\Resizefly\Image\Image::class));
+                // update the version option
+                update_option('resizefly_version', $plugin['config.version']);
+            }
         }
 
         // save options to retrieve them on uninstall
