@@ -42,6 +42,3 @@ Will be added after anything has been asked frequently. Please check [the suppor
 
 == Changelog ==
 
-= 2.0.0 =
-* Refactoring of whole application
-* Better DI Container
