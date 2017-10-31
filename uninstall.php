@@ -6,21 +6,19 @@
  * Time: 10:42
  */
 
-if (! defined('WP_UNINSTALL_PLUGIN') || ! isset($_REQUEST['plugin'])) {
+if (! defined('WP_UNINSTALL_PLUGIN')) {
     exit();
 }
-
-check_admin_referer("deactivate-plugin_{$_REQUEST['plugin']}");
 
 // simple uninstallation for now
 $options = get_option('resizefly_options');
 
-if (is_dir($options['cache']['path'])) {
-    unlink($options['cache']['path']);
-}
+global $wp_filesystem;
 
-if (is_dir($options['duplicates']['path'])) {
-    unlink($options['duplicates']['path']);
+foreach ([$options['cache']['path'], $options['duplicates']['path']] as $dir) {
+    if (is_dir($dir)) {
+        $wp_filesystem->rmdir($dir, true);
+    }
 }
 
 // delete database options
