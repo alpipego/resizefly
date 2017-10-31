@@ -36,7 +36,7 @@ if (! $check->errors()) {
 
         // settings/filterable configuration values
         $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
-        $plugin['options.duplicate.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
+        $plugin['options.duplicates.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
 
         // set the cache path throughout the plugin
         $plugin['options.cache.path'] = function (Plugin $plugin) {
@@ -52,7 +52,7 @@ if (! $check->errors()) {
         // set the duplicates path
         $plugin['options.duplicates.path'] = function (Plugin $plugin) {
             return trailingslashit($plugin->get(Uploads::class)
-                                          ->getBasePath()) . trim($plugin->get('options.duplicate.suffix'),
+                                          ->getBasePath()) . trim($plugin->get('options.duplicates.suffix'),
                     DIRECTORY_SEPARATOR);
         };
 
@@ -77,6 +77,9 @@ if (! $check->errors()) {
         if (is_admin()) {
             $plugin->addDefiniton(__DIR__ . '/app/config/admin.php');
         }
+
+        // save options to retrieve them on uninstall
+        update_option('resizefly_options', $plugin->get('options'), false);
 
         $plugin->run();
 
