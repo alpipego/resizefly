@@ -5,7 +5,7 @@ Stable tag: 2.0.0
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
-Tested up to: 4.8
+Tested up to: 4.8.3
 
 Dynamically resize your WordPress images on the fly. Upload your images once and don't worry about missing or new image sizes.
 
