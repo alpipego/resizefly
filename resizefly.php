@@ -3,10 +3,10 @@
 /**
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
- * Plugin URI:  http://resizefly.com/
- * Version:     1.3.5
+ * Plugin URI:  https://resizefly.com/
+ * Version:     2.0.0
  * Author:      alpipego
- * Author URI:  http://alpipego.com/
+ * Author URI:  https://alpipego.com/
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
  * GitHub Branch: master
@@ -32,7 +32,7 @@ if (! $check->errors()) {
         $plugin['config.url']      = plugin_dir_url(__FILE__);
         $plugin['config.basename'] = plugin_basename(__FILE__);
         $plugin['config.siteurl']  = get_bloginfo('url');
-        $plugin['config.version']  = '1.3.5';
+        $plugin['config.version']  = '2.0.0';
 
         // settings/filterable configuration values
         $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
