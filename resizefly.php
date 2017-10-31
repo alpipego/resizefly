@@ -7,6 +7,8 @@
  * Version:     2.0.0
  * Author:      alpipego
  * Author URI:  https://alpipego.com/
+ * License:     MIT
+ * License URI: https://opensource.org/licenses/MIT
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
  * GitHub Branch: master
