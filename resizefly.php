@@ -79,14 +79,7 @@ if (! $check->errors()) {
         if (is_admin()) {
             $plugin->addDefiniton(__DIR__ . '/app/config/admin.php');
 
-            // try to move thumbnail files
-            if (get_option('resizefly_version') !== $plugin['config.version']) {
-                $plugin
-                    ->get(\Alpipego\Resizefly\Upload\Cache::class)
-                    ->populateOnInstall($plugin->get(\Alpipego\Resizefly\Image\Image::class));
-                // update the version option
-                update_option('resizefly_version', $plugin['config.version']);
-            }
+            require_once __DIR__ . '/app/actions/activation.php';
         }
 
         // save options to retrieve them on uninstall
