@@ -53,20 +53,15 @@ class DuplicateOriginal
     }
 
     /**
-     * Check if the directory exists (and is writeable), try to create it
-     * TODO this should not at all be here but, in Admin | only quickly check if writeable
+     * Check if the directory exists (and is writable), try to create it
      *
      * @return bool
      */
     private function dirExists()
     {
-        $permissions = is_writeable($this->path);
+        $dir = wp_mkdir_p($this->path);
 
-        if (! is_dir($this->path) && $permissions) {
-            $permissions = mkdir($this->path, 0755, true);
-        }
-
-        if (! $permissions) {
+        if (! $dir) {
             add_action('admin_init', function () {
                 add_action('admin_notices', function () {
                     echo '<div class="error"><p>';
@@ -81,7 +76,7 @@ class DuplicateOriginal
             );
         }
 
-        return $permissions;
+        return $dir;
     }
 
     /**
@@ -96,7 +91,6 @@ class DuplicateOriginal
 
     /**
      * Duplicate the image
-     * TODO this needs a refactor and should be split into smaller methods
      *
      * @param string $image image URL
      *
