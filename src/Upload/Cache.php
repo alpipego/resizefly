@@ -217,9 +217,8 @@ class Cache
                 }
 
                 // actually move the file
-                rename($file, $newFile);
+                copy($file, $newFile);
             }
         }
-
     }
 }
