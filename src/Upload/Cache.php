@@ -163,11 +163,11 @@ class Cache
         return ((int)get_option('resizefly_lqir_size', apply_filters('resizefly/lqir/size', 150))) . 'x\d+?@0';
     }
 
-    public function populateOnInstall(ImageInterface $image, $pathOption)
+    public function populateOnInstall(ImageInterface $image)
     {
         $thumbnails = $this->getThumbnails(false);
-        // if there are either no registered thumbnail sizes or the cache path does not exist return
-        if (empty($thumbnails) || ! wp_mkdir_p(get_option($pathOption))) {
+        // if there are no registered thumbnail sizes return
+        if (empty($thumbnails)) {
             return;
         }
 
@@ -184,7 +184,7 @@ class Cache
                 }
 
                 // if this is not either in uploads directly or in a year/month based folder skip
-                if (! preg_match('%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%', $file)) {
+                if (! preg_match('%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%', $file, $fragments)) {
                     continue;
                 }
 
@@ -208,6 +208,11 @@ class Cache
 
                 // skip if a file with the name already exists
                 if (file_exists($newFile)) {
+                    continue;
+                }
+
+                // if the dir can't be created skip
+                if (! wp_mkdir_p($this->cachePath . '/' . $fragments[1])) {
                     continue;
                 }
 
