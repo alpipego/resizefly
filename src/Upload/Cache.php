@@ -163,12 +163,14 @@ class Cache
         return ((int)get_option('resizefly_lqir_size', apply_filters('resizefly/lqir/size', 150))) . 'x\d+?@0';
     }
 
-    public function populateOnInstall(ImageInterface $image)
+    public function populateOnInstall(ImageInterface $image, $pathOption)
     {
         $thumbnails = $this->getThumbnails(false);
-        if (empty($thumbnails)) {
+        // if there are either no registered thumbnail sizes or the cache path does not exist return
+        if (empty($thumbnails) || ! wp_mkdir_p(get_option($pathOption))) {
             return;
         }
+
         $thumbRegex = '/-(' . implode('|', $thumbnails) . ')\.(jpe?g|png|gif)$/i';
         $iterator   = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->uploads->getBasePath(), RecursiveDirectoryIterator::SKIP_DOTS));
 
