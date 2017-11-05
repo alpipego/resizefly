@@ -3,10 +3,12 @@
 /**
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
- * Plugin URI:  http://resizefly.com/
- * Version:     1.3.5
+ * Plugin URI:  https://resizefly.com/
+ * Version:     2.0.0
  * Author:      alpipego
- * Author URI:  http://alpipego.com/
+ * Author URI:  https://alpipego.com/
+ * License:     MIT
+ * License URI: https://opensource.org/licenses/MIT
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
  * GitHub Branch: master
@@ -32,11 +34,11 @@ if (! $check->errors()) {
         $plugin['config.url']      = plugin_dir_url(__FILE__);
         $plugin['config.basename'] = plugin_basename(__FILE__);
         $plugin['config.siteurl']  = get_bloginfo('url');
-        $plugin['config.version']  = '1.3.5';
+        $plugin['config.version']  = '2.0.0';
 
         // settings/filterable configuration values
-        $plugin['options.cache.suffix']     = get_option('resizefly_resized_path', 'resizefly');
-        $plugin['options.duplicate.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
+        $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
+        $plugin['options.duplicates.suffix'] = apply_filters('resizefly/duplicate/dir', 'resizefly-duplicate');
 
         // set the cache path throughout the plugin
         $plugin['options.cache.path'] = function (Plugin $plugin) {
@@ -52,7 +54,7 @@ if (! $check->errors()) {
         // set the duplicates path
         $plugin['options.duplicates.path'] = function (Plugin $plugin) {
             return trailingslashit($plugin->get(Uploads::class)
-                                          ->getBasePath()) . trim($plugin->get('options.duplicate.suffix'),
+                                          ->getBasePath()) . trim($plugin->get('options.duplicates.suffix'),
                     DIRECTORY_SEPARATOR);
         };
 
@@ -76,7 +78,12 @@ if (! $check->errors()) {
 
         if (is_admin()) {
             $plugin->addDefiniton(__DIR__ . '/app/config/admin.php');
+
+            require_once __DIR__ . '/app/actions/activation.php';
         }
+
+        // save options to retrieve them on uninstall
+        update_option('resizefly_options', $plugin->get('options'), false);
 
         $plugin->run();
 

@@ -24,5 +24,5 @@ return [
         ->constructorParam('cachePath', 'options.cache.path')
         ->constructorParam('duplicatesPath', 'options.duplicates.path'),
     DuplicateOriginal::class => Alpipego\Resizefly\object()
-        ->constructorParam('duplicateDir', 'options.duplicate.suffix'),
+        ->constructorParam('duplicateDir', 'options.duplicates.suffix'),
 ];

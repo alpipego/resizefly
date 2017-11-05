@@ -1,11 +1,11 @@
 === ResizeFly ===
-Contributors: alpipego, otto42
+Contributors: alpipegof
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 1.3.5
-License: GPLv3
+Stable tag: 2.0.0
+License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
-Tested up to: 4.8
+Tested up to: 4.8.3
 
 Dynamically resize your WordPress images on the fly. Upload your images once and don't worry about missing or new image sizes.
 
@@ -30,7 +30,7 @@ The plugin handles the images from here on. There is an option to save resized i
 
 = Prerequisites =
 
-You'll need at least php 5.4 and either GD or Imagick on your server.
+You'll need at least php 5.5 and either GD or Imagick on your server.
 
 = Uninstalling =
 
@@ -42,11 +42,3 @@ Will be added after anything has been asked frequently. Please check [the suppor
 
 == Changelog ==
 
-= 1.3.5 =
-* tested compatibility with WordPress 4.8
-
-= 1.3.0 =
-* added settings page under "Media"
-* provided settings section and fields extensibility for add ons
-* added translations
-* better use of pimple api (instead of changing variable visibility)

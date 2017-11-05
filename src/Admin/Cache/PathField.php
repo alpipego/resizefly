@@ -40,6 +40,8 @@ class PathField extends AbstractOption implements OptionInterface
         ];
         $this->uploads      = $uploads;
         parent::__construct($page, $section, $pluginPath);
+
+        add_option($this->optionsField['id'], 'resizefly');
     }
 
     public function setup(\WP_Screen $screen)

@@ -9,7 +9,7 @@
 class Resizefly_Version_Check
 {
     const PHP_VERSION = '5.5';
-    const WP_VERSION = '3.5';
+    const WP_VERSION = '4.7';
 
     private $versions = [
         'php'    => true,
