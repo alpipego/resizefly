@@ -8,126 +8,211 @@
 
 namespace Alpipego\Resizefly\Image;
 
+use Alpipego\Resizefly\Upload\UploadsInterface;
+
 /**
  * Holds all information relevant to the image
  * @package Alpipego\Resizefly\Image
  */
-class Image
+final class Image implements ImageInterface
 {
-	/**
-	 * @var string original image path
-	 */
-	public $original;
-	/**
-	 * @var string original image file name
-	 */
-	public $originalFile;
-	/**
-	 * @var array requested size
-	 */
-	public $resize;
-	/**
-	 * @var array `wp_upload_dir` array
-	 */
-	public $uploadDir;
-	/**
-	 * @var string relative path requested file
-	 */
-	protected $input;
-	/**
-	 * @var string requested file name
-	 */
-	protected $file;
-	/**
-	 * @var string full requested file url
-	 */
-	protected $url;
-	/**
-	 * @var string full requested file path
-	 */
-	protected $path;
-	/**
-	 * @var string full url to resizefly cache folder
-	 */
-	protected $cacheUrl;
+    /**
+     * @var array requested size
+     */
+    private $resize;
+    /**
+     * @var string relative path requested file
+     */
+    private $input;
+    /**
+     * @var string requested file name
+     */
+    private $filename;
+    /**
+     * @var string full requested file url
+     */
+    private $url;
+    /**
+     * @var string full requested file path
+     */
+    private $path;
+    /**
+     * @var string original image file name
+     */
+    private $originalFilename;
+    /**
+     * @var string original image path
+     */
+    private $originalPath;
+    /**
+     * @var int pixel density
+     */
+    private $density;
+    /**
+     * @var string basename for requested file
+     */
+    private $basename;
+    /**
+     * @var array `wp_upload_dir`
+     */
+    private $uploads;
+    /**
+     * @var string full path to resizefly cache dir
+     */
+    private $cachePath;
+    /**
+     * @var string full url to resizefly cache dir
+     */
+    private $cacheUrl;
+    /**
+     * @var string Full path to duplicates dir
+     */
+    private $duplicatesPath;
+    /**
+     * @var string wordpress site url
+     */
+    private $siteUrl;
 
-	/**
-	 * Image constructor. Sets up member variables
-	 *
-	 * @param string $file The requested image
-	 * @param array $uploads `wp_upload_dir` array
-	 * @param string $siteUrl the full website url
-	 * @param string $cacheUrl the full path to resizefly cache dir
-	 */
-	public function __construct($file, $uploads, $siteUrl, $cacheUrl)
+    /**
+     * Image constructor. Sets up member variables
+     *
+     * @param UploadsInterface $uploads `wp_upload_dir` array
+     * @param string $siteUrl the full website url
+     * @param string $cachePath the full path to resizefly cache dir
+     * @param string $cacheUrl
+     * @param string $duplicatesPath Full path to duplicates dir, since 2.0.0
+     */
+    public function __construct(UploadsInterface $uploads, $siteUrl, $cachePath, $cacheUrl, $duplicatesPath)
     {
-        $this->input = \sanitize_text_field($file[0]);
-        $this->file = array_slice(explode(DIRECTORY_SEPARATOR, $this->input), -1)[0];
-        $this->originalFile = array_slice(explode(DIRECTORY_SEPARATOR, $file[1]), -1)[0] . '.' . $file[4];
-        $this->url = $this->setImageUrl($siteUrl);
-        $this->path = $this->setImagePath($uploads, $siteUrl);
-        $this->original = $this->setImageOriginal();
-        $this->resize = [
-            'width' => $file[2],
-            'height' => $file[3],
+        $this->uploads        = $uploads;
+        $this->cachePath      = $cachePath;
+        $this->cacheUrl       = $cacheUrl;
+        $this->duplicatesPath = $duplicatesPath;
+        $this->siteUrl        = $siteUrl;
+    }
+
+
+    public function setImage(array $file)
+    {
+        $this->input            = sanitize_text_field($file[0]);
+        $this->basename         = pathinfo($this->input)['basename'];
+        $this->filename         = pathinfo($this->input)['filename'];
+        $this->url              = $this->setImageUrl();
+        $this->path             = $this->setImagePath();
+        $this->originalFilename = array_slice(explode(DIRECTORY_SEPARATOR, $file['file']), -1)[0];
+        $this->originalPath     = $this->setOriginalFile($file);
+        $this->resize           = [
+            'width'  => (int) $file['width'],
+            'height' => (int) $file['height'],
         ];
-        $this->uploadDir = $uploads;
-	    $this->cacheUrl = $cacheUrl;
+        $this->density          = !isset($file['density']) ? 1 : (int) $file['density'];
+
+        return $this;
     }
 
-	/**
-	 * Needs doc
-	 * @param string $siteUrl
-	 *
-	 * @return string new image url
-	 */
-	protected function setImageUrl($siteUrl)
+    /**
+     * Set the correct URL for the image
+     *
+     * @return string new image url
+     */
+    protected function setImageUrl()
     {
-        $urlArr = explode(DIRECTORY_SEPARATOR, $siteUrl);
-        unset($urlArr[3]);
-        $url = implode(DIRECTORY_SEPARATOR, $urlArr);
-
-	    return $url . $this->input;
-    }
-
-	/**
-	 * Get the correct path to the image, regardless of WordPress setup
-	 *
-	 * @param array $uploads `wp_uploads_dir` array
-	 * @param string $siteUrl WordPress site url
-	 *
-	 * @return string path to image
-	 */
-	protected function setImagePath($uploads, $siteUrl)
-    {
-        if (strpos($this->url, $uploads['baseurl']) !== false) {
-
-            return $uploads['basedir'] . str_replace($uploads['baseurl'], '', $this->url);
-        } else {
-	        while (strpos($uploads['basedir'], '/./')) {
-		        $uploads['basedir'] = preg_replace( '%(?:/\.{1}/)%', '/', $uploads['basedir'] );
-	        }
-	        while (strpos($uploads['basedir'], '/../')) {
-		        $uploads['basedir'] = preg_replace( '%(?:([^/]+?)/\.{2}/)%', '', $uploads['basedir']);
-	        }
-            $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
-            $uploadsArr = explode(DIRECTORY_SEPARATOR, $uploads['basedir']);
-            $pathArr = array_intersect($abspathArr, $uploadsArr);
-            $path = implode(DIRECTORY_SEPARATOR, $pathArr);
-
-            return $path . str_replace(\trailingslashit($siteUrl), '', $this->url);
+        if (strpos($this->input, $this->siteUrl) === 0) {
+            return $this->input;
         }
+
+        return untrailingslashit($this->siteUrl) . $this->input;
     }
 
-	/**
-	 * Set the url of the original (unresized) image
-	 *
-	 * @return string image url
-	 */
-	protected function setImageOriginal()
+    /**
+     * Set the correct path to the image, regardless of WordPress setup
+     *
+     * @return string path to image
+     */
+    protected function setImagePath()
     {
-	    $origPath = str_replace($this->cacheUrl, $this->uploadDir['baseurl'], $this->path );
+        // if this a full url to this wp install, set path
+        if (strpos($this->input, $this->uploads->getBaseUrl()) === 0) {
+            $filePath = $this->uploads->getBasePath() . str_replace($this->uploads->getBaseUrl(), '', $this->url);
+        } else {
+            $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
+            $uploadsArr = explode(DIRECTORY_SEPARATOR, $this->uploads->getBasePath());
+            $pathArr    = array_intersect($abspathArr, $uploadsArr);
+            $path       = implode(DIRECTORY_SEPARATOR, $pathArr);
+            $filePath   = $path . str_replace(trailingslashit($this->siteUrl), '', $this->url);
+        }
 
-        return str_replace($this->file, $this->originalFile, $origPath);
+        return str_replace($this->basename, '', $filePath);
+    }
+
+    /**
+     * Set path to the original image file
+     *
+     * @param array $file
+     *
+     * @return string
+     */
+    protected function setOriginalFile($file)
+    {
+        $path = str_replace($this->cachePath, $this->uploads->getBasePath(), $this->path);
+        $path = file_exists($path . $this->originalFilename . '.' . $file['ext']
+        ) ? $path . $this->originalFilename . '.' . $file['ext'] : sprintf('%s%s-%dx%d.%s',
+            $path, $this->originalFilename, $file['width'], $file['height'], $file['ext']
+        );
+
+        return $path;
+    }
+
+    /**
+     * @deprecated 1.4.0 use more verbose `getDuplicatePath()`
+     * @see getDuplicatePath()
+     */
+    public function getDuplicate()
+    {
+        return $this->getDuplicatePath();
+    }
+
+    /**
+     * Get the path for the duplicated original
+     *
+     * @return string Path to duplicate image
+     */
+    public function getDuplicatePath()
+    {
+        return str_replace($this->uploads->getBasePath(), $this->duplicatesPath, $this->originalPath);
+    }
+
+    /**
+     * @deprecated  1.4.0 use more verbose `getOriginalPath()`
+     * @see getOriginalPath()
+     */
+    public function getOriginal()
+    {
+        return $this->getOriginalPath();
+    }
+
+    public function getOriginalPath()
+    {
+        return $this->originalPath;
+    }
+
+    public function getOriginalUrl()
+    {
+        return str_replace($this->uploads->getBasePath(), $this->uploads->getBaseUrl(), $this->originalPath);
+    }
+
+    public function getDensity()
+    {
+        return (int) $this->density;
+    }
+
+    public function getWidth()
+    {
+        return (int) $this->resize['width'];
+    }
+
+    public function getHeight()
+    {
+        return (int) $this->resize['height'];
     }
 }

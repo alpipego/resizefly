@@ -1,6 +1,49 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        sass: {
+            options: {
+                sourceMap: true,
+                sourceMapEmbed: true,
+                outputStyle: 'compressed'
+            },
+            dist: {
+                files: {
+                    'css/resizefly-admin.css': 'css/src/*.scss'
+                }
+            }
+        },
+
+        uglify: {
+            dev: {
+                options: {
+                    mangle: false,
+                    sourceMap: true,
+                    // sourceMapIn: 'js/resizefly-admin.js.map',
+                    banner: '(function ($) {',
+                    footer: '\n})(jQuery);',
+                    preserveComments: 'some'
+                },
+                files: {
+                    'js/resizefly-admin.min.js': 'js/src/*.js'
+                }
+            },
+            dist: {
+                options: {
+                    mangle: true,
+                    preserveComments: 'some',
+                    banner: '(function ($) {',
+                    footer: '\n})(jQuery);',
+                    compress: {
+                        drop_console: true
+                    }
+                },
+                files: {
+                    'js/resizefly-admin.min.js': 'js/src/*.js'
+                }
+            }
+        },
 
         pot: {
             admin: {
@@ -25,17 +68,82 @@ module.exports = function(grunt) {
                         '_n_noop:1,2',
                         '_nx_noop:1,2,3c'
                     ],
-                    msgid_bugs_address: 'alpipego@gmail.com'
+                    msgid_bugs_address: 'hi@resizefly.com'
                 },
                 files: [{
                     expand: true,
                     src: ['**/*.php', '!node_modules/**']
                 }]
             }
+        },
+
+        'string-replace': {
+            php: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/Common',
+                    src: ['**/*.php'],
+                    dest: 'src/Common',
+                    filter: 'isFile'
+                }],
+                options: {
+                    replacements: [
+                        {
+                            pattern: /namespace\s+?([^;]+);/,
+                            replacement: 'namespace Alpipego\\Resizefly\\Common\\$1;'
+                        },
+                        {
+                            pattern: /use\s+?([^;]+)(?=\\)([^;]+);/g,
+                            replacement: 'use Alpipego\\Resizefly\\Common\\$1$2;'
+                        }
+                    ]
+                }
+            }
+        },
+
+        copy: {
+            php: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'vendor/pimple/pimple/src/Pimple',
+                        src: ['**', '!**/Tests/**'],
+                        dest: 'src/Common/Pimple'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'vendor/psr/container/src',
+                        src: '**',
+                        dest: 'src/Common/Psr/Container'
+                    },
+                    {
+                        src: 'vendor/composer/ClassLoader.php',
+                        dest: 'src/Common/Composer/Autoload/ClassLoader.php'
+                    }
+                ]
+            }
+        },
+
+        watch: {
+            js: {
+                files: ['Gruntfile.js', 'js/src/**/*.js'],
+                tasks: 'uglify:dev'
+            },
+            sass: {
+                files: ['Gruntfile.js', 'css/src/**/*.scss'],
+                tasks: 'sass'
+            }
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-pot');
+    grunt.loadNpmTasks('grunt-string-replace');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['pot']);
+    grunt.registerTask('third-party', ['copy:php', 'string-replace:php']);
+    grunt.registerTask('default', ['uglify:dev', 'sass', 'watch']);
+    grunt.registerTask('build', ['pot', 'uglify:dist', 'sass']);
 };

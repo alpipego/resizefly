@@ -20,12 +20,18 @@ class Fake {
 	 */
 	private $sizes;
 
+	private $uploads;
+
+	public function __construct( UploadsInterface $uploads ) {
+		$this->uploads = $uploads;
+	}
+
 	/**
 	 * register filters
 	 */
 	public function run() {
-		\add_filter( 'intermediate_image_sizes_advanced', [ $this, 'getRegisteredImageSizes' ] );
-		\add_filter( 'wp_generate_attachment_metadata', [ $this, 'fakeImageResize' ] );
+		add_filter( 'intermediate_image_sizes_advanced', [ $this, 'getRegisteredImageSizes' ] );
+		add_filter( 'wp_generate_attachment_metadata', [ $this, 'fakeImageResize' ] );
 	}
 
 	/**
@@ -38,26 +44,27 @@ class Fake {
 	public function getRegisteredImageSizes( $sizes ) {
 		$this->sizes = $sizes;
 
-		return [ ];
+		return [];
 	}
 
 	/**
 	 * Create a fake meta entry so WordPress thinks, the image size has been created
+     * TODO check if this can be merged with function in wp_get_attachment_src filter
 	 *
 	 * @param array $metadata filter param - image size metadata
 	 *
 	 * @return array either the original array or a manipulated one
 	 */
 	public function fakeImageResize( $metadata ) {
+		$file = pathinfo( realpath( $this->uploads->getBasePath() . '/' . $metadata['file'] ) );
+
 		foreach ( $this->sizes as $name => $size ) {
 			// figure out what size WP would make this:
-			$newsize = \image_resize_dimensions( $metadata['width'], $metadata['height'], $size['width'], $size['height'], $size['crop'] );
+			$newsize = image_resize_dimensions( $metadata['width'], $metadata['height'], $size['width'], $size['height'], $size['crop'] );
 
 			if ( $newsize ) {
-				$uploads = \wp_upload_dir( null, false );
-				$file    = pathinfo( realpath( $uploads['basedir'] . DIRECTORY_SEPARATOR . $metadata['file'] ) );
-
 				// build the fake meta entry for the size in question
+				// TODO update for density
 				$metadata['sizes'][ $name ] = [
 					'file'   => sprintf( '%s-%sx%s.%s', $file['filename'], $newsize[4], $newsize[5], $file['extension'] ),
 					'width'  => $newsize[4],
@@ -65,6 +72,12 @@ class Fake {
 				];
 			}
 		}
+
+		$metadata['sizes']['full'] = [
+			'file'   => $file['basename'],
+			'width'  => $metadata['width'],
+			'height' => $metadata['height'],
+		];
 
 		return $metadata;
 	}

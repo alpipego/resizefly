@@ -1,7 +1,7 @@
 {
     "name": "alpipego/resizefly",
     "description": "Dynamically resize WordPress images on the fly",
-    "license": "GPL 2.0+",
+    "license": "MIT",
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
@@ -9,7 +9,11 @@
         }
     },
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
         "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "pimple/pimple": "^3.1.0",
+        "psr/container": "^1.0"
     }
 }

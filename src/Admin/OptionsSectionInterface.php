@@ -13,27 +13,31 @@ namespace Alpipego\Resizefly\Admin;
  * Interface OptionsSectionInterface
  * @package Alpipego\Resizefly\Admin
  */
-interface OptionsSectionInterface {
+interface OptionsSectionInterface
+{
 
-	/**
-	 * actions and filters to be added
-	 *
-	 * @return void
-	 */
-	function run();
+    /**
+     * actions and filters to be added
+     *
+     * @return void
+     */
+    public function run();
 
-	/**
-	 * Wrapper for `add_settings_section`
-	 *
-	 * @return void
-	 */
-	function addSection();
+    /**
+     * Wrapper for `add_settings_section`
+     *
+     * @return void
+     */
+    public function addSection();
 
-	/**
-	 * Callback function
-	 *
-	 * @return void
-	 */
-	function callback();
+    /**
+     * Callback function
+     *
+     * @return void
+     */
+    public function callback();
 
+    public function getId();
+
+    public function getTitle();
 }
