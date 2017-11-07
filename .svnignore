@@ -8,3 +8,4 @@ Gruntfile.js
 .gitignore
 .svnignore
 .gitattributes
+js/src/
