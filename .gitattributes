@@ -8,3 +8,4 @@ Gruntfile.js export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .svnignore export-ignore
+js/src/ export-ignore
