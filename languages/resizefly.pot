@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 1.3.3\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2017-08-24 14:29+0200\n"
+"POT-Creation-Date: 2017-11-07 18:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,14 +29,14 @@ msgstr ""
 msgid "Path for resized images"
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:65
+#: src/Admin/Cache/PathField.php:67
 #, php-format
 msgid ""
 "The provided path (<code>%s</code>) is not writeable! Please fix the "
 "permissions in your uploads directory."
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:107
+#: src/Admin/Cache/PathField.php:109
 msgid ""
 "This directory already exists. Please remove the directory manually and try "
 "setting it again."
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Add Image Size"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:73
+#: src/Upload/DuplicateOriginal.php:68
 #, php-format
 msgid ""
 "The directory %s is not writeable by Resizefly. Please correct the "
@@ -137,13 +137,13 @@ msgstr ""
 #: views/field/resizefly-resized-path.php:14
 #, php-format
 msgid ""
-"Directory <code>%s</code> <span style=\"color: green\">is writeable</span>"
+"Directory <code>%s</code> <span style=\"color: green\">is writable</span>"
 msgstr ""
 
 #: views/field/resizefly-resized-path.php:16
 #, php-format
 msgid ""
-"Directory <code>%s</code> <span style=\"color: crimson\">is not writeable</"
+"Directory <code>%s</code> <span style=\"color: crimson\">is not writable</"
 "span>"
 msgstr ""
 
