@@ -21,7 +21,7 @@ use Alpipego\Resizefly\Upload\UploadsInterface;
  */
 class PathField extends AbstractOption implements OptionInterface
 {
-    private $uploads;
+    private $uploadsPath;
     private $path = '';
     private $permissions = false;
     private $currentSetting = 'resizefly';
@@ -31,41 +31,35 @@ class PathField extends AbstractOption implements OptionInterface
      *
      * {@inheritDoc}
      */
-    public function __construct(PageInterface $page, OptionsSectionInterface $section, UploadsInterface $uploads, $pluginPath)
-    {
-        add_action('current_screen', [$this, 'setup']);
+    public function __construct(
+        PageInterface $page,
+        OptionsSectionInterface $section,
+        UploadsInterface $uploads,
+        $pluginPath
+    ) {
         $this->optionsField = [
             'id'    => 'resizefly_resized_path',
             'title' => esc_attr__('Path for resized images', 'resizefly'),
         ];
-        $this->uploads      = $uploads;
-        parent::__construct($page, $section, $pluginPath);
 
         add_option($this->optionsField['id'], 'resizefly');
-    }
 
-    public function setup(\WP_Screen $screen)
-    {
-        if ($screen->id === $this->optionsPage->getId()) {
-            $this->uploads        = wp_upload_dir(null, false);
-            $this->currentSetting = get_option($this->optionsField['id'], 'resizefly');
-            $this->path           = trailingslashit(trailingslashit($this->uploads['basedir']) . $this->currentSetting);
-            $this->checkPath();
-        }
+        $this->uploadsPath    = $uploads->getBasePath();
+        $this->currentSetting = get_option($this->optionsField['id'], 'resizefly');
+        $this->path           = trailingslashit(trailingslashit($this->uploadsPath) . $this->currentSetting);
+        $this->checkPath();
+
+        parent::__construct($page, $section, $pluginPath);
     }
 
     private function checkPath()
     {
-        $this->permissions = is_writeable($this->path);
+        $this->permissions = wp_mkdir_p($this->path);
 
-        if ( ! is_dir($this->path)) {
-            $this->permissions = mkdir($this->path, 0755, true);
-        }
-
-        if ( ! $this->permissions) {
+        if (! $this->permissions) {
             add_settings_error($this->optionsField['id'], 'resizefly-dir-writeable',
-                sprintf(__('The provided path (<code>%s</code>) is not writeable! Please fix the permissions in your uploads directory.',
-                    'resizefly'), $this->path));
+                sprintf(__('The provided path (%s) is not writeable! Please fix the permissions in your uploads directory.',
+                    'resizefly'), "<code>{$this->path}</code>"));
         }
     }
 
@@ -78,7 +72,7 @@ class PathField extends AbstractOption implements OptionInterface
     {
         $this->includeView($this->optionsField['id'], array_merge($this->optionsField, [
             'path'        => $this->path,
-            'permissions' => $this->permissions
+            'permissions' => $this->permissions,
         ]));
     }
 
@@ -104,7 +98,7 @@ class PathField extends AbstractOption implements OptionInterface
         }
 
         if ($path !== $this->currentSetting) {
-            if ( ! $this->renameDir($path)) {
+            if (! $this->renameDir($path)) {
                 add_settings_error($this->optionsField['id'], 'resizefly-dir-exists',
                     __('This directory already exists. Please remove the directory manually and try setting it again.',
                         'resizefly'));
@@ -125,9 +119,9 @@ class PathField extends AbstractOption implements OptionInterface
     private function renameDir($path)
     {
         $oldPath = $this->path;
-        $newPath = trailingslashit(trailingslashit($this->uploads->getBasePath()) . $path);
+        $newPath = trailingslashit(trailingslashit($this->uploadsPath) . $path);
 
-        if ( ! is_dir($newPath)) {
+        if (! is_dir($newPath)) {
             return rename($oldPath, $newPath);
         }
 

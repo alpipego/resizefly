@@ -11,9 +11,9 @@
 <p>
 	<?php
 	if ($args['permissions']) {
-		printf(__('Directory <code>%s</code> <span style="color: green">is writable</span>', 'resizefly'), $args['path']);
+		printf(__('Directory %s <span style="color: green">is writable</span>', 'resizefly'), "<code>{$args['path']}</code>");
 	} else {
-		printf(__('Directory <code>%s</code> <span style="color: crimson">is not writable</span>', 'resizefly'), $args['path']);
+		printf(__('Directory %s <span style="color: crimson">is not writable</span>', 'resizefly'), "<code>{$args['path']}</code>");
 	}
 	?>
 </p>
