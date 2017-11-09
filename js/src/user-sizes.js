@@ -7,6 +7,7 @@ var $ = jQuery,
     resizefly = window.resizefly;
 
 $('#js-rzf-add-user-size').on('click', function (ev) {
+    console.log(ev);
     ev.preventDefault();
     var values = {},
         error = false;
