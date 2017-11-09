@@ -46,8 +46,9 @@
             </label>
         </div>
         <div class="rzf-user-sizes-single">
-            <button class="button-secondary" id="js-rzf-add-user-size"><?= __('Add image size',
-                    'resizefly'); ?></button>
+            <button type="button" class="button-secondary" id="js-rzf-add-user-size">
+                <?= __('Add image size', 'resizefly'); ?>
+            </button>
         </div>
     </div>
 
