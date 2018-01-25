@@ -81,8 +81,9 @@
         <?php foreach ($args['user_sizes'] as $size) : ?>
             <tr>
                 <td>
-                    <button class="js-rzf-delete-user-size button-secondary"><?= __('Delete Image Size',
-                            'resizefly'); ?></button>
+                    <button class="js-rzf-delete-user-size button-secondary">
+                        <?= __('Delete Image Size', 'resizefly'); ?>
+                    </button>
                 </td>
                 <td>
                     <?= $size['width']; ?>
