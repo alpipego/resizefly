@@ -22,7 +22,7 @@ add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
         // fix a bug from all version 1 images
         if (empty($imageMeta['sizes']['full'])) {
             $imageMeta['sizes']['full'] = [
-                'file'   => array_slice(explode(DIRECTORY_SEPARATOR, $imageMeta['file']), -1),
+                'file'   => array_slice(explode(DIRECTORY_SEPARATOR, $imageMeta['file']), -1)[0],
                 'width'  => $imageMeta['width'],
                 'height' => $imageMeta['height'],
             ];
@@ -31,8 +31,13 @@ add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
         $file = pathinfo($image[0]);
         if ($size !== 'full') {
             $imageMeta['sizes'][$size] = [
-                'file'   => sprintf('%s-%dx%d.%s', $file['filename'], $sizes[$size]['width'], $sizes[$size]['height'],
-                    $file['extension']),
+                'file'   => sprintf(
+                    '%s-%dx%d.%s',
+                    $file['filename'],
+                    $sizes[$size]['width'],
+                    $sizes[$size]['height'],
+                    $file['extension']
+                ),
                 'width'  => $sizes[$size]['width'],
                 'height' => $sizes[$size]['height'],
             ];
