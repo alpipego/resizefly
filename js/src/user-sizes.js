@@ -84,3 +84,10 @@ $('#js-rzf-toggle-crop').on('change', function () {
         $input.val(this.checked);
     }
 });
+
+$('[name^="resizefly_user_sizes[clone]"').on('keypress keyup', function(e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#js-rzf-add-user-size').click();
+    }
+});
