@@ -37,7 +37,7 @@ class SizesField extends AbstractOption implements OptionInterface
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
     {
-        $this->page = $page;
+        $this->page         = $page;
         $this->optionsField = [
             'id'    => 'resizefly_sizes',
             'title' => esc_attr__('Image Sizes', 'resizefly'),
@@ -68,6 +68,13 @@ class SizesField extends AbstractOption implements OptionInterface
                 wp_add_inline_style('wp-admin', '.rzf-image-sizes th {padding-left:10px;}');
             });
         });
+
+        add_action('admin_notices', [$this, 'adminSyncNotice']);
+
+        add_action('after_switch_theme', [$this, 'imageSizesSynced']);
+        add_action('upgrader_process_complete', [$this, 'imageSizesSynced']);
+        add_action('activated_plugin', [$this, 'imageSizesSynced']);
+        add_action('deactivate_plugin', [$this, 'imageSizesSynced']);
 
         parent::run();
     }
@@ -107,7 +114,6 @@ class SizesField extends AbstractOption implements OptionInterface
      */
     public function imageSizesSynced()
     {
-
         array_walk_recursive($this->savedSizes, [$this, 'normalizeSizes']);
         array_walk_recursive($this->registeredSizes, [$this, 'normalizeSizes']);
 
@@ -126,16 +132,7 @@ class SizesField extends AbstractOption implements OptionInterface
             )
         );
 
-        if (! empty($unsynced)) {
-            add_settings_error(
-                $this->optionsField['id'],
-                $this->optionsField['id'],
-                __(
-                    'The registered and saved image sizes are out of sync. Please update the settings on this page.',
-                    'resizefly'
-                )
-            );
-        }
+        update_option('resizefly_sizes_outofsync', array_keys($unsynced));
     }
 
     /**
@@ -208,6 +205,34 @@ class SizesField extends AbstractOption implements OptionInterface
         }
 
         return $sizes;
+    }
+
+    /**
+     * Outputs the admin notice
+     */
+    public function adminSyncNotice()
+    {
+        if (empty(get_option('resizefly_sizes_outofsync', [])) || ! (bool)get_option('resizefly_restrict_sizes', false)) {
+            return;
+        }
+        ?>
+        <div class="notice notice-warning">
+            <p>
+                <?=
+                sprintf(
+                    wp_kses(
+                        __(
+                            'The registered and saved image sizes for ResizeFly are out of sync. <button href="%s">Please review them here.</button>',
+                            'resizefly'
+                        ),
+                        ['button' => ['href' => []]]
+                    ),
+                    esc_url(menu_page_url($this->page->getSlug(), false) . '#rzf-image-sizes')
+                );
+                ?>
+            </p>
+        </div>
+        <?php
     }
 
     /**
