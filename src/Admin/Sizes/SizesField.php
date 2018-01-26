@@ -15,7 +15,13 @@ use Alpipego\Resizefly\Admin\PageInterface;
 
 class SizesField extends AbstractOption implements OptionInterface
 {
+    /**
+     * @var array
+     */
     private $registeredSizes = [];
+    /**
+     * @var array
+     */
     private $savedSizes = [];
 
     /**
@@ -56,6 +62,9 @@ class SizesField extends AbstractOption implements OptionInterface
         parent::__construct($page, $section, $pluginPath);
     }
 
+    /**
+     * @return array
+     */
     protected function getRegisteredImageSizes()
     {
         $intermediate = get_intermediate_image_sizes();
@@ -83,6 +92,9 @@ class SizesField extends AbstractOption implements OptionInterface
         return $sizes;
     }
 
+    /**
+     *
+     */
     public function imageSizesSynced()
     {
 
@@ -129,6 +141,9 @@ class SizesField extends AbstractOption implements OptionInterface
         $this->includeView($this->optionsField['id'], $args);
     }
 
+    /**
+     * @return array
+     */
     protected function getImageSizes()
     {
         array_walk($this->registeredSizes, function (&$size, $name) {
@@ -140,6 +155,11 @@ class SizesField extends AbstractOption implements OptionInterface
         return $this->sortImageSizes($this->registeredSizes);
     }
 
+    /**
+     * @param array $sizes
+     *
+     * @return mixed
+     */
     protected function sortImageSizes($sizes)
     {
         // order results
@@ -180,11 +200,24 @@ class SizesField extends AbstractOption implements OptionInterface
         return $sizes;
     }
 
+
+    /**
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
     private function compareSizeNames($a, $b)
     {
         return $a === $b ? 0 : 1;
     }
 
+    /**
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
     private function compareSizes($a, $b)
     {
         ksort($a);
@@ -193,6 +226,10 @@ class SizesField extends AbstractOption implements OptionInterface
         return $a === $b ? 0 : 1;
     }
 
+    /**
+     * @param mixed &$value convert thruthy strings to boolean
+     * @param string $key
+     */
     private function normalizeSizes(&$value, $key)
     {
         if ($key === 'crop' && ! is_array($value)) {
