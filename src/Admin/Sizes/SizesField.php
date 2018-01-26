@@ -23,15 +23,30 @@ class SizesField extends AbstractOption implements OptionInterface
      * @var array
      */
     private $savedSizes = [];
+    /**
+     * @var PageInterface
+     */
+    private $page;
 
     /**
      * RestrictSizesField constructor.
      *
-     * @param PageInterface|string $page
+     * @param PageInterface $page
      * @param OptionsSectionInterface|string $section
      * @param string $pluginPath
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
+    {
+        $this->page = $page;
+        $this->optionsField = [
+            'id'    => 'resizefly_sizes',
+            'title' => esc_attr__('Image Sizes', 'resizefly'),
+            'args'  => ['class' => 'hide-if-no-js', 'label_for' => 'resizefly_sizes_section'],
+        ];
+        parent::__construct($page, $section, $pluginPath);
+    }
+
+    public function run()
     {
         add_action('after_setup_theme', function () {
             // get registered and saved image sizes
@@ -43,23 +58,18 @@ class SizesField extends AbstractOption implements OptionInterface
         }, 11);
 
         // check if saved and registered image sizes are in sync
-        add_action('current_screen', function (\WP_Screen $screen) use ($page) {
-            if ($screen->id === $page->getId()) {
+        add_action('current_screen', function (\WP_Screen $screen) {
+            if ($screen->id === $this->page->getId()) {
                 $this->imageSizesSynced();
             }
+
+            // add inline styles
+            add_action('admin_enqueue_scripts', function () {
+                wp_add_inline_style('wp-admin', '.rzf-image-sizes th {padding-left:10px;}');
+            });
         });
 
-        // add inline styles
-        add_action('admin_enqueue_scripts', function () {
-            wp_add_inline_style('wp-admin', '.rzf-image-sizes th {padding-left:10px;}');
-        });
-
-        $this->optionsField = [
-            'id'    => 'resizefly_sizes',
-            'title' => esc_attr__('Image Sizes', 'resizefly'),
-            'args'  => ['class' => 'hide-if-no-js', 'label_for' => 'resizefly_sizes_section'],
-        ];
-        parent::__construct($page, $section, $pluginPath);
+        parent::run();
     }
 
     /**
@@ -199,7 +209,6 @@ class SizesField extends AbstractOption implements OptionInterface
 
         return $sizes;
     }
-
 
     /**
      * @param array $a
