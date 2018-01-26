@@ -13,6 +13,7 @@
 <table class="widefat rzf-image-sizes" id="rzf-image-sizes">
     <thead>
     <tr>
+        <th></th>
         <th><?= __('Active', 'resizefly'); ?></th>
         <th><?= __('Width', 'resizefly'); ?></th>
         <th><?= __('Height', 'resizefly'); ?></th>
@@ -22,6 +23,7 @@
     </thead>
     <tfoot>
     <tr>
+        <th></th>
         <th><?= __('Active', 'resizefly'); ?></th>
         <th><?= __('Width', 'resizefly'); ?></th>
         <th><?= __('Height', 'resizefly'); ?></th>
@@ -30,10 +32,17 @@
     </tr>
     </tfoot>
     <tbody>
-    <?php
-    foreach ($args['image_sizes'] as $name => $size) :
-        ?>
+    <?php foreach ($args['image_sizes'] as $name => $size) : ?>
         <tr>
+            <td>
+                <?php
+                foreach ($args['out_of_sync'] as $status => $sizes) {
+                    if (isset($sizes[$name])) {
+                        echo $status;
+                    }
+                }
+                ?>
+            </td>
             <td>
                 <input type="checkbox" name="resizefly_sizes[<?= $name; ?>][active]" <?php checked($size['active'], 1); ?>>
             </td>
@@ -59,8 +68,40 @@
             </td>
             <td><?= $name; ?></td>
         </tr>
-    <?php
-    endforeach;
-    ?>
+    <?php endforeach; ?>
+    <?php foreach ($args['out_of_sync']['missing'] as $name => $size) : ?>
+        <tr>
+            <td>
+                <?php
+                foreach ($args['out_of_sync'] as $status => $sizes) {
+                    if (isset($sizes[$name])) {
+                        echo $status;
+                    }
+                }
+                ?>
+            </td>
+            <td>
+                <input type="checkbox" disabled="disabled" <?php checked($size['active'], 1); ?>>
+            </td>
+            <td>
+                <?= $size['width']; ?>
+            </td>
+            <td>
+                <?= $size['height']; ?>
+            </td>
+            <td>
+                <?php
+                if ($size['crop']) {
+                    if (is_array($size['crop'])) {
+                        printf('%s, %s', $size['crop'][0], $size['crop'][1]);
+                    } else {
+                        echo 'center, center';
+                    }
+                }
+                ?>
+            </td>
+            <td><?= $name; ?></td>
+        </tr>
+    <?php endforeach; ?>
     </tbody>
 </table>
