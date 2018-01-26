@@ -124,25 +124,26 @@ class SizesField extends AbstractOption implements OptionInterface
      */
     public function imageSizesSynced()
     {
-        array_walk_recursive($this->savedSizes, [$this, 'normalizeSizes']);
-        array_walk_recursive($this->registeredSizes, [$this, 'normalizeSizes']);
+        $savedSizes      = array_map([$this, 'normalizeSizes'], $this->savedSizes);
+        $registeredSizes = array_map([$this, 'normalizeSizes'], $this->registeredSizes);
 
-        $unsynced = array_merge(
-            array_udiff_uassoc(
-                $this->savedSizes,
-                $this->registeredSizes,
-                [$this, 'compareSizes'],
-                [$this, 'compareSizeNames']
-            ),
-            array_udiff_uassoc(
-                $this->registeredSizes,
-                $this->savedSizes,
-                [$this, 'compareSizes'],
-                [$this, 'compareSizeNames']
-            )
+        $new = array_udiff_assoc(
+            $registeredSizes,
+            $savedSizes,
+            [$this, 'compareSizes']
         );
 
-        update_option(self::OUTOFSYNC, array_keys($unsynced));
+        $missing = array_udiff_assoc(
+            $savedSizes,
+            $registeredSizes,
+            [$this, 'compareSizes']
+        );
+
+        $updated = array_intersect_key($new, $missing);
+        $new     = array_diff_key($new, $updated);
+        $missing = array_diff_key($missing, $updated);
+
+        update_option(self::OUTOFSYNC, ['new' => $new, 'updated' => $updated, 'missing' => $missing]);
     }
 
     /**
@@ -154,6 +155,7 @@ class SizesField extends AbstractOption implements OptionInterface
     {
         $args                = $this->optionsField;
         $args['image_sizes'] = $this->getImageSizes();
+        $args['out_of_sync'] = get_option(self::OUTOFSYNC, []);
 
         $this->includeView($this->optionsField['id'], $args);
     }
@@ -222,7 +224,7 @@ class SizesField extends AbstractOption implements OptionInterface
      */
     public function adminSyncNotice()
     {
-        if (empty(get_option(self::OUTOFSYNC, [])) || ! (bool)get_option('resizefly_restrict_sizes', false)) {
+        if (empty(array_filter(get_option(self::OUTOFSYNC, []))) || ! (bool)get_option('resizefly_restrict_sizes', false)) {
             return;
         }
         ?>
@@ -232,10 +234,10 @@ class SizesField extends AbstractOption implements OptionInterface
                 sprintf(
                     wp_kses(
                         __(
-                            'The registered and saved image sizes for ResizeFly are out of sync. <button href="%s">Please review them here.</button>',
+                            'The registered and saved image sizes for ResizeFly are out of sync. <a href="%s"><button type="button">Please review them here.</button></a>',
                             'resizefly'
                         ),
-                        ['button' => ['href' => []]]
+                        ['a' => ['href' => []], 'button' => ['type' => ['button']]]
                     ),
                     esc_url(menu_page_url($this->page->getSlug(), false) . '#rzf-image-sizes')
                 );
@@ -271,13 +273,17 @@ class SizesField extends AbstractOption implements OptionInterface
     }
 
     /**
-     * @param mixed &$value convert thruthy strings to boolean
-     * @param string $key
+     * @param array $value normalize input array
+     *
+     * @return array
      */
-    private function normalizeSizes(&$value, $key)
+    private function normalizeSizes($value)
     {
-        if ($key === 'crop' && ! is_array($value)) {
-            $value = (bool)$value;
+        unset($value['active']);
+        if (! is_array($value['crop'])) {
+            $value['crop'] = (bool)$value['crop'];
         }
+
+        return $value;
     }
 }
