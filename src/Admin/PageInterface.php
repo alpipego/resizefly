@@ -15,11 +15,19 @@ namespace Alpipego\Resizefly\Admin;
 interface PageInterface
 {
     /**
-     * @return mixed
+     * @return void
      */
     public function run();
 
+    /**
+     * @return string
+     */
     public function getId();
+    
+    /**
+     * @return string
+     */
+    public function getSlug();
 
     public function localize(array $toLocalize);
 }

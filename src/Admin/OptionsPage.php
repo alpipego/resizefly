@@ -18,12 +18,15 @@ final class OptionsPage extends AbstractPage implements PageInterface {
 	 */
 	const PAGE = 'media_page_resizefly';
 
+	const SLUG = 'resizefly';
+
 	/**
 	 * @var string $viewsPath path to views dir
 	 */
 	protected $viewsPath;
     private $pluginUrl;
     private $pluginPath;
+    private $slug;
 
     /**
 	 * OptionsPage constructor.
@@ -35,6 +38,10 @@ final class OptionsPage extends AbstractPage implements PageInterface {
 		$this->viewsPath = $pluginPath . 'views/';
 		$this->pluginUrl = $pluginUrl;
 	}
+
+	public function getSlug() {
+	    return self::SLUG;
+    }
 
 	/**
 	 * Add the page to admin menu action
@@ -54,7 +61,7 @@ final class OptionsPage extends AbstractPage implements PageInterface {
 			'Resizefly Settings',
 			'Resizefly',
 			'manage_options',
-			'resizefly',
+			self::SLUG,
 			[
 				$this,
 				'callback'
