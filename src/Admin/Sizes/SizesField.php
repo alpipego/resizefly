@@ -15,6 +15,11 @@ use Alpipego\Resizefly\Admin\PageInterface;
 
 class SizesField extends AbstractOption implements OptionInterface
 {
+
+    /**
+     * @var string option name for out of sync image sizes
+     */
+    const OUTOFSYNC = 'resizefly_sizes_outofsync';
     /**
      * @var array
      */
@@ -53,12 +58,13 @@ class SizesField extends AbstractOption implements OptionInterface
             $this->savedSizes      = (array)get_option('resizefly_sizes', []);
             $this->registeredSizes = $this->getRegisteredImageSizes();
 
-            // set default
+            // set defaults
             add_option('resizefly_sizes', $this->registeredSizes);
+            add_option(self::OUTOFSYNC, []);
         }, 11);
 
-        // check if saved and registered image sizes are in sync
         add_action('current_screen', function (\WP_Screen $screen) {
+            // check if saved and registered image sizes are in sync
             if ($screen->id === $this->page->getId()) {
                 $this->imageSizesSynced();
             }
@@ -69,8 +75,10 @@ class SizesField extends AbstractOption implements OptionInterface
             });
         });
 
+        // see if there are out-of-sync image sizes
         add_action('admin_notices', [$this, 'adminSyncNotice']);
 
+        // check for out of sync image sizes after theme switch, theme or plugin updates, (de)activation of plugins
         add_action('after_switch_theme', [$this, 'imageSizesSynced']);
         add_action('upgrader_process_complete', [$this, 'imageSizesSynced']);
         add_action('activated_plugin', [$this, 'imageSizesSynced']);
@@ -80,6 +88,8 @@ class SizesField extends AbstractOption implements OptionInterface
     }
 
     /**
+     * Gets and normalizes built in and registered image sizes
+     *
      * @return array
      */
     protected function getRegisteredImageSizes()
@@ -110,7 +120,7 @@ class SizesField extends AbstractOption implements OptionInterface
     }
 
     /**
-     *
+     * Check if the saved an (externally) registered image sizes are in sync
      */
     public function imageSizesSynced()
     {
@@ -132,7 +142,7 @@ class SizesField extends AbstractOption implements OptionInterface
             )
         );
 
-        update_option('resizefly_sizes_outofsync', array_keys($unsynced));
+        update_option(self::OUTOFSYNC, array_keys($unsynced));
     }
 
     /**
@@ -212,7 +222,7 @@ class SizesField extends AbstractOption implements OptionInterface
      */
     public function adminSyncNotice()
     {
-        if (empty(get_option('resizefly_sizes_outofsync', [])) || ! (bool)get_option('resizefly_restrict_sizes', false)) {
+        if (empty(get_option(self::OUTOFSYNC, [])) || ! (bool)get_option('resizefly_restrict_sizes', false)) {
             return;
         }
         ?>
