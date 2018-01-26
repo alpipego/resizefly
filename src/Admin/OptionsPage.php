@@ -12,87 +12,125 @@ namespace Alpipego\Resizefly\Admin;
  * Class OptionsPage
  * @package Alpipego\Resizefly\Admin
  */
-final class OptionsPage extends AbstractPage implements PageInterface {
-	/**
-	 * @var string $page id of this settings page
-	 */
-	const PAGE = 'media_page_resizefly';
-
-	const SLUG = 'resizefly';
-
-	/**
-	 * @var string $viewsPath path to views dir
-	 */
-	protected $viewsPath;
-    private $pluginUrl;
-    private $pluginPath;
-    private $slug;
+final class OptionsPage extends AbstractPage implements PageInterface
+{
+    /**
+     * @var string PAGE id of this settings page
+     */
+    const PAGE = 'media_page_resizefly';
 
     /**
-	 * OptionsPage constructor.
-	 *
-	 * @param string $pluginPath plugin base path
-	 */
-	function __construct( $pluginPath, $pluginUrl ) {
-	    $this->pluginPath = $pluginPath;
-		$this->viewsPath = $pluginPath . 'views/';
-		$this->pluginUrl = $pluginUrl;
-	}
+     * @var string SLUG menu slug for this page
+     */
+    const SLUG = 'resizefly';
 
-	public function getSlug() {
-	    return self::SLUG;
+    /**
+     * @var string $viewsPath path to views dir
+     */
+    protected $viewsPath;
+
+    /**
+     * @var string $pluginUrl url to plugin dir
+     */
+    private $pluginUrl;
+
+    /**
+     * @var string $pluginPath path to plugin dir
+     */
+    private $pluginPath;
+
+    /**
+     * OptionsPage constructor.
+     *
+     * @param string $pluginPath plugin base path
+     */
+    public function __construct($pluginPath, $pluginUrl)
+    {
+        $this->pluginPath = $pluginPath;
+        $this->viewsPath  = $pluginPath . 'views/';
+        $this->pluginUrl  = $pluginUrl;
     }
 
-	/**
-	 * Add the page to admin menu action
-	 */
-	public function run() {
-		add_action( 'admin_menu', [ $this, 'addPage' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueueAssets' ] );
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getSlug()
+    {
+        return self::SLUG;
+    }
 
-	/**
-	 * Wrapper for add_media_section
-	 *
-	 * Add the page in media section
-	 */
-	function addPage() {
-		add_media_page(
-			'Resizefly Settings',
-			'Resizefly',
-			'manage_options',
-			self::SLUG,
-			[
-				$this,
-				'callback'
-			]
-		);
-	}
+    /**
+     * Add the page to admin menu action
+     */
+    public function run()
+    {
+        add_action('admin_menu', [$this, 'addPage']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
+    }
 
-	/**
-	 * Include the view
-	 */
-	function callback() {
-		$args = [
-			'page' => self::PAGE,
-		];
+    /**
+     * Wrapper for add_media_section
+     *
+     * Add the page in media section
+     */
+    public function addPage()
+    {
+        add_media_page(
+            'Resizefly Settings',
+            'Resizefly',
+            'manage_options',
+            self::SLUG,
+            [
+                $this,
+                'callback',
+            ]
+        );
+    }
 
-		include $this->viewsPath . 'page/resizefly.php';
-	}
+    /**
+     * Include the view
+     */
+    public function callback()
+    {
+        $args = [
+            'page' => self::PAGE,
+        ];
 
-    public function enqueueAssets( $page ) {
-        if ( $page === self::PAGE ) {
-            wp_enqueue_script( 'resizefly-admin', $this->pluginUrl . 'js/resizefly-admin.min.js', [ 'jquery' ], '1.0.0', true );
-            wp_add_inline_style( 'wp-admin', file_get_contents( $this->pluginPath . '/css/resizefly-admin.css' ) );
+        include $this->viewsPath . 'page/resizefly.php';
+    }
 
-            wp_localize_script( 'resizefly-admin', 'resizefly', $this->localized );
+    /**
+     * @param string $page current admin page hook
+     */
+    public function enqueueAssets($page)
+    {
+        if ($page === self::PAGE) {
+            wp_enqueue_script(
+                'resizefly-admin',
+                $this->pluginUrl . 'js/resizefly-admin.min.js',
+                ['jquery'],
+                '1.0.0',
+                true
+            );
+            wp_add_inline_style('wp-admin', file_get_contents($this->pluginPath . '/css/resizefly-admin.css'));
+
+            wp_localize_script('resizefly-admin', 'resizefly', $this->localized);
         }
     }
 
-    public function localize(array $localizeArray) {
-	    return $this->localized = array_merge($this->localized, $localizeArray);
+    /**
+     * @param array $localizeArray
+     *
+     * @return array
+     */
+    public function localize(array $localizeArray)
+    {
+        return $this->localized = array_merge($this->localized, $localizeArray);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getId()
     {
         return self::PAGE;
