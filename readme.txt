@@ -5,7 +5,7 @@ Stable tag: 2.0.2
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
-Tested up to: 4.8.3
+Tested up to: 4.9.4
 
 Dynamically resize your WordPress images on the fly. Upload them once and don't worry about missing or new image sizes.
 
@@ -59,9 +59,7 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.0.1 =
-
-* update translation files
-* fix error when renaming directory
-* add user sizes error messages
-* remove bootstrap code from main plugin file
+= 2.0.2 =
+* Fix zoomed in cropped image when original image smaller than requested size
+* Allow image to be resized to match original even if sizes restrict is turned on
+* Test with WP 4.9.4
