@@ -152,6 +152,14 @@ final class Handler implements HandlerInterface
     // TODO make this easier readable
     public function allowedImageSize(array $allowedSizes)
     {
+        // if requested size is original size
+        if (
+            $this->image->getWidth() === $this->editor->getWidth()
+            && $this->image->getHeight() === $this->editor->getHeight()
+        ) {
+            return true;
+        }
+        
         foreach ($allowedSizes as $size) {
             if (! (bool)$size['active']) {
                 continue;
