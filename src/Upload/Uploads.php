@@ -111,7 +111,7 @@ class Uploads implements UploadsInterface
         return array_reduce(explode(DIRECTORY_SEPARATOR, $path), function ($a, $b) {
             if ($a === 0) {
                 // fix Windows drive letters
-                if (preg_match('/[A-Z]:/', $b)) {
+                if (preg_match('/[a-zA-Z]:/', $b)) {
                     return '';
                 }
                 $a = '/';
@@ -125,7 +125,7 @@ class Uploads implements UploadsInterface
                 return dirname($a);
             }
 
-            return preg_replace('/[\\\/]+/', '/', "$a/$b");
+            return preg_replace('@[\\/]+@', '/', "$a/$b");
         }, 0);
     }
 
