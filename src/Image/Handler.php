@@ -115,10 +115,10 @@ final class Handler implements HandlerInterface
 
         // if width or height is larger than the image itself, set it to the original width/height
         // TODO if only one is larger, the output will be rather unexpected; maybe change to original aspect ratio
-        if (! isset($size['width'])) {
+        if (! isset($size['width']) || $this->image->getWidth() > $origWidth) {
             $size['width'] = $this->image->getWidth() > $origWidth ? $origWidth : $this->image->getWidth();
         }
-        if (! isset($size['height'])) {
+        if (! isset($size['height']) || $this->image->getHeight() > $origHeight) {
             $size['height'] = $this->image->getHeight() > $origHeight ? $origHeight : $this->image->getHeight();
         }
         if (! isset($size['density'])) {
@@ -179,6 +179,7 @@ final class Handler implements HandlerInterface
                         $aspect['focal_x'] = $focal['x'][$size['crop'][0]];
                         $aspect['focal_y'] = $focal['y'][$size['crop'][1]];
                     }
+
                     $this->parseRequestedImageSize($aspect);
 
                     return true;
