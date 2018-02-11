@@ -10,6 +10,7 @@ add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
         return $image;
     }
 
+
     // does our custom size even exist in the image meta data?
     // if not, then we will have to create it
     if (empty($imageMeta['sizes'][$size])) {
@@ -22,7 +23,7 @@ add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
         // fix a bug from all version 1 images
         if (empty($imageMeta['sizes']['full'])) {
             $imageMeta['sizes']['full'] = [
-                'file'   => array_slice(explode(DIRECTORY_SEPARATOR, $imageMeta['file']), -1),
+                'file'   => array_slice(explode(DIRECTORY_SEPARATOR, $imageMeta['file']), -1)[0],
                 'width'  => $imageMeta['width'],
                 'height' => $imageMeta['height'],
             ];
