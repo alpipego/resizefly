@@ -23,7 +23,7 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin->addDefiniton(__DIR__ . '/config/plugin.php');
     $plugin->loadTextdomain(__DIR__ . '/../languages');
 
-    $file = realpath(__DIR__ . '/../resizefly.php');
+    $file                      = realpath(__DIR__ . '/../resizefly.php');
     $plugin['config.path']     = trailingslashit(plugin_dir_path($file));
     $plugin['config.url']      = plugin_dir_url($file);
     $plugin['config.basename'] = plugin_basename($file);
@@ -90,4 +90,6 @@ add_action('plugins_loaded', function () use ($classLoader) {
     // handle image resizing
     require_once __DIR__ . '/actions/template-redirect.php';
 
+    // fix wrong attachment date
+    require_once __DIR__ . '/actions/media-send-to-editor.php';
 });
