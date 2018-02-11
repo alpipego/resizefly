@@ -59,7 +59,6 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.0.2 =
-* Fix zoomed in cropped image when original image smaller than requested size
-* Allow image to be resized to match original even if sizes restrict is turned on
-* Test with WP 4.9.4
+= 2.0.3 =
+* Fix a bug in 2.0.0 causing attachment metadata to have an array as `file` for size `full`
+* Filter the URL after image is sent to editor (previously images only showed up after save)
