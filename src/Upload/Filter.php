@@ -80,6 +80,7 @@ class Filter
 
 
         // add resizefly url before loaded into editor, remove before saving
+        add_filter('media_send_to_editor', [$this, 'urlInHtml']);
         add_filter('content_edit_pre', [$this, 'urlInHtml']);
         add_filter('content_save_pre', [$this, 'revertOriginalContent']);
     }
