@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
@@ -59,7 +59,5 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.0.2 =
-* Fix zoomed in cropped image when original image smaller than requested size
-* Allow image to be resized to match original even if sizes restrict is turned on
-* Test with WP 4.9.4
+= 2.0.4 =
+* fixes Window paths including drive letters (e.g. when using XAMPP)
