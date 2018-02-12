@@ -59,7 +59,5 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.0.2 =
-* Fix zoomed in cropped image when original image smaller than requested size
-* Allow image to be resized to match original even if sizes restrict is turned on
-* Test with WP 4.9.4
+= 2.0.4 =
+* fixes Window paths including drive letters (e.g. when using XAMPP)
