@@ -178,6 +178,22 @@ class Filter
         );
     }
 
+	/**
+	 * @param string $src
+	 *
+	 * @return string
+	 */
+	public function getOriginal($src)
+	{
+		return preg_replace_callback(
+			"%{$this->cacheUrl}(?<image>[^\",\s]*?)(?<dim>-\d+x\d+)?(?:@\d)?\.(?<ext>png|jpe?g|gif)%",
+			function ($matches) {
+				return sprintf('%s%s.%s', $this->uploads->getBaseUrl(), $matches['image'], $matches['ext']);
+			},
+			$src
+		);
+	}
+
     /**
      * Get the filename as stored in post meta data
      *
