@@ -41,8 +41,8 @@ abstract class AbstractOption
     /**
      * AbstractOption constructor.
      *
-     * @param string $page The parent page
-     * @param string $section The containing section
+     * @param PageInterface $page The parent page
+     * @param OptionsSectionInterface $section The containing section
      * @param string $pluginPath Plugin base path
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
