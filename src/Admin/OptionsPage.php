@@ -108,7 +108,7 @@ final class OptionsPage extends AbstractPage implements PageInterface
             wp_enqueue_script(
                 'resizefly-admin',
                 $this->pluginUrl . 'js/resizefly-admin.min.js',
-                ['jquery'],
+                ['jquery', 'wp-util'],
                 '1.0.0',
                 true
             );
