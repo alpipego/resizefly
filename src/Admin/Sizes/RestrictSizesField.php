@@ -16,13 +16,13 @@ use Alpipego\Resizefly\Admin\PageInterface;
 
 class RestrictSizesField extends AbstractOption implements OptionInterface {
 
-    /**
-     * RestrictSizesField constructor.
-     *
-     * @param PageInterface|string $page
-     * @param OptionsSectionInterface|string $section
-     * @param string $pluginPath
-     */
+	/**
+	 * RestrictSizesField constructor.
+	 *
+	 * @param PageInterface|string $page
+	 * @param OptionsSectionInterface|string $section
+	 * @param string $pluginPath
+	 */
 	public function __construct( PageInterface $page, OptionsSectionInterface $section, $pluginPath ) {
 		// set default option
 		add_option( 'resizefly_restrict_sizes', true );

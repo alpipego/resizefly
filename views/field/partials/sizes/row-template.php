@@ -8,11 +8,11 @@
 ?>
 <script type="text/html" id="tmpl-rzf-size-row">
     <tr
-        class="rzf-size rzf-size-status-new"
-        data-width="{{ data.width }}"
-        data-height="{{ data.height }}"
-        data-crop="<# !!data.crop #>"
-        data-name="{{ data.name }}"
+            class="rzf-size rzf-size-status-new"
+            data-width="{{ data.width }}"
+            data-height="{{ data.height }}"
+            data-crop="<# !!data.crop #>"
+            data-name="{{ data.name }}"
     >
         <td class="rzf-size-status"></td>
         <td class="rzf-size-active">

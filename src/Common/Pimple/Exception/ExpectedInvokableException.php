@@ -33,6 +33,5 @@ use Alpipego\Resizefly\Common\Psr\Container\ContainerExceptionInterface;
  *
  * @author Pascal Luna <skalpa@zetareticuli.org>
  */
-class ExpectedInvokableException extends \InvalidArgumentException implements ContainerExceptionInterface
-{
+class ExpectedInvokableException extends \InvalidArgumentException implements ContainerExceptionInterface {
 }

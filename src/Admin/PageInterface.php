@@ -12,22 +12,21 @@ namespace Alpipego\Resizefly\Admin;
  * Interface AdminInterface
  * @package Alpipego\Resizefly\Admin
  */
-interface PageInterface
-{
-    /**
-     * @return void
-     */
-    public function run();
+interface PageInterface {
+	/**
+	 * @return void
+	 */
+	public function run();
 
-    /**
-     * @return string
-     */
-    public function getId();
-    
-    /**
-     * @return string
-     */
-    public function getSlug();
+	/**
+	 * @return string
+	 */
+	public function getId();
 
-    public function localize(array $toLocalize);
+	/**
+	 * @return string
+	 */
+	public function getSlug();
+
+	public function localize( array $toLocalize );
 }

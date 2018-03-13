@@ -7,15 +7,15 @@
  */
 ?>
 <div class="wrap">
-	<h1>Resizefly Settings</h1>
+    <h1>Resizefly Settings</h1>
 	<?php settings_errors(); ?>
-	<form method="post" action="options.php">
+    <form method="post" action="options.php">
 		<?php
 		do_settings_sections( $args['page'] );
 		settings_fields( 'resizefly' );
 
 		submit_button( __( 'Update Options', 'resizefly' ) );
 		?>
-	</form>
+    </form>
 </div>
 

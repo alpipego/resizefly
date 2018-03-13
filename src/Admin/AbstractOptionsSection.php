@@ -18,7 +18,7 @@ abstract class AbstractOptionsSection {
 	 * @var array $optionsGroup id and title for field group
 	 */
 	public $optionsGroup = [
-		'id'   => null,
+		'id'    => null,
 		'title' => null,
 	];
 
@@ -56,7 +56,7 @@ abstract class AbstractOptionsSection {
 	public function addSection() {
 		add_settings_section( $this->optionsGroup['id'], $this->optionsGroup['title'], [
 			$this,
-			'callback'
+			'callback',
 		], $this->optionsPage->getId() );
 	}
 
@@ -76,11 +76,11 @@ abstract class AbstractOptionsSection {
 		include $this->viewsPath . 'section/' . implode( '-', $fileArr ) . '.php';
 	}
 
-    public function getId() {
-	    return $this->optionsGroup['id'];
-    }
+	public function getId() {
+		return $this->optionsGroup['id'];
+	}
 
-    public function getTitle() {
-        return $this->optionsGroup['title'];
-    }
+	public function getTitle() {
+		return $this->optionsGroup['title'];
+	}
 }

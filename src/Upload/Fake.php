@@ -49,7 +49,7 @@ class Fake {
 
 	/**
 	 * Create a fake meta entry so WordPress thinks, the image size has been created
-     * TODO check if this can be merged with function in wp_get_attachment_src filter
+	 * TODO check if this can be merged with function in wp_get_attachment_src filter
 	 *
 	 * @param array $metadata filter param - image size metadata
 	 *

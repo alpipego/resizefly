@@ -15,10 +15,10 @@
  */
 
 // PHP 5.2 compatible version check
-require_once dirname(__FILE__) . '/version-check.php';
-$check = new Resizefly_Version_Check(__FILE__);
+require_once dirname( __FILE__ ) . '/version-check.php';
+$check = new Resizefly_Version_Check( __FILE__ );
 
-if (! $check->errors()) {
-    require_once dirname(__FILE__) . '/app/bootstrap.php';
+if ( ! $check->errors() ) {
+	require_once dirname( __FILE__ ) . '/app/bootstrap.php';
 }
 
