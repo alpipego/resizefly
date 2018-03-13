@@ -59,5 +59,8 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
+= 2.0.5 =
+* return filtered content, instead of original before saving to database
+
 = 2.0.4 =
 * fixes Window paths including drive letters (e.g. when using XAMPP)
