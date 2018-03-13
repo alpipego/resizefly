@@ -118,7 +118,7 @@ $add.on('click', function (ev) {
         });
 });
 
-$('.js-rzf-user-size-readd').on('click', function (ev) {
+$(document).on('click', '.js-rzf-user-size-readd', function (ev) {
     ev.preventDefault();
     var $button = $(this),
         $row = $(this).parents('tr').eq(0);
@@ -153,7 +153,7 @@ $('.js-rzf-user-size-readd').on('click', function (ev) {
         });
 });
 
-$('.js-rzf-user-size-delete').on('click', function (ev) {
+$(document).on('click', '.js-rzf-user-size-delete', function (ev) {
     ev.preventDefault();
     var $button = $(this);
 
@@ -173,6 +173,8 @@ $('.js-rzf-user-size-delete').on('click', function (ev) {
                 .find('input').each(function () {
                 $(this).remove();
             });
+
+            $button.remove();
 
             unsaved = true;
         })
