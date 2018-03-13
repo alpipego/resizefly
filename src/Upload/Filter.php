@@ -168,7 +168,7 @@ class Filter
      */
     public function revertOriginalContent($content)
     {
-        preg_replace_callback(
+        return preg_replace_callback(
             "%{$this->cacheUrl}(?<image>[^\",\s]*?)(?<dim>-\d+x\d+)?(?:@\d)?\.(?<ext>png|jpe?g|gif)%",
             function ($matches) {
                 return sprintf('%s%s%s.%s', $this->uploads->getBaseUrl(), $matches['image'], $matches['dim'],
@@ -176,8 +176,6 @@ class Filter
             },
             $content
         );
-
-        return $content;
     }
 
     /**
