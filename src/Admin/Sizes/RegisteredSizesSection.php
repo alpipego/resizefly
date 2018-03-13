@@ -8,7 +8,6 @@
 
 namespace Alpipego\Resizefly\Admin\Sizes;
 
-
 use Alpipego\Resizefly\Admin\AbstractOptionsSection;
 use Alpipego\Resizefly\Admin\OptionsSectionInterface;
 use Alpipego\Resizefly\Admin\PageInterface;

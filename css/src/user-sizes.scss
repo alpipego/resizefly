@@ -1,16 +1,16 @@
 .rzf {
     &-user-sizes {
         float: left;
-        width: 100%;
         margin-bottom: 10px;
+        width: 100%;
         &-single {
             float: left;
-            width: auto;
-            padding-right: 20px;
             height: 50px;
+            padding-right: 20px;
+            width: auto;
             .label {
-                width: 100%;
                 display: block;
+                width: 100%;
             }
             [type="checkbox"] {
                 margin-top: 6px
@@ -20,8 +20,42 @@
             }
         }
         &-error {
-            margin-bottom: 20px;
             color: rgb(222, 48, 43);
+            margin-bottom: 20px;
+        }
+    }
+    &-image-sizes {
+        th {
+            padding-left: 10px;
+        }
+    }
+    &-size-status {
+        padding: 0 4px !important;
+        vertical-align: middle !important;
+        width: 20px !important;
+        &-new {
+            background-color: lighten(#46b450, 45);
+            .rzf-size-status {
+                background-color: #46b450;
+            }
+        }
+        &-updated {
+            background-color: lighten(#ffb902, 45);
+            .rzf-size-status {
+                background-color: #ffb902;
+            }
+        }
+        &-missing {
+            background-color: lighten(#dc3232, 45);
+            .rzf-size-status {
+                background-color: #dc3232;
+            }
+        }
+        &-desc {
+            margin-bottom: 1em;
+        }
+        .dashicons {
+            color: #fff;
         }
     }
 }
