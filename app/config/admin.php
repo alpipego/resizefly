@@ -45,8 +45,6 @@ return [
         ->constructorParam('section', RegisteredSizesSection::class),
     SizesField::class             => Alpipego\Resizefly\object()
         ->constructorParam('section', RegisteredSizesSection::class),
-    UserSizesField::class         => Alpipego\Resizefly\object()
-        ->constructorParam('section', RegisteredSizesSection::class),
     Fake::class                   => Alpipego\Resizefly\object(),
     Admin::class                  => Alpipego\Resizefly\object()
         ->constructorParam('basename', 'config.basename')
