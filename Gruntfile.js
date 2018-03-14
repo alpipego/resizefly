@@ -4,13 +4,11 @@ module.exports = function (grunt) {
 
         sass: {
             options: {
-                sourceMap: true,
-                sourceMapEmbed: true,
                 outputStyle: 'compressed'
             },
             dist: {
                 files: {
-                    'css/resizefly-admin.css': 'css/src/*.scss'
+                    'css/resizefly-admin.css': 'css/src/inc.scss'
                 }
             }
         },
@@ -20,7 +18,6 @@ module.exports = function (grunt) {
                 options: {
                     mangle: false,
                     sourceMap: true,
-                    // sourceMapIn: 'js/resizefly-admin.js.map',
                     banner: '(function ($) {',
                     footer: '\n})(jQuery);',
                     preserveComments: 'some'
