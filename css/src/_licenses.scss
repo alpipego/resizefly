@@ -1,0 +1,13 @@
+.resizefly-license {
+    &-status {
+        font-size: 12px !important;
+        margin-top: 0 !important;
+        position: absolute !important;
+    }
+    &-valid {
+        color: $green;
+    }
+    &-invalid {
+        color: $red;
+    }
+}

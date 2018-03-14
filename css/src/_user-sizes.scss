@@ -1,7 +1,6 @@
 .rzf {
     &-user-sizes {
         float: left;
-        margin-bottom: 10px;
         width: 100%;
         margin: {
             top: 30px;
@@ -44,9 +43,9 @@
         width: 20px !important;
 
         &-new {
-            background-color: lighten(#46b450, 45);
+            background-color: lighten($green, 45);
             .rzf-size-status {
-                background-color: #46b450;
+                background-color: $green;
             }
         }
 
@@ -58,15 +57,15 @@
         }
 
         &-missing {
-            background-color: lighten(#dc3232, 45);
+            background-color: lighten($red, 45);
             .rzf-size-status {
-                background-color: #dc3232;
+                background-color: $red;
             }
         }
 
         &-desc {
+            border-width: 0 !important;
             margin-bottom: 1em;
-            border-width: 0!important;
         }
 
         .dashicons {
