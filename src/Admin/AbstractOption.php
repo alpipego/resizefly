@@ -62,18 +62,21 @@ abstract class AbstractOption {
 	 * Register the option
 	 */
 	public function registerSetting() {
-		register_setting( 'resizefly', $this->optionsField['id'], [ $this, 'sanitize' ] );
+		register_setting( $this->optionsPage->getId(), $this->optionsField['id'], [ $this, 'sanitize' ] );
 	}
 
 	/**
 	 * Add settings field
 	 */
 	public function addField() {
-		add_settings_field( $this->optionsField['id'], $this->optionsField['title'], [
-			$this,
-			'callback',
-		], $this->optionsPage->getId(), $this->optionsGroup->getId(),
-			! empty( $this->optionsField['args'] ) ? $this->optionsField['args'] : [] );
+		add_settings_field(
+			$this->optionsField['id'],
+			$this->optionsField['title'],
+			[ $this, 'callback' ],
+			$this->optionsPage->getId(),
+			$this->optionsGroup->getId(),
+			! empty( $this->optionsField['args'] ) ? $this->optionsField['args'] : []
+		);
 	}
 
 	public function getId() {
@@ -91,12 +94,16 @@ abstract class AbstractOption {
 	 * @param array $args variables to pass to view
 	 */
 	protected function includeView( $name, $args = [] ) {
+		include $this->getView( $name );
+	}
+
+	public function getView( $name ) {
 		$fileArr = preg_split( '/(?=[A-Z-_])/', $name );
 		$fileArr = array_map( function ( &$value ) {
 			return trim( $value, '-_' );
 		}, $fileArr );
 		$fileArr = array_map( 'strtolower', $fileArr );
 
-		include $this->viewsPath . 'field/' . implode( '-', $fileArr ) . '.php';
+		return $this->viewsPath . 'field/' . implode( '-', $fileArr ) . '.php';
 	}
 }

@@ -86,8 +86,12 @@ final class OptionsPage extends AbstractPage implements PageInterface {
 	 * Include the view
 	 */
 	public function callback() {
+		$sections = array_unique( array_merge( [
+			self::PAGE => __( 'ResizeFly', 'resizefly' ),
+		], (array) apply_filters( 'resizefly/admin/sections', [] ) ) );
+
 		$args = [
-			'page' => self::PAGE,
+			'sections' => $sections,
 		];
 
 		include $this->viewsPath . 'page/resizefly.php';
@@ -105,7 +109,7 @@ final class OptionsPage extends AbstractPage implements PageInterface {
 				'1.0.0',
 				true
 			);
-			wp_add_inline_style( 'wp-admin', file_get_contents( $this->pluginPath . '/css/resizefly-admin.css' ) );
+			wp_add_inline_style( 'wp-admin', file_get_contents( $this->pluginPath . 'css/resizefly-admin.css' ) );
 
 			wp_localize_script( 'resizefly-admin', 'resizefly', $this->localized );
 		}

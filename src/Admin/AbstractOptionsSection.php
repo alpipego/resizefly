@@ -31,16 +31,19 @@ abstract class AbstractOptionsSection {
 	 * @var string $viewsPath path to views dir
 	 */
 	protected $viewsPath;
+	private $custom;
 
 	/**
 	 * AbstractOptionsSection constructor.
 	 *
 	 * @param PageInterface $page
 	 * @param string $pluginPath base plugin path
+	 * @param string $customSection
 	 */
-	public function __construct( PageInterface $page, $pluginPath ) {
+	public function __construct( PageInterface $page, $pluginPath, $customSection = '' ) {
 		$this->optionsPage = $page;
 		$this->viewsPath   = $pluginPath . 'views/';
+		$this->custom      = $customSection;
 	}
 
 	/**
@@ -57,7 +60,15 @@ abstract class AbstractOptionsSection {
 		add_settings_section( $this->optionsGroup['id'], $this->optionsGroup['title'], [
 			$this,
 			'callback',
-		], $this->optionsPage->getId() );
+		], ( empty( $this->custom ) ? $this->optionsPage->getId() : $this->custom ) );
+	}
+
+	public function getId() {
+		return $this->optionsGroup['id'];
+	}
+
+	public function getTitle() {
+		return $this->optionsGroup['title'];
 	}
 
 	/**
@@ -74,13 +85,5 @@ abstract class AbstractOptionsSection {
 		$fileArr = array_map( 'strtolower', $fileArr );
 
 		include $this->viewsPath . 'section/' . implode( '-', $fileArr ) . '.php';
-	}
-
-	public function getId() {
-		return $this->optionsGroup['id'];
-	}
-
-	public function getTitle() {
-		return $this->optionsGroup['title'];
 	}
 }
