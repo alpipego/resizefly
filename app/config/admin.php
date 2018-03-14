@@ -16,7 +16,6 @@ use Alpipego\Resizefly\Admin\PageInterface;
 use Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\Sizes\RestrictSizesField;
 use Alpipego\Resizefly\Admin\Sizes\SizesField;
-use Alpipego\Resizefly\Admin\Sizes\UserSizesField;
 use Alpipego\Resizefly\Upload\Cache;
 use Alpipego\Resizefly\Upload\Fake;
 use Alpipego\Resizefly\Upload\RemoveResized;
