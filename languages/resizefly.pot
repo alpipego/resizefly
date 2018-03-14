@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 1.3.3\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-03-13 17:07+0700\n"
+"POT-Creation-Date: 2018-03-14 12:31+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,47 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Admin/Admin.php:37
+#: src/Addon/EddAddonUpdater.php:306
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+
+#: src/Addon/EddAddonUpdater.php:314
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+
+#: src/Addon/EddAddonUpdater.php:444
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: src/Addon/EddAddonUpdater.php:444
+msgid "Error"
+msgstr ""
+
+#: src/Admin/Admin.php:33
 msgid "Resizefly Settings"
 msgstr ""
 
-#: src/Admin/Cache/CacheSection.php:31
+#: src/Admin/Cache/CacheSection.php:29
 msgid "Cache Settings"
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:42
+#: src/Admin/Cache/PathField.php:41
 msgid "Path for resized images"
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:61
+#: src/Admin/Cache/PathField.php:59
 #, php-format
 msgid ""
 "The provided path (%s) is not writeable! Please fix the permissions in your "
 "uploads directory."
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:103
+#: src/Admin/Cache/PathField.php:99
 msgid ""
 "This directory already exists. Please remove the directory manually and try "
 "setting it again."
@@ -65,11 +86,58 @@ msgctxt "as in \"most resized images\""
 msgid "most"
 msgstr ""
 
-#: src/Admin/Cache/RemoveResizedField.php:21
+#: src/Admin/Cache/RemoveResizedField.php:19
 msgid "Remove All Resized Images"
 msgstr ""
 
-#: src/Admin/Sizes/RegisteredSizesSection.php:28
+#: src/Admin/Licenses/LicenseField.php:37
+#, php-format
+msgid "Your license key expired on %s."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:38
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:39
+msgid "Invalid license."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:40
+#: src/Admin/Licenses/LicenseField.php:41
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:42
+#, php-format
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:43
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:44 src/edd-sample-plugin.php:107
+msgid "An error occurred, please try again."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:108
+msgid "valid"
+msgstr ""
+
+#: src/Admin/Licenses/LicensesSection.php:22
+msgid "Addon Licenses"
+msgstr ""
+
+#: src/Admin/Licenses/LicensesSection.php:29
+msgid "Licenses"
+msgstr ""
+
+#: src/Admin/OptionsPage.php:90
+msgid "ResizeFly"
+msgstr ""
+
+#: src/Admin/Sizes/RegisteredSizesSection.php:26
 msgid "Registered Sizes Settings"
 msgstr ""
 
@@ -124,28 +192,28 @@ msgid ""
 "\"%s\"><button type=\"button\">Please review them here.</button></a>"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:68
+#: src/Upload/DuplicateOriginal.php:64
 #, php-format
 msgid ""
 "The directory %s is not writeable by Resizefly. Please correct the "
 "permissions."
 msgstr ""
 
-#: version-check.php:91
+#: version-check.php:82
 #, php-format
 msgid ""
 "Resizefly requires at least PHP %s to function properly. Please upgrade PHP "
 "to use Resizefly."
 msgstr ""
 
-#: version-check.php:97
+#: version-check.php:88
 #, php-format
 msgid ""
 "Resizefly requires at least WordPress %s to function properly. Please "
 "upgrade WordPress to use Resizefly."
 msgstr ""
 
-#: version-check.php:102
+#: version-check.php:93
 msgid ""
 "Resizefly could not find an Image Editor. Please make sure you have either "
 "GD or Imagick installed."
@@ -200,6 +268,15 @@ msgstr ""
 msgid "Add image size"
 msgstr ""
 
+#: views/field/resizefly-addon-license.php:15
+msgid "Enter your License Key"
+msgstr ""
+
+#: views/field/resizefly-addon-license.php:19
+#, php-format
+msgid "Status: %s"
+msgstr ""
+
 #. /07/16
 #. * Time: 14:39
 #.
@@ -228,12 +305,12 @@ msgstr ""
 
 #: views/field/resizefly-resized-path.php:14
 #, php-format
-msgid "Directory %s <span style=\"color: green\">is writable</span>"
+msgid "Directory %s <span class=\"resizefly-ok\">is writable</span>"
 msgstr ""
 
 #: views/field/resizefly-resized-path.php:16
 #, php-format
-msgid "Directory %s <span style=\"color: crimson\">is not writable</span>"
+msgid "Directory %s <span class=\"resizefly-error\">is not writable</span>"
 msgstr ""
 
 #: views/field/resizefly-sizes.php:19 views/field/resizefly-sizes.php:30
@@ -249,7 +326,7 @@ msgctxt "button text"
 msgid "Delete Size"
 msgstr ""
 
-#: views/page/resizefly.php:17
+#: views/page/resizefly.php:31
 msgid "Update Options"
 msgstr ""
 
