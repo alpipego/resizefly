@@ -32,7 +32,7 @@ class LicenseField extends AbstractOption implements OptionInterface {
 		$this->addon            = $addonData;
 		$this->license          = get_option( $this->optionsField['id'] );
 		$this->statusKey        = 'resizefly_license_status_' . $this->addon['name'];
-		$this->statusKeyVerbose = 'resizefly_license_status_verbose' . $this->addon['name'];
+		$this->statusKeyVerbose = 'resizefly_license_status_verbose_' . $this->addon['name'];
 		$this->errorMessages    = [
 			'expired'             => __( 'Your license key expired on %s.', 'resizefly' ),
 			'revoked'             => __( 'Your license key has been disabled.', 'resizefly' ),
@@ -60,7 +60,7 @@ class LicenseField extends AbstractOption implements OptionInterface {
 		new EddAddonUpdater( self::STORE_URL, $this->addon['file'], [
 				'version' => $this->addon['version'],
 				'license' => $this->license,
-				'item_id' => $this->addon['id'],
+				'item_id' => ! empty( $this->addon['id'] ) ? (int)$this->addon['id'] : 0,
 				'author'  => ! empty( $this->addon['author'] ) ? $this->addon['author'] : 'Alexander Goller',
 				'beta'    => ! empty( $this->addon['beta'] ),
 			]
@@ -104,14 +104,12 @@ class LicenseField extends AbstractOption implements OptionInterface {
 	private function activateLicense( $license ) {
 		$response = $this->remotePost( 'activate_license', $license );
 
-		error_log( date( 'd.m.Y H:i:s', strtotime( 'now' ) ) . ' ' . __FILE__ . "::" . __LINE__ . "\n" . var_export( [ 'error' => is_wp_error( $response ), 'response' => wp_remote_retrieve_response_code( $response ) ], true ) . "\n" );
 		$message = __( 'valid', 'resizefly' );
 
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			$message = is_wp_error( $response ) ? $response->get_error_message() : $this->errorMessages['default'];
 		} else {
 			$licenseData = json_decode( wp_remote_retrieve_body( $response ) );
-			error_log( date( 'd.m.Y H:i:s', strtotime( 'now' ) ) . ' ' . __FILE__ . "::" . __LINE__ . "\n" . var_export( $licenseData, true ) . "\n" );
 			if ( $licenseData->success === false ) {
 				$message = $this->handleError( $licenseData );
 			}
