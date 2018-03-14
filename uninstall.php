@@ -13,7 +13,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // simple uninstallation for now
 $options = get_option( 'resizefly_options' );
 
-global $wp_filesystem;
+global $wp_filesystem, $wpdb;
 
 foreach ( [ $options['cache']['path'], $options['duplicates']['path'] ] as $dir ) {
 	if ( is_dir( $dir ) ) {
@@ -22,9 +22,7 @@ foreach ( [ $options['cache']['path'], $options['duplicates']['path'] ] as $dir 
 }
 
 // delete database options
-delete_option( 'resizefly_options' );
-delete_option( 'resizefly_restrict_sizes' );
-delete_option( 'resizefly_sizes' );
-delete_option( 'resizefly_user_sizes' );
-delete_option( 'resizefly_resized_path' );
-delete_option( 'resizefly_version' );
+$options = $wpdb->get_col("SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'resizefly_%';");
+foreach ($options as $option) {
+	delete_option($option);
+}
