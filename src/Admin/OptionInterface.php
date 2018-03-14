@@ -55,4 +55,6 @@ interface OptionInterface {
 	public function getId();
 
 	public function getTitle();
+
+	public function getView($name);
 }
