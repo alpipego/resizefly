@@ -6,6 +6,9 @@
  * Time: 10:45
  */
 
+use Alpipego\Resizefly\Admin\Licenses\LicensesPage;
+use Alpipego\Resizefly\Admin\Licenses\LicensesSection;
+use Alpipego\Resizefly\Admin\OptionsPage;
 use Alpipego\Resizefly\Common\Composer\Autoload\ClassLoader;
 use Alpipego\Resizefly\Plugin;
 use Alpipego\Resizefly\Upload\Uploads;
@@ -60,6 +63,16 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 	foreach ( $plugin->get( 'addons' ) as $addonName => $addon ) {
 		add_filter( 'resizefly/addons/' . $addonName, function () use ( $plugin ) {
 			return $plugin;
+		} );
+	}
+
+	if ( ! empty( $plugin->get( 'addons' ) ) ) {
+		$plugin->offsetSet( 'Licenses', function ( Plugin $plugin ) {
+			return new LicensesSection(
+				new LicensesPage,
+				$plugin->get( 'config.path' ),
+				$plugin->get( 'addons' )
+			);
 		} );
 	}
 
