@@ -30,7 +30,7 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 	$plugin['config.url']      = plugin_dir_url( $file );
 	$plugin['config.basename'] = plugin_basename( $file );
 	$plugin['config.siteurl']  = get_bloginfo( 'url' );
-	$plugin['config.version']  = '2.0.1';
+	$plugin['config.version']  = '2.1.0';
 
 	// settings/filterable configuration values
 	$plugin['options.cache.suffix']      = get_option( 'resizefly_resized_path', 'resizefly' );
