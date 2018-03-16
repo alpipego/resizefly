@@ -42,6 +42,7 @@ class LicenseField extends AbstractOption implements OptionInterface {
 			'item_name_mismatch'  => __( 'This appears to be an invalid license key for %s.', 'resizefly' ),
 			'no_activations_left' => __( 'Your license key has reached its activation limit.', 'resizefly' ),
 			'default'             => __( 'An error occurred, please try again.', 'resizefly' ),
+			'unknown_addon'       => __( 'Unknown addon', 'resizefly' ),
 		];
 
 		add_option( $this->optionsField['id'] );
@@ -60,7 +61,7 @@ class LicenseField extends AbstractOption implements OptionInterface {
 		new EddAddonUpdater( self::STORE_URL, $this->addon['file'], [
 				'version' => $this->addon['version'],
 				'license' => $this->license,
-				'item_id' => ! empty( $this->addon['id'] ) ? (int)$this->addon['id'] : 0,
+				'item_id' => ! empty( $this->addon['id'] ) ? (int) $this->addon['id'] : 0,
 				'author'  => ! empty( $this->addon['author'] ) ? $this->addon['author'] : 'Alexander Goller',
 				'beta'    => ! empty( $this->addon['beta'] ),
 			]
@@ -121,6 +122,10 @@ class LicenseField extends AbstractOption implements OptionInterface {
 	}
 
 	private function remotePost( $action, $license ) {
+		if ( empty( (int) $this->addon['id'] ) ) {
+			return new \WP_Error( 'empty_addon_id', $this->errorMessages['unknown_addon'] );
+		}
+
 		return wp_remote_post(
 			self::STORE_URL,
 			[
@@ -129,7 +134,7 @@ class LicenseField extends AbstractOption implements OptionInterface {
 				'body'      => [
 					'edd_action' => $action,
 					'license'    => $license,
-					'item_id'    => $this->addon['id'],
+					'item_id'    => ! empty( (int) $this->addon['id'] ) ? (int) $this->addon['id'] : 0,
 					'url'        => home_url(),
 				],
 			]
