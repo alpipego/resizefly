@@ -8,7 +8,6 @@
 
 namespace Alpipego\Resizefly\Admin\Sizes;
 
-
 use Alpipego\Resizefly\Admin\AbstractOption;
 use Alpipego\Resizefly\Admin\OptionInterface;
 use Alpipego\Resizefly\Admin\OptionsSectionInterface;
@@ -19,8 +18,8 @@ class RestrictSizesField extends AbstractOption implements OptionInterface {
 	/**
 	 * RestrictSizesField constructor.
 	 *
-	 * @param PageInterface|string $page
-	 * @param OptionsSectionInterface|string $section
+	 * @param PageInterface $page
+	 * @param OptionsSectionInterface $section
 	 * @param string $pluginPath
 	 */
 	public function __construct( PageInterface $page, OptionsSectionInterface $section, $pluginPath ) {
