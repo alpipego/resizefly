@@ -8,7 +8,6 @@
 
 use Alpipego\Resizefly\Admin\Licenses\LicensesPage;
 use Alpipego\Resizefly\Admin\Licenses\LicensesSection;
-use Alpipego\Resizefly\Admin\OptionsPage;
 use Alpipego\Resizefly\Common\Composer\Autoload\ClassLoader;
 use Alpipego\Resizefly\Plugin;
 use Alpipego\Resizefly\Upload\Uploads;
@@ -39,20 +38,14 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 
 	// set the cache path throughout the plugin
 	$plugin['options.cache.path'] = function ( Plugin $plugin ) {
-		return trailingslashit( $plugin->get( Uploads::class )
-		                               ->getBasePath() ) . trim( $plugin->get( 'options.cache.suffix' ),
-				DIRECTORY_SEPARATOR );
+		return trailingslashit( $plugin->get( Uploads::class )->getBasePath() ) . trim( $plugin->get( 'options.cache.suffix' ), DIRECTORY_SEPARATOR );
 	};
 	$plugin['options.cache.url']  = function ( Plugin $plugin ) {
-		return trailingslashit( $plugin->get( Uploads::class )
-		                               ->getBaseUrl() ) . trim( $plugin->get( 'options.cache.suffix' ),
-				DIRECTORY_SEPARATOR );
+		return trailingslashit( $plugin->get( Uploads::class )->getBaseUrl() ) . trim( $plugin->get( 'options.cache.suffix' ), DIRECTORY_SEPARATOR );
 	};
 	// set the duplicates path
 	$plugin['options.duplicates.path'] = function ( Plugin $plugin ) {
-		return trailingslashit( $plugin->get( Uploads::class )
-		                               ->getBasePath() ) . trim( $plugin->get( 'options.duplicates.suffix' ),
-				DIRECTORY_SEPARATOR );
+		return trailingslashit( $plugin->get( Uploads::class )->getBasePath() ) . trim( $plugin->get( 'options.duplicates.suffix' ), DIRECTORY_SEPARATOR );
 	};
 
 	$plugin->offsetSet( 'loader', $classLoader );
@@ -67,6 +60,21 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 	}
 
 	if ( ! empty( $plugin->get( 'addons' ) ) ) {
+		// check minimum parent requirement
+		foreach ( $plugin->get( 'addons' ) as $addon ) {
+			$version = ! empty( $addon['min_version'] ) ? $addon['min_version'] : $plugin['config.version'];
+
+			if ( version_compare( $version, $plugin['config.version'] ) === 1 ) {
+				add_action('admin_init', function() use ($addon, $plugin) {
+					deactivate_plugins( plugin_basename( $addon['file'] ), true );
+					add_action('admin_notices', function() use ($addon, $plugin) {
+						printf( __('<div class="error"><p>The %s addon requires at least ResizeFly %s. You have %s installed. Please update ResizeFly.</p></div>', 'resizefly'), $addon['nicename'],$addon['min_version'], $plugin['config.version'] );
+					});
+				});
+			}
+		}
+
+		// add licenses for add-on
 		$plugin->offsetSet( 'Licenses', function ( Plugin $plugin ) {
 			return new LicensesSection(
 				new LicensesPage,
@@ -105,4 +113,7 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 
 	// fix wrong attachment date
 	require_once __DIR__ . '/actions/media-send-to-editor.php';
+
+	// update version after upgrade
+	require_once __DIR__ . '/actions/upgrader-process-complete.php';
 } );
