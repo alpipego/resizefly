@@ -22,7 +22,7 @@ foreach ( [ $options['cache']['path'], $options['duplicates']['path'] ] as $dir 
 }
 
 // delete database options
-$options = $wpdb->get_col("SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'resizefly_%';");
-foreach ($options as $option) {
-	delete_option($option);
+$options = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'resizefly_%';" );
+foreach ( $options as $option ) {
+	delete_option( $option );
 }
