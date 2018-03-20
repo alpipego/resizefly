@@ -9,10 +9,21 @@
  */
 
 // try to move thumbnail files
-if (version_compare(get_option('resizefly_version'), $plugin['config.version'], '<')) {
-    $plugin
-        ->get(\Alpipego\Resizefly\Upload\Cache::class)
-        ->populateOnInstall($plugin->get(\Alpipego\Resizefly\Image\Image::class));
-    // update the version option
-    update_option('resizefly_version', $plugin['config.version']);
+use Alpipego\Resizefly\Common\Psr\Container\ContainerExceptionInterface;
+use Alpipego\Resizefly\Common\Psr\Container\NotFoundExceptionInterface;
+use Alpipego\Resizefly\Image\Image;
+use Alpipego\Resizefly\Upload\Cache;
+
+if ( version_compare( get_option( 'resizefly_version' ), $plugin['config.version'], '<' ) ) {
+	try {
+		$plugin
+			->get( Cache::class )
+			->populateOnInstall( $plugin->get( Image::class ) );
+	} catch ( NotFoundExceptionInterface $e ) {
+	} catch ( ContainerExceptionInterface $e ) {
+	}
+
+	// update the version option
+	update_option( 'resizefly_version_initial', $plugin['config.version'] );
+	update_option( 'resizefly_version', $plugin['config.version'] );
 }

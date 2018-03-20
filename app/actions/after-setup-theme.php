@@ -13,7 +13,7 @@ add_action( 'after_setup_theme', function () {
 	$userSizes = get_option( 'resizefly_user_sizes', [] );
 	if ( ! empty( $userSizes ) ) {
 		foreach ( $userSizes as $size ) {
-			if ( !is_array( $size['crop'] ) || count( $size['crop'] ) !== 2 ) {
+			if ( ! is_array( $size['crop'] ) || count( $size['crop'] ) !== 2 ) {
 				$size['crop'] = (bool) $size['crop'];
 			}
 			add_image_size( $size['name'], (int) $size['width'], (int) $size['height'], $size['crop'] );

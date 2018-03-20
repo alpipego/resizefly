@@ -6,6 +6,10 @@
 var resizefly = window.resizefly,
     buttonIds = ['#' + resizefly.purge_id, '#' + resizefly.resized_id];
 
+$('#' + resizefly.purge_id + '-smart').on('change', function () {
+    $('#' + resizefly.purge_id + '-text').text($(this).prop('checked') ? resizefly.purge_most : resizefly.purge_all);
+});
+
 $(buttonIds.join(',')).on('click', function (e) {
     e.preventDefault();
 

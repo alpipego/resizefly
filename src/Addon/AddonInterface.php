@@ -9,7 +9,6 @@
 namespace Alpipego\Resizefly\Addon;
 
 
-interface AddonInterface
-{
-    public function run();
+interface AddonInterface {
+	public function run();
 }

@@ -9,13 +9,12 @@
 namespace Alpipego\Resizefly\DI;
 
 
-class ObjectDefinition
-{
-    public $constructorParams = [];
+class ObjectDefinition {
+	public $constructorParams = [];
 
-    public function constructorParam($name, $value) {
-        $this->constructorParams[$name] = $value;
+	public function constructorParam( $name, $value ) {
+		$this->constructorParams[ $name ] = $value;
 
-        return $this;
-    }
+		return $this;
+	}
 }

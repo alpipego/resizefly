@@ -1,0 +1,13 @@
+$green: #46b450;
+$red: #dc3232;
+
+.resizefly {
+    &-ok {
+        color: $green;
+    }
+    &-error {
+        color: $red;
+    }
+}
+
+@import "licenses", "user-sizes";

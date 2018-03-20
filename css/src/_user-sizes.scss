@@ -1,0 +1,78 @@
+.rzf {
+    &-user-sizes {
+        float: left;
+        width: 100%;
+        margin: {
+            top: 30px;
+            bottom: 30px;
+        }
+
+        &-single {
+            float: left;
+            height: 50px;
+            padding-right: 20px;
+            width: auto;
+
+            .label {
+                display: block;
+                width: 100%;
+            }
+
+            [type="checkbox"] {
+                margin-top: 6px
+            }
+
+            .button-secondary {
+                margin-top: 17px;
+            }
+        }
+
+        &-error {
+            color: rgb(222, 48, 43);
+            margin-bottom: 20px;
+        }
+    }
+    &-image-sizes {
+        th {
+            padding-left: 10px;
+        }
+    }
+    &-size-status {
+        padding: 0 4px !important;
+        vertical-align: middle !important;
+        width: 20px !important;
+
+        &-new {
+            background-color: lighten($green, 45);
+            .rzf-size-status {
+                background-color: $green;
+            }
+        }
+
+        &-updated {
+            background-color: lighten(#ffb902, 45);
+            .rzf-size-status {
+                background-color: #ffb902;
+            }
+        }
+
+        &-missing {
+            background-color: lighten($red, 45);
+            .rzf-size-status {
+                background-color: $red;
+            }
+        }
+
+        &-desc {
+            border-width: 0 !important;
+            margin-bottom: 1em;
+        }
+
+        .dashicons {
+            color: #fff;
+        }
+    }
+    &-size {
+        height: 58px;
+    }
+}
