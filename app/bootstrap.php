@@ -60,20 +60,6 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 	}
 
 	if ( ! empty( $plugin->get( 'addons' ) ) ) {
-		// check minimum parent requirement
-		foreach ( $plugin->get( 'addons' ) as $addon ) {
-			$version = ! empty( $addon['min_version'] ) ? $addon['min_version'] : $plugin['config.version'];
-
-			if ( version_compare( $version, $plugin['config.version'] ) === 1 ) {
-				add_action( 'admin_init', function () use ( $addon, $plugin ) {
-					deactivate_plugins( plugin_basename( $addon['file'] ), true );
-					add_action( 'admin_notices', function () use ( $addon, $plugin ) {
-						printf( __( '<div class="error"><p>The %s addon requires at least ResizeFly %s. You have %s installed. Please update ResizeFly.</p></div>', 'resizefly' ), $addon['nicename'], $addon['min_version'], $plugin['config.version'] );
-					} );
-				} );
-			}
-		}
-
 		// add licenses for add-on
 		$plugin->offsetSet( 'Licenses', function ( Plugin $plugin ) {
 			return new LicensesSection(
