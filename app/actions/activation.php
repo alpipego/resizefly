@@ -24,6 +24,6 @@ if ( version_compare( get_option( 'resizefly_version' ), $plugin['config.version
 	}
 
 	// update the version option
-	update_option( 'resizefly_version_initial', $plugin['config.version'] );
+	add_option( 'resizefly_version_initial', $plugin['config.version'] );
 	update_option( 'resizefly_version', $plugin['config.version'] );
 }
