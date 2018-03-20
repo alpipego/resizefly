@@ -30,7 +30,7 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 	$plugin['config.url']      = plugin_dir_url( $file );
 	$plugin['config.basename'] = plugin_basename( $file );
 	$plugin['config.siteurl']  = get_bloginfo( 'url' );
-	$plugin['config.version']  = '2.0.1';
+	$plugin['config.version']  = '2.1.0';
 
 	// settings/filterable configuration values
 	$plugin['options.cache.suffix']      = get_option( 'resizefly_resized_path', 'resizefly' );
@@ -65,12 +65,12 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 			$version = ! empty( $addon['min_version'] ) ? $addon['min_version'] : $plugin['config.version'];
 
 			if ( version_compare( $version, $plugin['config.version'] ) === 1 ) {
-				add_action('admin_init', function() use ($addon, $plugin) {
+				add_action( 'admin_init', function () use ( $addon, $plugin ) {
 					deactivate_plugins( plugin_basename( $addon['file'] ), true );
-					add_action('admin_notices', function() use ($addon, $plugin) {
-						printf( __('<div class="error"><p>The %s addon requires at least ResizeFly %s. You have %s installed. Please update ResizeFly.</p></div>', 'resizefly'), $addon['nicename'],$addon['min_version'], $plugin['config.version'] );
-					});
-				});
+					add_action( 'admin_notices', function () use ( $addon, $plugin ) {
+						printf( __( '<div class="error"><p>The %s addon requires at least ResizeFly %s. You have %s installed. Please update ResizeFly.</p></div>', 'resizefly' ), $addon['nicename'], $addon['min_version'], $plugin['config.version'] );
+					} );
+				} );
 			}
 		}
 

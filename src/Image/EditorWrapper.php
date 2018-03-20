@@ -83,7 +83,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 	private function parseDensity( $width, $height, $density ) {
 		$width   = $width * $density;
 		$height  = $height * $density;
-		$quality = 20;
+		$quality = 40;
 		if ( $density === 1 ) {
 			$quality = $this->getQuality();
 		}

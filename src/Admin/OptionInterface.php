@@ -56,5 +56,5 @@ interface OptionInterface {
 
 	public function getTitle();
 
-	public function getView($name);
+	public function getView( $name );
 }
