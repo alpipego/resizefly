@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 1.3.3\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-03-14 12:31+0700\n"
+"POT-Creation-Date: 2018-05-19 16:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,8 +117,12 @@ msgstr ""
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:44 src/edd-sample-plugin.php:107
+#: src/Admin/Licenses/LicenseField.php:44
 msgid "An error occurred, please try again."
+msgstr ""
+
+#: src/Admin/Licenses/LicenseField.php:45
+msgid "Unknown addon"
 msgstr ""
 
 #: src/Admin/Licenses/LicenseField.php:108
@@ -141,7 +145,7 @@ msgstr ""
 msgid "Registered Sizes Settings"
 msgstr ""
 
-#: src/Admin/Sizes/RestrictSizesField.php:32
+#: src/Admin/Sizes/RestrictSizesField.php:31
 msgid "Restrict Image Sizes"
 msgstr ""
 
@@ -149,43 +153,43 @@ msgstr ""
 msgid "Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:81
+#: src/Admin/Sizes/SizesField.php:83
 msgctxt "admin custom image size."
 msgid "Please choose a unique name."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:82
+#: src/Admin/Sizes/SizesField.php:84
 msgctxt "admin custom image size."
 msgid "Please add either width or height."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:83
+#: src/Admin/Sizes/SizesField.php:85
 msgctxt "admin custom image size"
 msgid "When specifying \"crop\", please add both width and height."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:85 views/field/resizefly-sizes.php:93
+#: src/Admin/Sizes/SizesField.php:87 views/field/resizefly-sizes.php:93
 msgctxt "button text"
 msgid "Add Size"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:209
+#: src/Admin/Sizes/SizesField.php:211
 msgid ""
 "This image size is not yet saved. If you want to allow images in this size "
 "save the form."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:210
+#: src/Admin/Sizes/SizesField.php:212
 msgid "This image size has been updated since your last save."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:211
+#: src/Admin/Sizes/SizesField.php:213
 msgid ""
 "This image size is no longer registered. If you still want to keep it you "
 "will have to add it manually."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:377
+#: src/Admin/Sizes/SizesField.php:379
 #, php-format
 msgid ""
 "The registered and saved image sizes for ResizeFly are out of sync. <a href="
