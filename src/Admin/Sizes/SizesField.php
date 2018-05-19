@@ -69,6 +69,8 @@ class SizesField extends AbstractOption implements OptionInterface {
 		];
 		$this->localize( $page );
 
+		add_option($this->optionsField['id'], []);
+
 		parent::__construct( $page, $section, $pluginPath );
 	}
 
