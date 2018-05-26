@@ -59,8 +59,11 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.0.5 =
-* return filtered content, instead of original before saving to database
+= 2.1.1 =
+* ignore any images that are not jp(e)g, gif, png; e.g. svgs
+* image had wrong dimensions, if ratio was not original and density > 1
 
-= 2.0.4 =
-* fixes Window paths including drive letters (e.g. when using XAMPP)
+= 2.1.0 =
+* prepare the main plugin for add-ons
+* fix a bug in the full size post meta data
+* improve user submitted sizes section
