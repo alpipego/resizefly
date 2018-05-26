@@ -4,7 +4,7 @@
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
  * Plugin URI:  https://resizefly.com/
- * Version:     2.1.0
+ * Version:     2.1.1
  * Author:      alpipego
  * Author URI:  https://alpipego.com/
  * License:     MIT
