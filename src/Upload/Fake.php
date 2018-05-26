@@ -57,6 +57,9 @@ class Fake {
 	 */
 	public function fakeImageResize( $metadata ) {
 		$file = pathinfo( realpath( $this->uploads->getBasePath() . '/' . $metadata['file'] ) );
+        if (!in_array($file['extension'], ['jpg', 'jpeg', 'png', 'gif'], true)) {
+            return $metadata;
+        }
 
 		foreach ( $this->sizes as $name => $size ) {
 			// figure out what size WP would make this:

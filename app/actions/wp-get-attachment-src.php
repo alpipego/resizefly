@@ -1,7 +1,11 @@
 <?php
 
 add_filter( 'wp_get_attachment_image_src', function ( $image, $imageId, $size ) {
-	if ( ! $image || is_array( $size ) ) {
+    if (
+        ! $image
+        || is_array( $size )
+        || !in_array(get_post_mime_type($imageId), ['image/jpeg', 'image/png', 'image/gif'], true)
+    ) {
 		return $image;
 	}
 

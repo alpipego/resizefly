@@ -58,6 +58,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 
 		if ( $density > 0 ) {
 			list( $quality, $width, $height ) = $this->parseDensity( $width, $height, $density );
+			$ratio = $ratio * $density;
 			$this->editor->set_quality( $quality );
 		}
 
