@@ -27,6 +27,11 @@ class DuplicateOriginal {
 	private $recursion = 0;
 
 	/**
+	 * @var bool
+	 */
+	private $errorAdded = false;
+
+	/**
 	 * DuplicateOriginal constructor.
 	 *
 	 * @param UploadsInterface $uploads
@@ -55,10 +60,11 @@ class DuplicateOriginal {
 	 * @return bool
 	 */
 	private function dirExists() {
-		$dir = wp_mkdir_p( $this->path );
+		$dir = wp_mkdir_p( $this->path ) && wp_is_writable( $this->path );
 
-		if ( ! $dir ) {
+		if ( ! $dir && !$this->errorAdded) {
 			add_action( 'admin_init', function () {
+				$this->errorAdded = true;
 				add_action( 'admin_notices', function () {
 					echo '<div class="error"><p>';
 					printf( __( 'The directory %s is not writeable by Resizefly. Please correct the permissions.',

@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
@@ -58,6 +58,10 @@ If you have one long location directive listing all the static file formats (css
 The plugin stores an optimized duplicate of each image in this folder. The reason for this is, that image resizing puts a strain on your server and uses comparably a lot of resources. To minimize this ResizeFly creates an optimized copy from which the smaller image sizes will be created.
 
 == Changelog ==
+
+= 2.1.2 =
+* fix permission checks for uploads dir
+* check if object already in stock on container
 
 = 2.1.1 =
 * ignore any images that are not jp(e)g, gif, png; e.g. svgs

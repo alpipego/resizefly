@@ -52,12 +52,14 @@ class PathField extends AbstractOption implements OptionInterface {
 	}
 
 	private function checkPath() {
-		$this->permissions = wp_mkdir_p( $this->path );
+		$this->permissions = wp_mkdir_p( $this->path ) && wp_is_writable( $this->path );
 
 		if ( ! $this->permissions ) {
-			add_settings_error( $this->optionsField['id'], 'resizefly-dir-writeable',
-				sprintf( __( 'The provided path (%s) is not writeable! Please fix the permissions in your uploads directory.',
-					'resizefly' ), "<code>{$this->path}</code>" ) );
+			add_action( 'admin_init', function () {
+				add_settings_error( $this->optionsField['id'], 'resizefly-dir-writeable',
+					sprintf( __( 'The provided path (%s) is not writeable! Please fix the permissions in your uploads directory.',
+						'resizefly' ), "<code>{$this->path}</code>" ) );
+			} );
 		}
 	}
 
