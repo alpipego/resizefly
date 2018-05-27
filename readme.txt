@@ -59,6 +59,10 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
+= 2.1.2 =
+* fix permission checks for uploads dir
+* check if object already in stock on container
+
 = 2.1.1 =
 * ignore any images that are not jp(e)g, gif, png; e.g. svgs
 * image had wrong dimensions, if ratio was not original and density > 1
