@@ -22,6 +22,7 @@ use ReflectionParameter;
  */
 class Plugin extends Container implements ContainerInterface {
 	private $definitions = [];
+	private $stock = [];
 
 	/**
 	 * Calls `run()` method on all objects registered on plugin container
@@ -29,7 +30,11 @@ class Plugin extends Container implements ContainerInterface {
 	public function run() {
 		$keys = array_merge( $this->keys(), array_keys( $this->definitions ) );
 		foreach ( $keys as $key ) {
-			$content = $this->get( $key );
+			if ( in_array( $key, $this->stock ) ) {
+				continue;
+			}
+			$this->stock[] = $key;
+			$content       = $this->get( $key );
 
 			if ( is_object( $content ) ) {
 				$reflection = new ReflectionClass( $content );
