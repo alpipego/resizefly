@@ -59,12 +59,16 @@ final class EditorWrapper implements EditorWrapperInterface {
 		if ( $density > 0 ) {
 			list( $quality, $width, $height ) = $this->parseDensity( $width, $height, $density );
 			$ratio = $ratio * $density;
+            // make sure not to request an image larger than the original
+			if ($width > $origWidth || $height > $origHeight) {
+                $width  = $origWidth;
+                $height = $origHeight * ($width / $origWidth);
+                $quality = $this->getQuality();
+                $ratio      = max( $width / $origWidth, $height / $origHeight );
+            }
+
 			$this->editor->set_quality( $quality );
 		}
-
-		// make sure not to request an image larger than the original
-		$width  = $width > $origWidth ? $origWidth : $width;
-		$height = $height > $origHeight ? $origHeight : $height;
 
 		return $this->editor->crop( $srcX, $srcY, $width / $ratio, $height / $ratio, $width, $height );
 	}
@@ -99,7 +103,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 	public function saveImage( $file ) {
 		do_action( 'resizefly/before_save', $file, $this->editor );
 
-		return $this->editor->save( $file );
+//		return $this->editor->save( $file );
 	}
 
 	/**
