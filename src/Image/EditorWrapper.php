@@ -52,25 +52,34 @@ final class EditorWrapper implements EditorWrapperInterface {
 	public function resizeImage( $width, $height, $density, $focalX, $focalY ) {
 		$origWidth  = $this->getWidth();
 		$origHeight = $this->getHeight();
-		$ratio      = max( $width / $origWidth, $height / $origHeight );
-		$srcX       = round( ( $origWidth - $width / $ratio ) * $focalX / 100 );
-		$srcY       = round( ( $origHeight - $height / $ratio ) * $focalY / 100 );
+		$factor     = max( $width / $origWidth, $height / $origHeight );
+		$srcX       = round( ( $origWidth - $width / $factor ) * $focalX / 100 );
+		$srcY       = round( ( $origHeight - $height / $factor ) * $focalY / 100 );
 
 		if ( $density > 0 ) {
 			list( $quality, $width, $height ) = $this->parseDensity( $width, $height, $density );
-			$ratio = $ratio * $density;
-            // make sure not to request an image larger than the original
-			if ($width > $origWidth || $height > $origHeight) {
-                $width  = $origWidth;
-                $height = $origHeight * ($width / $origWidth);
-                $quality = $this->getQuality();
-                $ratio      = max( $width / $origWidth, $height / $origHeight );
-            }
+			$factor = $factor * $density;
+			// make sure not to request an image larger than the original
+			if ( $width > $origWidth || $height > $origHeight ) {
+				$ratio = $width / $height;
+				if ( $width > $origWidth && $height > $origHeight ) {
+					$width  = $origWidth / $ratio * ( $origWidth / $origHeight );
+					$height = $origHeight / $ratio * ( $origWidth / $origHeight );
+				} elseif ( $width > $origWidth ) {
+					$width  = $origWidth;
+					$height = $width * $ratio;
+				} elseif ( $height > $origHeight ) {
+					$height = $origHeight;
+					$width  = $height * $ratio;
+				}
+				$quality = $this->getQuality();
+				$factor  = max( $width / $origWidth, $height / $origHeight );
+			}
 
 			$this->editor->set_quality( $quality );
 		}
 
-		return $this->editor->crop( $srcX, $srcY, $width / $ratio, $height / $ratio, $width, $height );
+		return $this->editor->crop( $srcX, $srcY, $width / $factor, $height / $factor, $width, $height );
 	}
 
 	/**
@@ -103,7 +112,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 	public function saveImage( $file ) {
 		do_action( 'resizefly/before_save', $file, $this->editor );
 
-//		return $this->editor->save( $file );
+		return $this->editor->save( $file );
 	}
 
 	/**
