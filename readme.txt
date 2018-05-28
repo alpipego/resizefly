@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
@@ -59,8 +59,11 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.1.3 =
+= 2.1.4 =
 * fixed cropped images if dimensions too large and ratio > 1
+
+= 2.1.3 =
+**This one was a mistake and is removed**
 
 = 2.1.2 =
 * fix permission checks for uploads dir
