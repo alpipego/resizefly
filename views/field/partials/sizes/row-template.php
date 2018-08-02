@@ -16,7 +16,8 @@
     >
         <td class="rzf-size-status"></td>
         <td class="rzf-size-active">
-            <input type="checkbox" name="resizefly_sizes[{{{ data.name }}}][active]" checked="checked">
+            <input type="checkbox" name="resizefly_sizes[{{{ data.name }}}][active]" checked="checked" disabled>
+            <input type="hidden" name="resizefly_sizes[{{{ data.name }}}][active]" value="on">
         </td>
         <td class="rzf-size-action"></td>
         <td class="rzf-size-width">
