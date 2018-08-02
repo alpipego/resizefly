@@ -145,6 +145,9 @@ $(document).on('click', '.js-rzf-user-size-readd', function (ev) {
 
             $(row(r.data)).insertBefore($row);
             $row.remove();
+            if (!$('.rzf-size.rzf-size-status-missing').length) {
+                $('.rzf-size-status-desc .rzf-size-status-missing').addClass('hidden');
+            }
         })
         .fail(function (r) {
             $.each(r.responseJSON.data, function (i, val) {

@@ -264,7 +264,7 @@ class SizesField extends AbstractOption implements OptionInterface {
 			$size['width']  = (int) $size['width'];
 			$size['height'] = (int) $size['height'];
 			$size['active'] = isset( $size['active'] );
-			$crop           = explode( ', ', $size['crop'] );
+			$crop           = is_array( $size['crop'] ) ? $size['crop'] : explode( ', ', $size['crop'] );
 			$size['crop']   = (bool) $crop[0];
 			if ( is_array( $crop ) && count( $crop ) === 2 ) {
 				$size['crop'] = array_values( $crop );
@@ -299,15 +299,15 @@ class SizesField extends AbstractOption implements OptionInterface {
 	public function addUserSize() {
 		check_ajax_referer( self::ADD_ACTION, 'ajax_nonce' );
 
-		$userSizes = get_option( self::USERSIZES, [] );
-
 		$size   = $this->sanitizeAjax( $_POST['size'] );
-		$errors = $this->errorHandling( $size, $userSizes );
+		$errors = $this->errorHandling( $size, $this->userSizes );
 		if ( ! empty( $errors ) ) {
 			wp_send_json_error( $errors, 400 );
 		}
-		$userSizes[ $size['name'] ] = $size;
-		update_option( self::USERSIZES, $userSizes );
+		$this->userSizes[ $size['name'] ] = $size;
+		$this->savedSizes[ $size['name'] ] = array_merge(['active' => true], $size);
+		update_option( self::USERSIZES, $this->userSizes );
+		update_option( $this->optionsField['id'], $this->savedSizes );
 
 		wp_send_json_success( $size );
 	}
