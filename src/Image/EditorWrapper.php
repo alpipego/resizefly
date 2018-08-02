@@ -67,7 +67,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 					$height = $origHeight / $ratio * ( $origWidth / $origHeight );
 				} elseif ( $width > $origWidth ) {
 					$width  = $origWidth;
-					$height = $width * $ratio;
+					$height = $width * $height/ $width;
 				} elseif ( $height > $origHeight ) {
 					$height = $origHeight;
 					$width  = $height * $ratio;
