@@ -74,7 +74,7 @@ class Filter {
 		add_filter( 'the_content', [ $this, 'urlInHtml' ] );
 		add_filter( 'post_thumbnail_html', [ $this, 'urlInHtml' ] );
 		add_filter( 'get_header_image_tag', [ $this, 'urlInHtml' ] );
-
+		add_filter( 'admin_post_thumbnail_html', [ $this, 'urlInHtml' ] );
 
 		// add resizefly url before loaded into editor, remove before saving
 		add_filter( 'media_send_to_editor', [ $this, 'urlInHtml' ] );
