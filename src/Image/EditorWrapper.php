@@ -72,7 +72,6 @@ final class EditorWrapper implements EditorWrapperInterface {
 					$height = $origHeight;
 					$width  = $height * $ratio;
 				}
-				$quality = $this->getQuality();
 				$factor  = max( $width / $origWidth, $height / $origHeight );
 			}
 
@@ -97,7 +96,7 @@ final class EditorWrapper implements EditorWrapperInterface {
 	private function parseDensity( $width, $height, $density ) {
 		$width   = $width * $density;
 		$height  = $height * $density;
-		$quality = 40;
+		$quality = (int) apply_filters('resizefly/image/hidpi_quality', 40);
 		if ( $density === 1 ) {
 			$quality = $this->getQuality();
 		}
