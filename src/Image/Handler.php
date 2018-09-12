@@ -109,10 +109,10 @@ final class Handler implements HandlerInterface {
 		$origHeight = $this->editor->getHeight();
 
 		// if width or height is larger than the image itself, set it to the original width/height
-		if ( ! isset( $size['width'] ) ) {
+		if ( ! isset( $size['width'] ) || empty($size['width']) ) {
 			$size['width'] = $this->image->getWidth();
 		}
-		if ( ! isset( $size['height'] ) ) {
+		if ( ! isset( $size['height'] ) || empty($size['height']) ) {
 			$size['height'] = $this->image->getHeight();
 		}
 		if ( ! isset( $size['density'] ) ) {
