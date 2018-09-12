@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 2.1.6
+Stable tag: 2.2.0
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
@@ -59,7 +59,9 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.1.6 =
-* filter featured image in wp-admin
+= 2.2.0 =
+* add filter `resizefly/image/hidpi_quality`
+* add GD library wrapper
+* improve duplicate handling
 
 see https://github.com/alpipego/resizefly/releases for full changelog

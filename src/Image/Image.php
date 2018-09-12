@@ -149,10 +149,9 @@ final class Image implements ImageInterface {
 	 */
 	protected function setOriginalFile( $file ) {
 		$path = str_replace( $this->cachePath, $this->uploads->getBasePath(), $this->path );
-		$path = file_exists( $path . $this->originalFilename . '.' . $file['ext']
-		) ? $path . $this->originalFilename . '.' . $file['ext'] : sprintf( '%s%s-%dx%d.%s',
-			$path, $this->originalFilename, $file['width'], $file['height'], $file['ext']
-		);
+		$path = file_exists( $path . $this->originalFilename . '.' . $file['ext'] )
+			? $path . $this->originalFilename . '.' . $file['ext']
+			: sprintf( '%s%s-%dx%d.%s', $path, $this->originalFilename, $file['width'], $file['height'], $file['ext'] );
 
 		return $path;
 	}

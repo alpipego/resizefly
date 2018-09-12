@@ -62,20 +62,19 @@ class DuplicateOriginal {
 	private function dirExists() {
 		$dir = wp_mkdir_p( $this->path ) && wp_is_writable( $this->path );
 
-		if ( ! $dir && !$this->errorAdded) {
+		if ( ! $dir && ! $this->errorAdded ) {
 			add_action( 'admin_init', function () {
 				$this->errorAdded = true;
 				add_action( 'admin_notices', function () {
 					echo '<div class="error"><p>';
 					printf( __( 'The directory %s is not writeable by Resizefly. Please correct the permissions.',
 						'resizefly'
-					), '<code>' . $this->path . '</code>'
+					),
+						'<code>' . $this->path . '</code>'
 					);
 					echo '</p></div>';
-				}
-				);
-			}
-			);
+				});
+			});
 		}
 
 		return $dir;
@@ -99,59 +98,60 @@ class DuplicateOriginal {
 	 */
 	protected function create( $image ) {
 		$editor = wp_get_image_editor( $image );
-		if ( ! is_wp_error( $editor ) ) {
-			$duplicate = str_replace( trailingslashit( $this->uploads->getBasePath() ), $this->path, $image );
-
-			if ( (bool) apply_filters( 'resizefly/duplicate', true ) && $editor instanceof EditorImagick ) {
-				$sizes  = $editor->get_size();
-				$larger = false;
-				foreach ( $sizes as $size ) {
-					if ( $size > (int) apply_filters( 'resizefly/duplicate/threshold', 1200 ) ) {
-						$larger = true;
-						break;
-					}
-				}
-				if ( $larger && $this->calculateMemory( $sizes, $editor ) ) {
-					$editor->blurImage( 1, .5 );
-				}
-			}
-
-			// resize the image
-			$longEdge = (int) apply_filters( 'resizefly/duplicate/long_edge', 2560 );
-			$longEdge = $longEdge > 0 ? $longEdge : 2560;
-			$editor->resize( $longEdge, $longEdge );
-
-			if ( $editor instanceof EditorImagick ) {
-				$editor->stripImage();
-				$editor->setColorspace( \Imagick::COLORSPACE_SRGB );
-			}
-
-			// set quality
-			$quality = (int) apply_filters( 'resizefly/duplicate/quality', 70 );
-			$quality = $quality > 0 ? $quality : 70;
-			$editor->set_quality( $quality );
-
-			// check if image could be saved
-			$save = $editor->save( $duplicate );
-			if ( is_wp_error( $save ) ) {
-				// delete the zero byte file
-				if ( file_exists( $duplicate ) ) {
-					unlink( $duplicate );
-				}
-
-				if ( $editor instanceof EditorImagick ) {
-					// try setting resources and try once more
-					if ( $this->trySettingResources( $editor ) && $this->recursion < 1 ) {
-						$this->recursion ++;
-						$this->create( $image );
-					}
-				}
-			}
-
-			return ! is_wp_error( $save );
+		if ( is_wp_error( $editor ) || ! (bool) apply_filters( 'resizefly/duplicate', true ) ) {
+			return false;
 		}
 
-		return false;
+		$duplicate = str_replace( trailingslashit( $this->uploads->getBasePath() ), $this->path, $image );
+
+		if ( $editor instanceof EditorImagick ) {
+			$sizes  = $editor->get_size();
+			$larger = false;
+			foreach ( $sizes as $size ) {
+				if ( $size > (int) apply_filters( 'resizefly/duplicate/threshold', 1200 ) ) {
+					$larger = true;
+					break;
+				}
+			}
+			if ( $larger && $this->calculateMemory( $sizes, $editor ) ) {
+				$editor->blurImage( 1, .5 );
+			}
+		}
+
+		// resize the image
+		$longEdge = (int) apply_filters( 'resizefly/duplicate/long_edge', 2560 );
+		$longEdge = $longEdge > 0 ? $longEdge : 2560;
+		$longEdge = $longEdge > max( $editor->get_size() ) ? max( $editor->get_size() ) : $longEdge;
+		$editor->resize( $longEdge, $longEdge );
+
+		if ( $editor instanceof EditorImagick ) {
+			$editor->stripImage();
+			$editor->setColorspace( \Imagick::COLORSPACE_SRGB );
+		}
+
+		// set quality
+		$quality = (int) apply_filters( 'resizefly/duplicate/quality', $editor->get_quality() );
+		$quality = $quality > 0 ? $quality : $editor->get_quality();
+		$editor->set_quality( $quality );
+
+		// check if image could be saved
+		$save = $editor->save( $duplicate );
+		if ( is_wp_error( $save ) ) {
+			// delete the zero byte file
+			if ( file_exists( $duplicate ) ) {
+				unlink( $duplicate );
+			}
+
+			if ( $editor instanceof EditorImagick ) {
+				// try setting resources and try once more
+				if ( $this->trySettingResources( $editor ) && $this->recursion < 1 ) {
+					$this->recursion ++;
+					$this->create( $image );
+				}
+			}
+		}
+
+		return ! is_wp_error( $save );
 	}
 
 	/**

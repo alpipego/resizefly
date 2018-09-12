@@ -11,10 +11,6 @@ namespace Alpipego\Resizefly\Image;
 use WP_Image_Editor_Imagick;
 
 class EditorImagick extends WP_Image_Editor_Imagick {
-	public function setOption( $key, $value ) {
-		return $this->image->setOption( $key, $value );
-	}
-
 	public function setColorspace( $colorspace ) {
 		return $this->image->setColorspace( $colorspace );
 	}
@@ -35,20 +31,8 @@ class EditorImagick extends WP_Image_Editor_Imagick {
 		return $this->image->stripImage();
 	}
 
-	public function getFile() {
-		return $this->file;
-	}
-
 	public function blurImage( $radius, $float ) {
 		return $this->image->blurImage( $radius, $float );
-	}
-
-	public function getImageBlob() {
-		return $this->image->getImageBlob();
-	}
-
-	public function setImageFormat( $format ) {
-		return $this->image->setImageFormat( $format );
 	}
 
 	public function set_quality( $quality = null ) {

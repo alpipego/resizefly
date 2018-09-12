@@ -39,7 +39,7 @@ add_action( 'template_redirect', function () use ( $plugin ) {
 		}
 
 		// check if to resize from duplicate
-		if ( (bool) apply_filters( 'resizefly/duplicate', true ) ) {
+		if ( (bool) apply_filters( 'resizefly/duplicate', true ) && $matches['width'] <= (int) apply_filters( 'resizefly/duplicate/long_edge', 2560 ) ) {
 			if ( ! file_exists( $image->getDuplicatePath() ) ) {
 				$plugin->get( DuplicateOriginal::class )->rebuild( $image->getOriginalPath() );
 			}
