@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResizeFly 2.1.5\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-08-02 15:22+0200\n"
+"POT-Creation-Date: 2018-11-01 13:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,8 @@ msgid ""
 "setting it again."
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:20
+#: src/Admin/Cache/PurgeCacheField.php:20 src/Admin/Cache/PurgeSingle.php:45
+#: src/Admin/Cache/PurgeSingle.php:63
 msgid "Purge Cache"
 msgstr ""
 
@@ -72,7 +73,7 @@ msgstr ""
 msgid "%s file(s) have been removed and %s of disk space has been freed."
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:34
+#: src/Admin/Cache/PurgeCacheField.php:34 src/Admin/Cache/PurgeSingle.php:99
 msgid "No files were removed because the cache was already empty."
 msgstr ""
 
@@ -84,6 +85,19 @@ msgstr ""
 #: src/Admin/Cache/PurgeCacheField.php:37
 msgctxt "as in \"most resized images\""
 msgid "most"
+msgstr ""
+
+#: src/Admin/Cache/PurgeSingle.php:57
+msgid "Resizefly Cache"
+msgstr ""
+
+#: src/Admin/Cache/PurgeSingle.php:65
+msgid "Delete all generated sizes for this image."
+msgstr ""
+
+#: src/Admin/Cache/PurgeSingle.php:96
+#, php-format
+msgid "%s file(s) have been removed."
 msgstr ""
 
 #: src/Admin/Cache/RemoveResizedField.php:19
