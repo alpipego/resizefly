@@ -26,7 +26,8 @@ module.exports = function (grunt) {
                     preserveComments: 'some'
                 },
                 files: {
-                    'js/resizefly-admin.min.js': 'js/src/*.js'
+                    'js/resizefly-admin.min.js': 'js/src/settings/*.js',
+                    'js/resizefly-purge-single.min.js': 'js/src/purge-single.js'
                 }
             },
             dist: {
@@ -37,10 +38,12 @@ module.exports = function (grunt) {
                     footer: '\n})(jQuery);',
                     compress: {
                         drop_console: true
-                    }
+                    },
+                    map: false
                 },
                 files: {
-                    'js/resizefly-admin.min.js': 'js/src/*.js'
+                    'js/resizefly-admin.min.js': 'js/src/settings/*.js',
+                    'js/resizefly-purge-single.min.js': 'js/src/purge-single.js'
                 }
             }
         },
