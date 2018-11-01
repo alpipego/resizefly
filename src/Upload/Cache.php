@@ -20,55 +20,62 @@ use SplFileInfo;
  */
 class Cache {
 	private $uploads;
-	private $action;
 	private $cachePath;
 	private $filesize = 0;
 	private $files = 0;
 	private $addons;
+	private $image;
 
-	public function __construct( UploadsInterface $uploads, OptionInterface $field, $cachePath, $addons ) {
+	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cachePath, $addons ) {
 		$this->uploads   = $uploads;
-		$this->action    = $field->getId();
 		$this->cachePath = $cachePath;
 		$this->addons    = $addons;
+		$this->image     = $image;
 	}
 
-	public function run() {
-		add_action( 'delete_attachment', [ $this, 'purgeSingle' ] );
-		add_action( "wp_ajax_{$this->action}", [ $this, 'ajaxCallback' ] );
-	}
-
-	public function purgeSingle( $id ) {
-		$file = new SplFileInfo( get_attached_file( $id ) );
-		$path = str_replace( $this->uploads->getBasePath(), $this->cachePath, $file->getPathInfo() );
+	public function purgeSingle( $id, $deleteDuplicate = true ) {
+		$amount = 0;
+		$file   = new SplFileInfo( get_attached_file( $id ) );
+		$path   = str_replace( $this->uploads->getBasePath(), $this->cachePath, $file->getPathInfo() );
 		try {
 			$dir = new RecursiveDirectoryIterator( $path );
 		} catch ( \Exception $e ) {
 			// probably the directory does not exist
-			return false;
+			return $amount;
 		}
+
+		if ( $deleteDuplicate ) {
+			if ( preg_match(
+				'/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@(?<density>[0-3])\.(?<ext>jpe?g|png|gif)/i',
+				wp_get_attachment_image_src( $id )[0],
+				$matches
+			) ) {
+				$this->image->setImage( $matches );
+				$duplicate = $this->image->getDuplicatePath();
+				if ( file_exists( $duplicate ) && unlink( $duplicate ) ) {
+					$amount ++;
+				}
+			}
+		}
+
 		$match = sprintf(
-			'/^%s-[0-9]+x[0-9]+\.%s$/i',
+			'/^(?<file>%s)-(?<width>[0-9]+)x(?<height>[0-9]+)@(?<density>[0-3])\.(?<ext>%s)/i',
 			$file->getBasename( '.' . $file->getExtension() ),
 			$file->getExtension()
 		);
 
 		/** @var SplFileInfo $file */
 		foreach ( $dir as $file ) {
-			if ( preg_match( $match, $file->getBasename() ) ) {
-				unlink( $file->getRealPath() );
+			if ( ! $file->isFile() ) {
+				continue;
+			}
+
+			if ( preg_match( $match, $file->getBasename() ) && unlink( $file->getRealPath() ) ) {
+				$amount ++;
 			}
 		}
-	}
 
-	public function ajaxCallback() {
-		$canDelete = current_user_can( apply_filters( 'resizefly/delete_attachment_cap', 'delete_posts' ) );
-		if ( check_ajax_referer( $this->action ) && $canDelete ) {
-			$freed = $this->purgeAll( $this->cachePath );
-			wp_send_json( $freed );
-		} else {
-			wp_send_json( 'fail' );
-		}
+		return $amount;
 	}
 
 	/**
@@ -80,8 +87,9 @@ class Cache {
 	 *      'files' => int number of files cleared,
 	 *      'size' => float sum of freed space
 	 */
-	private function purgeAll( $dir ) {
-		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir, RecursiveDirectoryIterator::SKIP_DOTS ) );
+	public function purgeAll( $dir ) {
+		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir,
+			RecursiveDirectoryIterator::SKIP_DOTS ) );
 		$smartPurge = filter_var( $_POST['smart-purge'], FILTER_VALIDATE_BOOLEAN );
 		if ( $smartPurge ) {
 			$retain = $this->smartPurge();
@@ -162,7 +170,8 @@ class Cache {
 		}
 
 		$thumbRegex = '/-(' . implode( '|', $thumbnails ) . ')\.(jpe?g|png|gif)$/i';
-		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $this->uploads->getBasePath(), RecursiveDirectoryIterator::SKIP_DOTS ) );
+		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $this->uploads->getBasePath(),
+			RecursiveDirectoryIterator::SKIP_DOTS ) );
 
 		foreach ( $iterator as $path ) {
 			if ( ! $path->isDir() ) {
@@ -174,7 +183,8 @@ class Cache {
 				}
 
 				// if this is not either in uploads directly or in a year/month based folder skip
-				if ( ! preg_match( '%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%', $file, $fragments ) ) {
+				if ( ! preg_match( '%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%',
+					$file, $fragments ) ) {
 					continue;
 				}
 
