@@ -9,7 +9,9 @@
 use Alpipego\Resizefly\Admin\Admin;
 use Alpipego\Resizefly\Admin\Cache\CacheSection;
 use Alpipego\Resizefly\Admin\Cache\PathField;
+use Alpipego\Resizefly\Admin\Cache\PurgeAll;
 use Alpipego\Resizefly\Admin\Cache\PurgeCacheField;
+use Alpipego\Resizefly\Admin\Cache\PurgeSingle;
 use Alpipego\Resizefly\Admin\Cache\RemoveResizedField;
 use Alpipego\Resizefly\Admin\OptionsPage;
 use Alpipego\Resizefly\Admin\PageInterface;
@@ -31,8 +33,12 @@ return [
 		->constructorParam( 'section', CacheSection::class ),
 	PurgeCacheField::class        => Alpipego\Resizefly\object()
 		->constructorParam( 'section', CacheSection::class ),
-	Cache::class                  => Alpipego\Resizefly\object()
+	PurgeSingle::class            => \Alpipego\Resizefly\object()
+		->constructorParam( 'pluginUrl', 'config.url' ),
+	PurgeAll::class               => \Alpipego\Resizefly\object()
 		->constructorParam( 'field', PurgeCacheField::class )
+		->constructorParam( 'cachePath', 'options.cache.path' ),
+	Cache::class                  => Alpipego\Resizefly\object()
 		->constructorParam( 'cachePath', 'options.cache.path' )
 		->constructorParam( 'addons', 'addons' ),
 	RemoveResizedField::class     => Alpipego\Resizefly\object()
