@@ -81,6 +81,8 @@ add_action( 'plugins_loaded', function () use ( $classLoader ) {
 		$plugin->addDefiniton( __DIR__ . '/config/admin.php' );
 
 		require_once __DIR__ . '/actions/activation.php';
+
+		$plugin->addDefiniton( __DIR__ . '/config/compatibles.php' );
 	}
 
 	// save options to retrieve them on uninstall

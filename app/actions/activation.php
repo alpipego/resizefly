@@ -16,9 +16,7 @@ use Alpipego\Resizefly\Upload\Cache;
 
 if ( version_compare( get_option( 'resizefly_version' ), $plugin['config.version'], '<' ) ) {
 	try {
-		$plugin
-			->get( Cache::class )
-			->populateOnInstall( $plugin->get( Image::class ) );
+		$plugin->get( Cache::class )->warmUpAll();
 	} catch ( NotFoundExceptionInterface $e ) {
 	} catch ( ContainerExceptionInterface $e ) {
 	}
