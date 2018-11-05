@@ -19,11 +19,13 @@ use Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection;
 use Alpipego\Resizefly\Admin\Sizes\RestrictSizesField;
 use Alpipego\Resizefly\Admin\Sizes\SizesField;
 use Alpipego\Resizefly\Upload\Cache;
+use Alpipego\Resizefly\Upload\CacheInterface;
 use Alpipego\Resizefly\Upload\Fake;
 use Alpipego\Resizefly\Upload\RemoveResized;
 
 return [
 	PageInterface::class          => OptionsPage::class,
+	CacheInterface::class         => Cache::class,
 	'pluginPath'                  => 'config.path',
 	OptionsPage::class            => Alpipego\Resizefly\object()
 		->constructorParam( 'pluginUrl', 'config.url' ),
@@ -36,8 +38,7 @@ return [
 	PurgeSingle::class            => \Alpipego\Resizefly\object()
 		->constructorParam( 'pluginUrl', 'config.url' ),
 	PurgeAll::class               => \Alpipego\Resizefly\object()
-		->constructorParam( 'field', PurgeCacheField::class )
-		->constructorParam( 'cachePath', 'options.cache.path' ),
+		->constructorParam( 'field', PurgeCacheField::class ),
 	Cache::class                  => Alpipego\Resizefly\object()
 		->constructorParam( 'cachePath', 'options.cache.path' )
 		->constructorParam( 'addons', 'addons' ),
