@@ -18,19 +18,27 @@ use SplFileInfo;
  * Class Cache
  * @package Alpipego\Resizefly\Upload
  */
-class Cache {
+final class Cache implements CacheInterface {
 	private $uploads;
 	private $cachePath;
+	private $duplicate;
 	private $filesize = 0;
 	private $files = 0;
 	private $addons;
 	private $image;
 
-	public function __construct( UploadsInterface $uploads, ImageInterface $image, $cachePath, $addons ) {
+	public function __construct(
+		UploadsInterface $uploads,
+		ImageInterface $image,
+		DuplicateOriginal $duplicate,
+		$cachePath,
+		$addons
+	) {
 		$this->uploads   = $uploads;
 		$this->cachePath = $cachePath;
 		$this->addons    = $addons;
 		$this->image     = $image;
+		$this->duplicate = $duplicate;
 	}
 
 	public function purgeSingle( $id, $deleteDuplicate = true ) {
@@ -78,32 +86,27 @@ class Cache {
 		return $amount;
 	}
 
-	/**
-	 * Purge ResizeFly cache - all (or smart)
-	 *
-	 * @param string $dir ResizeFly cache dir
-	 *
-	 * @return array
-	 *      'files' => int number of files cleared,
-	 *      'size' => float sum of freed space
-	 */
-	public function purgeAll( $dir ) {
-		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir,
-			RecursiveDirectoryIterator::SKIP_DOTS ) );
-		$smartPurge = filter_var( $_POST['smart-purge'], FILTER_VALIDATE_BOOLEAN );
-		if ( $smartPurge ) {
+	public function purgeAll( $smart = true ) {
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $this->cachePath, RecursiveDirectoryIterator::SKIP_DOTS )
+		);
+
+		if ( $smart ) {
 			$retain = $this->smartPurge();
 		}
+
 		foreach ( $iterator as $path ) {
-			if ( ! $path->isDir() ) {
-				$file = $path->__toString();
-				if ( $smartPurge && preg_match( $retain, $file ) ) {
-					continue;
-				}
-				$this->filesize += filesize( $file );
-				$this->files ++;
-				unlink( $file );
+			if ( ! $path->isFile() ) {
+				continue;
 			}
+
+			$file = $path->__toString();
+			if ( $smart && preg_match( $retain, $file ) ) {
+				continue;
+			}
+			$this->filesize += filesize( $file );
+			$this->files ++;
+			unlink( $file );
 		}
 
 		return [ 'files' => $this->files, 'size' => $this->filesize ];
@@ -115,9 +118,7 @@ class Cache {
 	 * @return string
 	 */
 	private function smartPurge() {
-		$retain   = $this->getThumbnails();
-		$retain[] = $this->getLqir();
-
+		$retain = (array) apply_filters( 'resizefly/cache/retain_sizes', $this->getThumbnails() );
 		$retain = array_unique( array_filter( $retain ) );
 
 		return '/-(' . implode( '|', $retain ) . ')\.(jpe?g|png|gif)$/i';
@@ -131,6 +132,11 @@ class Cache {
 	 * @return array
 	 */
 	private function getThumbnails( $density = true ) {
+		static $sizes;
+		if ( ! is_null( $sizes ) ) {
+			return $sizes;
+		}
+
 		$intermediate = get_intermediate_image_sizes();
 		$sizes        = [];
 		foreach ( [ 'thumbnail', 'medium' ] as $size ) {
@@ -149,76 +155,84 @@ class Cache {
 		return $sizes;
 	}
 
-	/**
-	 * If lqir addon present, keep the currently set filesize
-	 *
-	 * @return string
-	 */
-	private function getLqir() {
-		if ( ! array_key_exists( 'lqir', $this->addons ) ) {
-			return '';
-		}
+	public function warmUpAll() {
+		$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $this->uploads->getBasePath(),
+			RecursiveDirectoryIterator::SKIP_DOTS ) );
 
-		return ( (int) get_option( 'resizefly_lqir_size', apply_filters( 'resizefly/lqir/size', 150 ) ) ) . 'x\d+?@0';
+		foreach ( $iterator as $path ) {
+			if ( ! $path->isFile() ) {
+				continue;
+			}
+
+			$this->warmUp( (string) $path );
+		}
 	}
 
-	public function populateOnInstall( ImageInterface $image ) {
+	public function warmUpSingle( $file ) {
+		return $this->warmUp( $file );
+	}
+
+	private function warmUp( $file ) {
 		$thumbnails = $this->getThumbnails( false );
 		// if there are no registered thumbnail sizes return
 		if ( empty( $thumbnails ) ) {
 			return;
 		}
 
-		$thumbRegex = '/-(' . implode( '|', $thumbnails ) . ')\.(jpe?g|png|gif)$/i';
-		$iterator   = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $this->uploads->getBasePath(),
-			RecursiveDirectoryIterator::SKIP_DOTS ) );
-
-		foreach ( $iterator as $path ) {
-			if ( ! $path->isDir() ) {
-				$file = $path->__toString();
-
-				// if this is not a thumbnail size skip
-				if ( ! preg_match( $thumbRegex, $file ) ) {
-					continue;
-				}
-
-				// if this is not either in uploads directly or in a year/month based folder skip
-				if ( ! preg_match( '%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%',
-					$file, $fragments ) ) {
-					continue;
-				}
-
-				// if this is an original skip
-				$regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)\.(?<ext>jpe?g|png|gif)/i';
-				$url   = str_replace( $this->uploads->getBasePath(), $this->uploads->getBaseUrl(), $file );
-				preg_match( $regex, $url, $matches );
-
-				if ( $image->setImage( $matches )->getOriginalPath() === $file ) {
-					continue;
-				}
-
-				$newFile = sprintf(
-					'%s-%dx%d@%d.%s',
-					str_replace( $this->uploads->getBaseUrl(), $this->cachePath, $matches['file'] ),
-					$matches['width'],
-					$matches['height'],
-					1,
-					$matches['ext']
-				);
-
-				// skip if a file with the name already exists
-				if ( file_exists( $newFile ) ) {
-					continue;
-				}
-
-				// if the dir can't be created skip
-				if ( ! wp_mkdir_p( $this->cachePath . '/' . $fragments[1] ) ) {
-					continue;
-				}
-
-				// actually move the file
-				copy( $file, $newFile );
-			}
+		static $thumbRegex;
+		if ( empty( $thumbRegex ) ) {
+			$thumbRegex = '/-(' . implode( '|', $thumbnails ) . ')\.(jpe?g|png|gif)$/i';
 		}
+
+		// if this is not a thumbnail size skip
+		if ( ! preg_match( $thumbRegex, $file ) ) {
+			return;
+		}
+
+		// if this is not either in uploads directly or in a year/month based folder skip
+		if ( ! preg_match(
+			'%' . $this->uploads->getBasePath() . '/(\d{4}/\d{2}/)?[^/]+\.(?:jpe?g|png|gif)$%',
+			$file,
+			$fragments
+		) ) {
+			return;
+		}
+
+		// if this is an original skip
+		$url = str_replace( $this->uploads->getBasePath(), $this->uploads->getBaseUrl(), $file );
+		preg_match(
+			'/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)(@(?<density>[0-3]))?\.(?<ext>jpe?g|png|gif)/i',
+			$url,
+			$matches
+		);
+
+		if ( $this->image->setImage( $matches )->getOriginalPath() === $file ) {
+			return;
+		}
+
+		$newFile = sprintf(
+			'%s-%dx%d@%d.%s',
+			str_replace( $this->uploads->getBaseUrl(), $this->cachePath, $matches['file'] ),
+			$matches['width'],
+			$matches['height'],
+			1,
+			$matches['ext']
+		);
+
+		// skip if a file with the name already exists
+		if ( file_exists( $newFile ) ) {
+			return;
+		}
+
+		// if the dir can't be created skip
+		if ( ! wp_mkdir_p( $this->cachePath . '/' . $fragments[1] ) ) {
+			return;
+		}
+
+		// create duplicate
+		$this->duplicate->rebuild( $this->image );
+
+		// actually move the file
+		copy( $file, $newFile );
 	}
 }
