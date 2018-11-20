@@ -191,7 +191,7 @@ class SizesField extends AbstractOption implements OptionInterface {
 
 		// remove user sizes from updated
 		$updated = array_diff_key( $updated, $this->userSizes );
-
+		
 		update_option( self::OUTOFSYNC, [ 'new' => $new, 'updated' => $updated, 'missing' => $missing ] );
 	}
 
@@ -220,7 +220,7 @@ class SizesField extends AbstractOption implements OptionInterface {
 	 * @return array
 	 */
 	protected function getImageSizes() {
-		$sizes = array_merge( $this->registeredSizes, $this->savedSizes );
+		$sizes = array_merge( $this->savedSizes, $this->registeredSizes );
 		array_walk( $sizes, function ( &$size, $name ) {
 			if ( array_key_exists( $name, $this->savedSizes ) ) {
 				$size['active'] = $this->savedSizes[ $name ]['active'];
