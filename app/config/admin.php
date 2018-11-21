@@ -27,16 +27,14 @@ return [
 	PageInterface::class          => OptionsPage::class,
 	CacheInterface::class         => Cache::class,
 	'pluginPath'                  => 'config.path',
-	OptionsPage::class            => Alpipego\Resizefly\object()
-		->constructorParam( 'pluginUrl', 'config.url' ),
-	CacheSection::class           => Alpipego\Resizefly\object()
-		->constructorParam( 'pluginPath', 'config.path' ),
+	'pluginUrl'                   => 'config.url',
+	OptionsPage::class            => Alpipego\Resizefly\object(),
+	CacheSection::class           => Alpipego\Resizefly\object(),
 	PathField::class              => Alpipego\Resizefly\object()
 		->constructorParam( 'section', CacheSection::class ),
 	PurgeCacheField::class        => Alpipego\Resizefly\object()
 		->constructorParam( 'section', CacheSection::class ),
-	PurgeSingle::class            => \Alpipego\Resizefly\object()
-		->constructorParam( 'pluginUrl', 'config.url' ),
+	PurgeSingle::class            => \Alpipego\Resizefly\object(),
 	PurgeAll::class               => \Alpipego\Resizefly\object()
 		->constructorParam( 'field', PurgeCacheField::class ),
 	Cache::class                  => Alpipego\Resizefly\object()
@@ -53,6 +51,5 @@ return [
 		->constructorParam( 'section', RegisteredSizesSection::class ),
 	Fake::class                   => Alpipego\Resizefly\object(),
 	Admin::class                  => Alpipego\Resizefly\object()
-		->constructorParam( 'basename', 'config.basename' )
-		->constructorParam( 'pluginUrl', 'config.url' ),
+		->constructorParam( 'basename', 'config.basename' ),
 ];

@@ -8,7 +8,6 @@
 
 namespace Alpipego\Resizefly\Admin\Cache;
 
-use Alpipego\Resizefly\Image\ImageInterface;
 use Alpipego\Resizefly\Upload\Cache;
 use WP_Post;
 
@@ -82,13 +81,11 @@ class PurgeSingle {
 
 	public function enqueueAssets( $page ) {
 		if ( in_array( $page, [ 'post.php', 'upload.php' ], true ) ) {
-			wp_enqueue_script(
-				'resizefly-purge-single',
-				$this->pluginUrl . 'js/resizefly-purge-single.min.js',
-				[ 'jquery' ],
-				'1.0.0',
-				true
-			);
+			wp_enqueue_script( 'resizefly-purge-single', sprintf(
+				'%sjs/resizefly-purge-single.%sjs',
+				$this->pluginUrl,
+				defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : 'min.'
+			), [ 'jquery' ], '3.0.0', true );
 
 			wp_localize_script( 'resizefly-purge-single', 'resizefly', [
 				'purge_action' => $this->action,

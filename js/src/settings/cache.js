@@ -3,11 +3,10 @@
  *
  * Created by alpipego on 26.06.2017.
  */
-var resizefly = window.resizefly,
-    buttonIds = ['#' + resizefly.purge_id, '#' + resizefly.resized_id];
+var buttonIds = ['#' + window.resizefly.purge_id, '#' + window.resizefly.resized_id];
 
-$('#' + resizefly.purge_id + '-smart').on('change', function () {
-    $('#' + resizefly.purge_id + '-text').text($(this).prop('checked') ? resizefly.purge_most : resizefly.purge_all);
+$('#' + window.resizefly.purge_id + '-smart').on('change', function () {
+    $('#' + window.resizefly.purge_id + '-text').text($(this).prop('checked') ? window.resizefly.purge_most : window.resizefly.purge_all);
 });
 
 $(buttonIds.join(',')).on('click', function (e) {
@@ -21,15 +20,15 @@ $(buttonIds.join(',')).on('click', function (e) {
         },
         resultId = '#' + $this.attr('id') + '-result';
 
-    $.post(ajaxurl, data)
+    $.post(window.ajaxurl, data)
         .done(function (response) {
             if (response.files) {
                 $(resultId)
-                    .html(resizefly.purge_result)
+                    .html(window.resizefly.purge_result)
                     .children('.resizefly-files').text(response.files)
                     .parent().children('.resizefly-size').text(byteCalc.humanReadable(response.size));
             } else {
-                $(resultId).text(resizefly.purge_empty);
+                $(resultId).text(window.resizefly.purge_empty);
             }
         })
         .fail(function (xhr) {

@@ -3,9 +3,7 @@
  *
  * Created by alpipego on 26/06/17.
  */
-var $ = jQuery,
-    resizefly = window.resizefly,
-    unsaved = false,
+var unsaved = false,
     $error = $('#js-rzf-user-sizes-error'),
     $add = $('#js-rzf-user-size-add');
 
@@ -43,7 +41,7 @@ $add.on('click', function (ev) {
                 return $.trim($(this).text());
             }).toArray();
             if ($.inArray($.trim($input.val()), names) > -1) {
-                $error.append($('<div>').text(resizefly.user_size_errors.name));
+                $error.append($('<div>').text(window.resizefly.user_size_errors.name));
                 invalid = name[1];
                 return false;
             }
@@ -58,7 +56,7 @@ $add.on('click', function (ev) {
     $error.empty();
 
     if ($('input[name="resizefly_user_sizes[clone][name]"]').length === 0) {
-        $error.append($('<div>').text(resizefly.user_size_errors.name));
+        $error.append($('<div>').text(window.resizefly.user_size_errors.name));
     }
 
     // make ajax call to save user size
@@ -113,7 +111,7 @@ $add.on('click', function (ev) {
         })
         .fail(function (r) {
             $.each(r.responseJSON.data, function (i, val) {
-                $error.append($('<div>').text(resizefly.user_size_errors[val]));
+                $error.append($('<div>').text(window.resizefly.user_size_errors[val]));
             });
         });
 });
@@ -151,7 +149,7 @@ $(document).on('click', '.js-rzf-user-size-readd', function (ev) {
         })
         .fail(function (r) {
             $.each(r.responseJSON.data, function (i, val) {
-                $error.append($('<div>').text(resizefly.user_size_errors[val]));
+                $error.append($('<div>').text(window.resizefly.user_size_errors[val]));
             });
         });
 });
@@ -213,8 +211,8 @@ $('form[action="options.php"]').on('submit', function () {
     unsaved = false;
 });
 
-// window.addEventListener('beforeunload', function (e) {
-//     if (unsaved) {
-//         e.returnValue = true;
-//     }
-// });
+window.addEventListener('beforeunload', function (e) {
+    if (unsaved) {
+        e.returnValue = true;
+    }
+});

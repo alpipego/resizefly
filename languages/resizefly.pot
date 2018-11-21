@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the ResizeFly package.
+# This file is distributed under the same license as the resizefly package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ResizeFly 2.1.5\n"
+"Project-Id-Version: resizefly 3.0.0\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-11-01 13:54+0100\n"
+"POT-Creation-Date: 2018-11-20 11:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

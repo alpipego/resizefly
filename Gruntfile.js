@@ -39,11 +39,46 @@ module.exports = function (grunt) {
                     compress: {
                         drop_console: true
                     },
-                    map: false
+                    sourceMap: false
                 },
                 files: {
                     'js/resizefly-admin.min.js': 'js/src/settings/*.js',
                     'js/resizefly-purge-single.min.js': 'js/src/purge-single.js'
+                }
+            },
+            debug: {
+                options: {
+                    mangle: false,
+                    sourceMap: false,
+                    compress: {
+                        booleans: false,
+                        comparisons: false,
+                        evaluate: false,
+                        inline: false,
+                        keep_fnames: true,
+                        loops: false,
+                        sequences: false,
+                        typeofs: false,
+                        drop_console: true,
+                        hoist_vars: true,
+                        hoist_props: true,
+                        hoist_funs: true,
+                        passes: 2,
+                        warnings: true,
+                        reduce_vars: false,
+                        toplevel: true
+                    },
+                    beautify: {
+                        braces: true,
+                        indent_start: 4
+                    },
+                    banner: '(function ($) {',
+                    footer: '\n})(jQuery);',
+                    preserveComments: 'all'
+                },
+                files: {
+                    'js/resizefly-admin.js': 'js/src/settings/*.js',
+                    'js/resizefly-purge-single.js': 'js/src/purge-single.js'
                 }
             }
         },
@@ -127,6 +162,14 @@ module.exports = function (grunt) {
             }
         },
 
+        wp_readme_to_markdown: {
+            dist: {
+                files: {
+                    'README.md': 'readme.txt'
+                }
+            }
+        },
+
         watch: {
             js: {
                 files: ['Gruntfile.js', 'js/src/**/*.js'],
@@ -145,8 +188,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-pot');
     grunt.loadNpmTasks('grunt-string-replace');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 
     grunt.registerTask('third-party', ['copy:php', 'string-replace:php']);
     grunt.registerTask('default', ['uglify:dev', 'sass', 'watch']);
-    grunt.registerTask('build', ['pot', 'uglify:dist', 'sass']);
+    grunt.registerTask('build', ['pot', 'uglify:dist', 'uglify:debug', 'sass']);
 };
