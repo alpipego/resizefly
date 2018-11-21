@@ -13,8 +13,6 @@ class AbstractPage {
 	protected $localized = [];
 
 	public function localize( array $toLocalize ) {
-		array_merge_recursive( $this->localized, $toLocalize );
-
-		return $this->localized;
+		return $this->localized = array_merge_recursive( $this->localized, $toLocalize );
 	}
 }
