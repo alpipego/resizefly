@@ -59,9 +59,9 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 2.2.0 =
-* add filter `resizefly/image/hidpi_quality`
-* add GD library wrapper
-* improve duplicate handling
+= 3.0.0 =
+* Add ability to purge resized for single image
+* Improve php for Cache, add CacheInterface; breaks BC
+* Add unmangled and uncompiled JS; respect DEBUG_SCRIPT
 
 see https://github.com/alpipego/resizefly/releases for full changelog
