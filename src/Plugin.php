@@ -13,6 +13,7 @@ use Alpipego\Resizefly\Common\Psr\Container\ContainerExceptionInterface;
 use Alpipego\Resizefly\Common\Psr\Container\ContainerInterface;
 use Alpipego\Resizefly\Common\Psr\Container\NotFoundExceptionInterface;
 use Alpipego\Resizefly\DI\NotFoundException;
+use Alpipego\Resizefly\DI\ObjectDefinition;
 use ReflectionClass;
 use ReflectionParameter;
 
@@ -36,13 +37,24 @@ class Plugin extends Container implements ContainerInterface {
 			$this->stock[] = $key;
 			$content       = $this->get( $key );
 
-			if ( is_object( $content ) ) {
-				$reflection = new ReflectionClass( $content );
-				if ( $reflection->hasMethod( 'run' ) ) {
-					$content->run();
-				}
-			}
-		}
+			if (!is_object($content)) {
+			    continue;
+            }
+
+            try {
+                $reflection = new ReflectionClass($content);
+                try {
+                    $dependencies = $reflection->getMethod('run')->getParameters();
+                    $dependencies = array_map(function (ReflectionParameter $dependency) use ($key) {
+                        return $this->resolveDependency($dependency, $key);
+                    }, $dependencies);
+
+                    call_user_func_array([$content, 'run'], $dependencies);
+                } catch (\ReflectionException $e) {
+                }
+            } catch (\ReflectionException $e) {
+            }
+        }
 	}
 
 	/**
@@ -202,4 +214,19 @@ class Plugin extends Container implements ContainerInterface {
 	public function loadTextdomain( $dir ) {
 		load_plugin_textdomain( 'resizefly', false, $dir );
 	}
+
+    public function getEarly()
+    {
+        array_walk($this->definitions, function ($element, $id) {
+            if (!is_a($element, ObjectDefinition::class)) {
+                return;
+            }
+
+            if (!$element->instantiateEarly) {
+                return;
+            }
+
+            $this->get($id);
+        });
+    }
 }
