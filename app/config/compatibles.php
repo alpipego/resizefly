@@ -6,6 +6,9 @@
  * Time: 16:36
  */
 
+use Alpipego\Resizefly\Compatibles\WPML;
+
 return [
-	\Alpipego\Resizefly\Compatibles\EnableMediaReplace::class => \Alpipego\Resizefly\object(),
+    WPML::class => \Alpipego\Resizefly\object()
+        ->instantiateEarly(),
 ];
