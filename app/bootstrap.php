@@ -76,10 +76,11 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // Add own implementation to image editors
     add_filter('wp_image_editors', function (array $editors) {
-        array_unshift($editors, '\\Alpipego\\Resizefly\\Image\\EditorImagick', '\\Alpipego\\Resizefly\\Image\\EditorGD');
-
-        return $editors;
-    });
+		return array_merge( apply_filters( 'resizefly/image_editors', [
+			'\\Alpipego\\Resizefly\\Image\\EditorImagick',
+			'\\Alpipego\\Resizefly\\Image\\EditorGD',
+		] ), $editors );
+	} );
 
     if (is_admin()) {
         $plugin->addDefiniton(__DIR__ . '/config/admin.php');
