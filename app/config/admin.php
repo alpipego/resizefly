@@ -3,53 +3,37 @@
  * Created by PhpStorm.
  * User: alpipego
  * Date: 08/10/16
- * Time: 12:32
+ * Time: 12:32.
  */
-
 use Alpipego\Resizefly\Admin\Admin;
-use Alpipego\Resizefly\Admin\Cache\CacheSection;
-use Alpipego\Resizefly\Admin\Cache\PathField;
-use Alpipego\Resizefly\Admin\Cache\PurgeAll;
-use Alpipego\Resizefly\Admin\Cache\PurgeCacheField;
-use Alpipego\Resizefly\Admin\Cache\PurgeSingle;
-use Alpipego\Resizefly\Admin\Cache\RemoveResizedField;
-use Alpipego\Resizefly\Admin\OptionsPage;
-use Alpipego\Resizefly\Admin\PageInterface;
-use Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection;
-use Alpipego\Resizefly\Admin\Sizes\RestrictSizesField;
-use Alpipego\Resizefly\Admin\Sizes\SizesField;
-use Alpipego\Resizefly\Upload\Cache;
-use Alpipego\Resizefly\Upload\CacheInterface;
-use Alpipego\Resizefly\Upload\Fake;
-use Alpipego\Resizefly\Upload\RemoveResized;
 
 return [
-	PageInterface::class          => OptionsPage::class,
-	CacheInterface::class         => Cache::class,
-	'pluginPath'                  => 'config.path',
-	'pluginUrl'                   => 'config.url',
-	OptionsPage::class            => Alpipego\Resizefly\object(),
-	CacheSection::class           => Alpipego\Resizefly\object(),
-	PathField::class              => Alpipego\Resizefly\object()
-		->constructorParam( 'section', CacheSection::class ),
-	PurgeCacheField::class        => Alpipego\Resizefly\object()
-		->constructorParam( 'section', CacheSection::class ),
-	PurgeSingle::class            => \Alpipego\Resizefly\object(),
-	PurgeAll::class               => \Alpipego\Resizefly\object()
-		->constructorParam( 'field', PurgeCacheField::class ),
-	Cache::class                  => Alpipego\Resizefly\object()
-		->constructorParam( 'cachePath', 'options.cache.path' )
-		->constructorParam( 'addons', 'addons' ),
-	RemoveResizedField::class     => Alpipego\Resizefly\object()
-		->constructorParam( 'section', CacheSection::class ),
-	RemoveResized::class          => Alpipego\Resizefly\object()
-		->constructorParam( 'field', RemoveResizedField::class ),
-	RegisteredSizesSection::class => Alpipego\Resizefly\object(),
-	RestrictSizesField::class     => Alpipego\Resizefly\object()
-		->constructorParam( 'section', RegisteredSizesSection::class ),
-	SizesField::class             => Alpipego\Resizefly\object()
-		->constructorParam( 'section', RegisteredSizesSection::class ),
-	Fake::class                   => Alpipego\Resizefly\object(),
-	Admin::class                  => Alpipego\Resizefly\object()
-		->constructorParam( 'basename', 'config.basename' ),
+    'Alpipego\Resizefly\Admin\PageInterface'                => 'Alpipego\Resizefly\Admin\OptionsPage',
+    'Alpipego\Resizefly\Upload\CacheInterface'              => 'Alpipego\Resizefly\Upload\Cache',
+    'pluginPath'                                            => 'config.path',
+    'pluginUrl'                                             => 'config.url',
+    'Alpipego\Resizefly\Admin\OptionsPage'                  => Alpipego\Resizefly\object(),
+    'Alpipego\Resizefly\Admin\Cache\CacheSection'           => Alpipego\Resizefly\object(),
+    'Alpipego\Resizefly\Admin\Cache\PathField'              => Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Cache\CacheSection'),
+    'Alpipego\Resizefly\Admin\Cache\PurgeCacheField'        => Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Cache\CacheSection'),
+    'Alpipego\Resizefly\Admin\Cache\PurgeSingle'            => \Alpipego\Resizefly\object(),
+    'Alpipego\Resizefly\Admin\Cache\PurgeAll'               => \Alpipego\Resizefly\object()
+        ->constructorParam('field', 'Alpipego\Resizefly\Admin\Cache\PurgeCacheField'),
+    'Alpipego\Resizefly\Upload\Cache'                  => Alpipego\Resizefly\object()
+        ->constructorParam('cachePath', 'options.cache.path')
+        ->constructorParam('addons', 'addons'),
+    'Alpipego\Resizefly\Admin\Cache\RemoveResizedField'     => Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Cache\CacheSection'),
+    'Alpipego\Resizefly\Upload\RemoveResized'          => Alpipego\Resizefly\object()
+        ->constructorParam('field', 'Alpipego\Resizefly\Admin\Cache\RemoveResizedField'),
+    'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection' => Alpipego\Resizefly\object(),
+    'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'     => Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
+    'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'             => Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
+    'Alpipego\Resizefly\Upload\Fake'                   => Alpipego\Resizefly\object(),
+    Admin::class                                       => Alpipego\Resizefly\object()
+        ->constructorParam('basename', 'config.basename'),
 ];

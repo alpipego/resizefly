@@ -3,33 +3,31 @@
  * Created by PhpStorm.
  * User: alpipego
  * Date: 14.07.2017
- * Time: 10:45
+ * Time: 10:45.
  */
-
 use Alpipego\Resizefly\Admin\Licenses\LicensesPage;
 use Alpipego\Resizefly\Admin\Licenses\LicensesSection;
 use Alpipego\Resizefly\Common\Composer\Autoload\ClassLoader;
 use Alpipego\Resizefly\Plugin;
-use Alpipego\Resizefly\Upload\Uploads;
 
-require_once __DIR__ . '/../src/Common/Composer/Autoload/ClassLoader.php';
+require_once __DIR__.'/../src/Common/Composer/Autoload/ClassLoader.php';
 
 $classLoader = new ClassLoader();
-$classLoader->setPsr4('Alpipego\\Resizefly\\', realpath(__DIR__ . '/../src/'));
+$classLoader->setPsr4('Alpipego\\Resizefly\\', realpath(__DIR__.'/../src/'));
 $classLoader->register();
 
-require_once __DIR__ . '/functions.php';
+require_once __DIR__.'/functions.php';
 
 add_action('plugins_loaded', function () use ($classLoader) {
     $plugin = new Plugin();
-    $plugin->addDefiniton(__DIR__ . '/config/plugin.php');
-    $plugin->loadTextdomain(__DIR__ . '/../languages');
+    $plugin->addDefiniton(__DIR__.'/config/plugin.php');
+    $plugin->loadTextdomain(__DIR__.'/../languages');
 
     // Load compatibility fixes for other plugins
-    $plugin->addDefiniton(__DIR__ . '/config/compatibles.php');
+    $plugin->addDefiniton(__DIR__.'/config/compatibles.php');
     $plugin->getEarly();
 
-    $file                      = realpath(__DIR__ . '/../resizefly.php');
+    $file                      = realpath(__DIR__.'/../resizefly.php');
     $plugin['config.path']     = trailingslashit(plugin_dir_path($file));
     $plugin['config.url']      = plugin_dir_url($file);
     $plugin['config.basename'] = plugin_basename($file);
@@ -42,14 +40,14 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // set the cache path throughout the plugin
     $plugin['options.cache.path'] = function (Plugin $plugin) {
-        return trailingslashit($plugin->get(Uploads::class)->getBasePath()) . trim($plugin->get('options.cache.suffix'), DIRECTORY_SEPARATOR);
+        return trailingslashit($plugin->get('Alpipego\Resizefly\Upload\Uploads')->getBasePath()).trim($plugin->get('options.cache.suffix'), DIRECTORY_SEPARATOR);
     };
     $plugin['options.cache.url']  = function (Plugin $plugin) {
-        return trailingslashit($plugin->get(Uploads::class)->getBaseUrl()) . trim($plugin->get('options.cache.suffix'), DIRECTORY_SEPARATOR);
+        return trailingslashit($plugin->get('Alpipego\Resizefly\Upload\Uploads')->getBaseUrl()).trim($plugin->get('options.cache.suffix'), DIRECTORY_SEPARATOR);
     };
     // set the duplicates path
     $plugin['options.duplicates.path'] = function (Plugin $plugin) {
-        return trailingslashit($plugin->get(Uploads::class)->getBasePath()) . trim($plugin->get('options.duplicates.suffix'), DIRECTORY_SEPARATOR);
+        return trailingslashit($plugin->get('Alpipego\Resizefly\Upload\Uploads')->getBasePath()).trim($plugin->get('options.duplicates.suffix'), DIRECTORY_SEPARATOR);
     };
 
     $plugin->offsetSet('loader', $classLoader);
@@ -58,16 +56,16 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin->offsetSet('addons', apply_filters('resizefly/addons', []));
 
     foreach ($plugin->get('addons') as $addonName => $addon) {
-        add_filter('resizefly/addons/' . $addonName, function () use ($plugin) {
+        add_filter('resizefly/addons/'.$addonName, function () use ($plugin) {
             return $plugin;
         });
     }
 
-    if (!empty($plugin->get('addons'))) {
+    if (! empty($plugin->get('addons'))) {
         // add licenses for add-on
         $plugin->offsetSet('Licenses', function (Plugin $plugin) {
             return new LicensesSection(
-                new LicensesPage,
+                new LicensesPage(),
                 $plugin->get('config.path'),
                 $plugin->get('addons')
             );
@@ -83,12 +81,12 @@ add_action('plugins_loaded', function () use ($classLoader) {
 	} );
 
     if (is_admin()) {
-        $plugin->addDefiniton(__DIR__ . '/config/admin.php');
+        $plugin->addDefiniton(__DIR__.'/config/admin.php');
 
-        require_once __DIR__ . '/actions/activation.php';
+        require_once __DIR__.'/actions/activation.php';
 
         // add compatibility fixes that are only needed in admin
-        $plugin->addDefiniton(__DIR__ . '/config/compatibles-admin.php');
+        $plugin->addDefiniton(__DIR__.'/config/compatibles-admin.php');
     }
 
     // save options to retrieve them on uninstall
@@ -97,17 +95,17 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin->run();
 
     // register user added image sizes
-    require_once __DIR__ . '/actions/after-setup-theme.php';
+    require_once __DIR__.'/actions/after-setup-theme.php';
 
     // check if image size in attachment metadata
-    require_once __DIR__ . '/actions/wp-get-attachment-src.php';
+    require_once __DIR__.'/actions/wp-get-attachment-src.php';
 
     // handle image resizing
-    require_once __DIR__ . '/actions/template-redirect.php';
+    require_once __DIR__.'/actions/template-redirect.php';
 
     // fix wrong attachment date
-    require_once __DIR__ . '/actions/media-send-to-editor.php';
+    require_once __DIR__.'/actions/media-send-to-editor.php';
 
     // update version after upgrade
-    require_once __DIR__ . '/actions/upgrader-process-complete.php';
+    require_once __DIR__.'/actions/upgrader-process-complete.php';
 });
