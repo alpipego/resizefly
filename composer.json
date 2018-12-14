@@ -15,9 +15,9 @@
     "require-dev": {
         "pimple/pimple": "^3.1.0",
         "psr/container": "^1.0",
-        "spryker/code-sniffer": "^0.13.0",
-        "phpstan/phpstan": "^0.10.6",
         "wapmorgan/php-code-analyzer": "^1.0",
-        "sebastian/phpcpd": "^4.1"
+        "sebastian/phpcpd": "^4.1",
+        "roave/backward-compatibility-check": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.0"
     }
 }
