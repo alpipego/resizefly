@@ -3,58 +3,48 @@
  * Created by PhpStorm.
  * User: alpipego
  * Date: 26/07/16
- * Time: 12:18
+ * Time: 12:18.
  */
 
 namespace Alpipego\Resizefly\Admin;
 
-
 /**
- * Interface OptionInterface
- * @package Alpipego\Resizefly\Admin
+ * Interface OptionInterface.
  */
-interface OptionInterface {
+interface OptionInterface
+{
+    /**
+     * run actions and filters.
+     */
+    public function run();
 
-	/**
-	 * run actions and filters
-	 *
-	 * @return void
-	 */
-	public function run();
+    /**
+     * Register the setting.
+     */
+    public function registerSetting();
 
-	/**
-	 * Register the setting
-	 *
-	 * @return void
-	 */
-	public function registerSetting();
+    /**
+     * Add the settings field.
+     */
+    public function addField();
 
-	/**
-	 * Add the settings field
-	 *
-	 * @return void
-	 */
-	public function addField();
+    /**
+     * Add a callback to settings field.
+     */
+    public function callback();
 
-	/**
-	 * Add a callback to settings field
-	 *
-	 * @return void
-	 */
-	public function callback();
+    /**
+     * Sanitize values added to this settings field.
+     *
+     * @param mixed $value value to sanititze
+     *
+     * @return mixed
+     */
+    public function sanitize($value);
 
-	/**
-	 * Sanitize values added to this settings field
-	 *
-	 * @param mixed $value value to sanititze
-	 *
-	 * @return mixed
-	 */
-	public function sanitize( $value );
+    public function getId();
 
-	public function getId();
+    public function getTitle();
 
-	public function getTitle();
-
-	public function getView( $name );
+    public function getView($name);
 }
