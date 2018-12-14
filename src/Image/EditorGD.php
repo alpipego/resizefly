@@ -19,4 +19,8 @@ class EditorGD extends WP_Image_Editor_GD {
 			imagefilter($this->image, IMG_FILTER_GAUSSIAN_BLUR);
 		}
 	}
+
+    public function getImageSize() {
+        return filesize($this->file);
+	}
 }

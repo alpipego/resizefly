@@ -11,6 +11,18 @@ namespace Alpipego\Resizefly\Image;
 use WP_Image_Editor_Imagick;
 
 class EditorImagick extends WP_Image_Editor_Imagick {
+    /**
+     * @deprecated 3.1.0
+     * @return string
+     */
+	public function getImageBlob() {
+		return $this->image->getImageBlob();
+	}
+
+    public function getImageSize(  ) {
+        return strlen($this->image->getImageBlob());
+	}
+
 	public function setColorspace( $colorspace ) {
 		return $this->image->setColorspace( $colorspace );
 	}
