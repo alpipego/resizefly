@@ -26,6 +26,8 @@ class Plugin extends Container implements ContainerInterface
 
     /**
      * Calls `run()` method on all objects registered on plugin container.
+     *
+     * @throws ReflectionException
      */
     public function run()
     {
@@ -63,6 +65,7 @@ class Plugin extends Container implements ContainerInterface
      * @param string $id identifier of the entry to look for
      *
      * @throws \Alpipego\Resizefly\DI\NotFoundException
+     * @throws ReflectionException
      *
      * @return mixed entry
      */
@@ -138,35 +141,32 @@ class Plugin extends Container implements ContainerInterface
      */
     public function has($id)
     {
-        array(
-            'this',
-                'that'
-        );
         return isset($this[$id]);
     }
 
     /**
      * @param mixed $definition
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function addDefiniton($definition)
     {
         if (is_string($definition)) {
             if (! file_exists($definition)) {
-                throw new Exception(sprintf('%s not a readable file', gettype($definition)));
+                throw new \Exception(sprintf('%s not a readable file', gettype($definition)));
             }
             $definition = require_once $definition;
         }
 
         if (! is_array($definition)) {
-            throw new Exception(sprintf('Definiton has to be an array, %s given', gettype($definition)));
+            throw new \Exception(sprintf('Definiton has to be an array, %s given', gettype($definition)));
         }
 
         $this->definitions = array_merge($this->definitions, $definition);
     }
 
     /**
+     * @deprecated 3.1.0
      * wrapper for `load_plugin_textdomain`.
      *
      * @param string $dir path to languages dir
@@ -191,6 +191,11 @@ class Plugin extends Container implements ContainerInterface
         });
     }
 
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
     private function configArray($id)
     {
         // check if this is an array-like config request and return it as array
@@ -212,6 +217,14 @@ class Plugin extends Container implements ContainerInterface
         return $return;
     }
 
+    /**
+     * @param ReflectionParameter $dependency
+     * @param string              $id
+     *
+     * @throws ReflectionException
+     *
+     * @return mixed
+     */
     private function resolveDependency(ReflectionParameter $dependency, $id)
     {
         if (array_key_exists($id, $this->definitions)) {
