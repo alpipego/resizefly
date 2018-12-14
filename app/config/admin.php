@@ -5,7 +5,6 @@
  * Date: 08/10/16
  * Time: 12:32.
  */
-use Alpipego\Resizefly\Admin\Admin;
 
 return [
     'Alpipego\Resizefly\Admin\PageInterface'                => 'Alpipego\Resizefly\Admin\OptionsPage',
@@ -21,19 +20,19 @@ return [
     'Alpipego\Resizefly\Admin\Cache\PurgeSingle'            => \Alpipego\Resizefly\object(),
     'Alpipego\Resizefly\Admin\Cache\PurgeAll'               => \Alpipego\Resizefly\object()
         ->constructorParam('field', 'Alpipego\Resizefly\Admin\Cache\PurgeCacheField'),
-    'Alpipego\Resizefly\Upload\Cache'                  => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Upload\Cache'                       => Alpipego\Resizefly\object()
         ->constructorParam('cachePath', 'options.cache.path')
         ->constructorParam('addons', 'addons'),
     'Alpipego\Resizefly\Admin\Cache\RemoveResizedField'     => Alpipego\Resizefly\object()
         ->constructorParam('section', 'Alpipego\Resizefly\Admin\Cache\CacheSection'),
-    'Alpipego\Resizefly\Upload\RemoveResized'          => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Upload\RemoveResized'               => Alpipego\Resizefly\object()
         ->constructorParam('field', 'Alpipego\Resizefly\Admin\Cache\RemoveResizedField'),
     'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection' => Alpipego\Resizefly\object(),
     'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'     => Alpipego\Resizefly\object()
         ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
-    'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'             => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'     => Alpipego\Resizefly\object()
         ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
-    'Alpipego\Resizefly\Upload\Fake'                   => Alpipego\Resizefly\object(),
-    Admin::class                                       => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Upload\Fake'                        => Alpipego\Resizefly\object(),
+    'Alpipego\Resizefly\Admin\Admin'                        => Alpipego\Resizefly\object()
         ->constructorParam('basename', 'config.basename'),
 ];
