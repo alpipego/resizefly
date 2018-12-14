@@ -21,7 +21,7 @@ require_once __DIR__.'/functions.php';
 add_action('plugins_loaded', function () use ($classLoader) {
     $plugin = new Plugin();
     $plugin->addDefiniton(__DIR__.'/config/plugin.php');
-    $plugin->loadTextdomain(__DIR__.'/../languages');
+    load_plugin_textdomain('resizefly', false, __DIR__.'/../languages');
 
     // Load compatibility fixes for other plugins
     $plugin->addDefiniton(__DIR__.'/config/compatibles.php');
@@ -74,11 +74,11 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // Add own implementation to image editors
     add_filter('wp_image_editors', function (array $editors) {
-		return array_merge( apply_filters( 'resizefly/image_editors', [
-			'\\Alpipego\\Resizefly\\Image\\EditorImagick',
-			'\\Alpipego\\Resizefly\\Image\\EditorGD',
-		] ), $editors );
-	} );
+        return array_merge(apply_filters('resizefly/image_editors', [
+            '\\Alpipego\\Resizefly\\Image\\EditorImagick',
+            '\\Alpipego\\Resizefly\\Image\\EditorGD',
+        ]), $editors);
+    });
 
     if (is_admin()) {
         $plugin->addDefiniton(__DIR__.'/config/admin.php');
