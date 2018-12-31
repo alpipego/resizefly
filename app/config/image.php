@@ -3,17 +3,14 @@
  * Created by PhpStorm.
  * User: alpipego
  * Date: 17.07.2017
- * Time: 15:29
+ * Time: 15:29.
  */
 
-use Alpipego\Resizefly\Image\EditorWrapper;
-use Alpipego\Resizefly\Image\Handler;
-
 return [
-	EditorWrapper::class => Alpipego\Resizefly\object()
-		->constructorParam( 'editor', 'wp_image_editor' ),
-	Handler::class       => Alpipego\Resizefly\object()
-		->constructorParam( 'editor', EditorWrapper::class )
-		->constructorParam( 'cachePath', 'options.cache.path' )
-		->constructorParam( 'duplicatesPath', 'options.duplicates.path' ),
+    'Alpipego\Resizefly\Image\EditorWrapper' => Alpipego\Resizefly\object()
+        ->constructorParam('editor', 'wp_image_editor'),
+    'Alpipego\Resizefly\Image\Handler'       => Alpipego\Resizefly\object()
+        ->constructorParam('editor', 'Alpipego\Resizefly\Image\EditorWrapper')
+        ->constructorParam('cachePath', 'options.cache.path')
+        ->constructorParam('duplicatesPath', 'options.duplicates.path'),
 ];

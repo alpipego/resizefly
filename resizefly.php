@@ -4,21 +4,20 @@
  * Plugin Name: Resizefly
  * Description: Dynamically resize your images on the fly
  * Plugin URI:  https://resizefly.com/
- * Version:     3.0.0
+ * Version:     3.1.0
  * Author:      alpipego
  * Author URI:  https://alpipego.com/
  * License:     MIT
  * License URI: https://opensource.org/licenses/MIT
  * Text Domain: resizefly
  * GitHub Plugin URI: https://github.com/alpipego/resizefly
- * GitHub Branch: master
+ * GitHub Branch: master.
  */
 
 // PHP 5.2 compatible version check
-require_once dirname( __FILE__ ) . '/version-check.php';
-$check = new Resizefly_Version_Check( __FILE__ );
+require_once dirname(__FILE__).'/version-check.php';
+$check = new Resizefly_Version_Check(__FILE__);
 
-if ( ! $check->errors() ) {
-	require_once dirname( __FILE__ ) . '/app/bootstrap.php';
+if (! $check->errors()) {
+    include_once dirname(__FILE__).'/app/bootstrap.php';
 }
-

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: alpipego
  * Date: 09.02.2018
- * Time: 12:20
+ * Time: 12:20.
  */
 ?>
 <script type="text/html" id="tmpl-rzf-size-row">

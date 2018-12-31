@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: resizefly 3.0.0\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-11-20 11:17+0100\n"
+"POT-Creation-Date: 2018-12-31 13:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,28 +17,28 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Addon/EddAddonUpdater.php:306
+#: src/Addon/EddAddonUpdater.php:215
 #, php-format
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: src/Addon/EddAddonUpdater.php:314
+#: src/Addon/EddAddonUpdater.php:223
 #, php-format
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: src/Addon/EddAddonUpdater.php:444
+#: src/Addon/EddAddonUpdater.php:346
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: src/Addon/EddAddonUpdater.php:444
+#: src/Addon/EddAddonUpdater.php:346
 msgid "Error"
 msgstr ""
 
-#: src/Admin/Admin.php:33
+#: src/Admin/Admin.php:37
 msgid "Resizefly Settings"
 msgstr ""
 
@@ -46,171 +46,171 @@ msgstr ""
 msgid "Cache Settings"
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:41
+#: src/Admin/Cache/PathField.php:40
 msgid "Path for resized images"
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:60
+#: src/Admin/Cache/PathField.php:89
+msgid ""
+"This directory already exists. Please remove the directory manually and try "
+"setting it again."
+msgstr ""
+
+#: src/Admin/Cache/PathField.php:105
 #, php-format
 msgid ""
 "The provided path (%s) is not writeable! Please fix the permissions in your "
 "uploads directory."
 msgstr ""
 
-#: src/Admin/Cache/PathField.php:101
-msgid ""
-"This directory already exists. Please remove the directory manually and try "
-"setting it again."
-msgstr ""
-
-#: src/Admin/Cache/PurgeCacheField.php:20 src/Admin/Cache/PurgeSingle.php:45
-#: src/Admin/Cache/PurgeSingle.php:63
+#: src/Admin/Cache/PurgeCacheField.php:22 src/Admin/Cache/PurgeSingle.php:48
+#: src/Admin/Cache/PurgeSingle.php:67
 msgid "Purge Cache"
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:30
+#: src/Admin/Cache/PurgeCacheField.php:50
 #, php-format
 msgid "%s file(s) have been removed and %s of disk space has been freed."
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:34 src/Admin/Cache/PurgeSingle.php:99
+#: src/Admin/Cache/PurgeCacheField.php:54 src/Admin/Cache/PurgeSingle.php:104
 msgid "No files were removed because the cache was already empty."
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:36
+#: src/Admin/Cache/PurgeCacheField.php:56
 msgctxt "as in \"all resized images\""
 msgid "all"
 msgstr ""
 
-#: src/Admin/Cache/PurgeCacheField.php:37
+#: src/Admin/Cache/PurgeCacheField.php:57
 msgctxt "as in \"most resized images\""
 msgid "most"
 msgstr ""
 
-#: src/Admin/Cache/PurgeSingle.php:57
+#: src/Admin/Cache/PurgeSingle.php:61
 msgid "Resizefly Cache"
 msgstr ""
 
-#: src/Admin/Cache/PurgeSingle.php:65
+#: src/Admin/Cache/PurgeSingle.php:69
 msgid "Delete all generated sizes for this image."
 msgstr ""
 
-#: src/Admin/Cache/PurgeSingle.php:96
+#: src/Admin/Cache/PurgeSingle.php:101
 #, php-format
 msgid "%s file(s) have been removed."
 msgstr ""
 
-#: src/Admin/Cache/RemoveResizedField.php:19
+#: src/Admin/Cache/RemoveResizedField.php:21
 msgid "Remove All Resized Images"
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:37
+#: src/Admin/Licenses/LicenseField.php:38
 #, php-format
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:38
+#: src/Admin/Licenses/LicenseField.php:39
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:39
+#: src/Admin/Licenses/LicenseField.php:40
 msgid "Invalid license."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:40
 #: src/Admin/Licenses/LicenseField.php:41
+#: src/Admin/Licenses/LicenseField.php:42
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:42
+#: src/Admin/Licenses/LicenseField.php:43
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:43
+#: src/Admin/Licenses/LicenseField.php:44
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:44
+#: src/Admin/Licenses/LicenseField.php:45
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:45
+#: src/Admin/Licenses/LicenseField.php:46
 msgid "Unknown addon"
 msgstr ""
 
-#: src/Admin/Licenses/LicenseField.php:108
+#: src/Admin/Licenses/LicenseField.php:128
 msgid "valid"
 msgstr ""
 
-#: src/Admin/Licenses/LicensesSection.php:22
+#: src/Admin/Licenses/LicensesSection.php:24
 msgid "Addon Licenses"
 msgstr ""
 
-#: src/Admin/Licenses/LicensesSection.php:29
+#: src/Admin/Licenses/LicensesSection.php:31
 msgid "Licenses"
 msgstr ""
 
-#: src/Admin/OptionsPage.php:90
+#: src/Admin/OptionsPage.php:84
 msgid "ResizeFly"
 msgstr ""
 
-#: src/Admin/Sizes/RegisteredSizesSection.php:26
+#: src/Admin/Sizes/RegisteredSizesSection.php:27
 msgid "Registered Sizes Settings"
 msgstr ""
 
-#: src/Admin/Sizes/RestrictSizesField.php:31
+#: src/Admin/Sizes/RestrictSizesField.php:32
 msgid "Restrict Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:67
+#: src/Admin/Sizes/SizesField.php:68
 msgid "Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:83
-msgctxt "admin custom image size."
-msgid "Please choose a unique name."
-msgstr ""
-
-#: src/Admin/Sizes/SizesField.php:84
-msgctxt "admin custom image size."
-msgid "Please add either width or height."
-msgstr ""
-
-#: src/Admin/Sizes/SizesField.php:85
-msgctxt "admin custom image size"
-msgid "When specifying \"crop\", please add both width and height."
-msgstr ""
-
-#: src/Admin/Sizes/SizesField.php:87 views/field/resizefly-sizes.php:93
-msgctxt "button text"
-msgid "Add Size"
-msgstr ""
-
-#: src/Admin/Sizes/SizesField.php:211
+#: src/Admin/Sizes/SizesField.php:159
 msgid ""
 "This image size is not yet saved. If you want to allow images in this size "
 "save the form."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:212
+#: src/Admin/Sizes/SizesField.php:160
 msgid "This image size has been updated since your last save."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:213
+#: src/Admin/Sizes/SizesField.php:161
 msgid ""
 "This image size is no longer registered. If you still want to keep it you "
 "will have to add it manually."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:379
+#: src/Admin/Sizes/SizesField.php:245
 #, php-format
 msgid ""
 "The registered and saved image sizes for ResizeFly are out of sync. <a href="
 "\"%s\"><button type=\"button\">Please review them here.</button></a>"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:70
+#: src/Admin/Sizes/SizesField.php:330
+msgctxt "admin custom image size."
+msgid "Please choose a unique name."
+msgstr ""
+
+#: src/Admin/Sizes/SizesField.php:331
+msgctxt "admin custom image size."
+msgid "Please add either width or height."
+msgstr ""
+
+#: src/Admin/Sizes/SizesField.php:332
+msgctxt "admin custom image size"
+msgid "When specifying \"crop\", please add both width and height."
+msgstr ""
+
+#: src/Admin/Sizes/SizesField.php:334 views/field/resizefly-sizes.php:93
+msgctxt "button text"
+msgid "Add Size"
+msgstr ""
+
+#: src/Upload/DuplicateOriginal.php:177
 #, php-format
 msgid ""
 "The directory %s is not writeable by Resizefly. Please correct the "
@@ -296,7 +296,7 @@ msgid "Status: %s"
 msgstr ""
 
 #. /07/16
-#. * Time: 14:39
+#. * Time: 14:39.
 #.
 #: views/field/resizefly-purge-cache.php:12
 #, php-format
@@ -344,12 +344,12 @@ msgctxt "button text"
 msgid "Delete Size"
 msgstr ""
 
-#: views/page/resizefly.php:31
+#: views/page/resizefly.php:30
 msgid "Update Options"
 msgstr ""
 
 #. /07/16
-#. * Time: 12:57
+#. * Time: 12:57.
 #.
 #: views/section/resizefly-cache.php:9
 msgid ""
