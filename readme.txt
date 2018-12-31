@@ -1,7 +1,7 @@
 === ResizeFly ===
 Contributors: alpipego
 Tags: dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
@@ -59,9 +59,13 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 3.0.0 =
-* Add ability to purge resized for single image
-* Improve php for Cache, add CacheInterface; breaks BC
-* Add unmangled and uncompiled JS; respect DEBUG_SCRIPT
+= 3.1.0 =
+* Add compatibility for WPML/add filter for `home_url` (`resizefly/home_url`)
+* Add early running tasks in Plugin/DI
+* Deprecate `loadPluginTextdomain` wrapper
+* Update inline documentation, enforce code style
+* Add method `getImageSize` to image editors
+* Add action before streaming image (`resizefly/before_stream`)
+* Add filter for extending image editors (`resizefly/image_editors`)
 
 see https://github.com/alpipego/resizefly/releases for full changelog
