@@ -195,12 +195,12 @@ final class Handler implements HandlerInterface
         }
 
         // if either width or height is 0, resize to original aspect ratio
-        if (0 === $size['width'] && 0 === $size['height']) {
+        if ($size['width'] === 0 && $size['height'] === 0) {
             $size['width']  = $origWidth;
             $size['height'] = $origHeight;
-        } elseif (0 === $size['width']) {
+        } elseif ($size['width'] === 0) {
             $size['width'] = round($size['height'] * $this->editor->getRatio('width'));
-        } elseif (0 === $size['height']) {
+        } elseif ($size['height'] === 0) {
             $size['height'] = round($size['width'] * $this->editor->getRatio('height'));
         }
 
