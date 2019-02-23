@@ -3,13 +3,14 @@
  *
  * Created by alpipego on 26.06.2017.
  */
-var buttonIds = ['#' + window.resizefly.purge_id, '#' + window.resizefly.resized_id];
+var buttonIds = ['#' + window.resizefly.purge_id, '#' + window.resizefly.resized_id],
+    $buttons = $(buttonIds.join(','));
 
 $('#' + window.resizefly.purge_id + '-smart').on('change', function () {
     $('#' + window.resizefly.purge_id + '-text').text($(this).prop('checked') ? window.resizefly.purge_most : window.resizefly.purge_all);
 });
 
-$(buttonIds.join(',')).on('click', function (e) {
+$buttons.on('click', function (e) {
     e.preventDefault();
 
     var $this = $(this),
@@ -19,6 +20,9 @@ $(buttonIds.join(',')).on('click', function (e) {
             'smart-purge': $('#' + $this.attr('id') + '-smart').is(':checked')
         },
         resultId = '#' + $this.attr('id') + '-result';
+
+    $this.next('.spinner').addClass('is-active');
+    $buttons.prop('disabled', true);
 
     $.post(window.ajaxurl, data)
         .done(function (response) {
@@ -33,6 +37,10 @@ $(buttonIds.join(',')).on('click', function (e) {
         })
         .fail(function (xhr) {
             alert(xhr.responseText);
+        })
+        .always(function() {
+            $this.next('.spinner').removeClass('is-active');
+            $buttons.prop('disabled', false);
         });
 });
 

@@ -25,4 +25,8 @@
 
 <p id="<?= $args['id']; ?>-result"></p>
 
-<button id="<?= $args['id']; ?>" data-nonce="<?= wp_create_nonce($args['id']); ?>" class="button" <?php disabled($args['path'], false, true); ?> type="button"><?= $args['title']; ?></button>
+<button id="<?= $args['id']; ?>" data-nonce="<?= wp_create_nonce($args['id']); ?>" class="button" <?php disabled($args['path'], false, true); ?> type="button">
+    <?= $args['title']; ?>
+</button>
+
+<div class="spinner"></div>
