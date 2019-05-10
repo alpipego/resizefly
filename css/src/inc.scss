@@ -10,4 +10,12 @@ $red: #dc3232;
     }
 }
 
+#resizefly_purge_cache,
+#resizefly_remove_resized {
+    & + .spinner {
+        float: none;
+        margin-left: 10px;
+    }
+}
+
 @import "licenses", "user-sizes";

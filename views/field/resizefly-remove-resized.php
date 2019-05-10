@@ -16,3 +16,4 @@
 </p>
 
 <button id="<?= $args['id']; ?>" data-nonce="<?= wp_create_nonce($args['id']); ?>" class="button" type="button"><?= $args['title']; ?></button>
+<div class="spinner"></div>
