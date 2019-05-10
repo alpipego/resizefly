@@ -5,7 +5,7 @@ Stable tag: 3.1.1
 License: MIT
 Requires at least: 4.7.0
 Requires PHP: 5.5
-Tested up to: 5.0
+Tested up to: 5.2
 
 Dynamically resize your WordPress images on the fly. Upload them once and don't worry about missing or new image sizes.
 
@@ -59,13 +59,8 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 3.1.0 =
-* Add compatibility for WPML/add filter for `home_url` (`resizefly/home_url`)
-* Add early running tasks in Plugin/DI
-* Deprecate `loadPluginTextdomain` wrapper
-* Update inline documentation, enforce code style
-* Add method `getImageSize` to image editors
-* Add action before streaming image (`resizefly/before_stream`)
-* Add filter for extending image editors (`resizefly/image_editors`)
+= 3.1.1 =
+* Add visual feedback (a spinner) to purging caches
+* Confirm compatibility with WordPress 5.2
 
 see https://github.com/alpipego/resizefly/releases for full changelog
