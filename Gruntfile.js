@@ -192,5 +192,5 @@ module.exports = function (grunt) {
 
     grunt.registerTask('third-party', ['copy:php', 'string-replace:php']);
     grunt.registerTask('default', ['uglify:debug', 'uglify:dev', 'sass', 'watch']);
-    grunt.registerTask('build', ['pot', 'uglify:dist', 'uglify:debug', 'sass']);
+    grunt.registerTask('build', ['pot', 'wp_readme_to_markdown', 'uglify:dist', 'uglify:debug', 'sass']);
 };
