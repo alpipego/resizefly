@@ -173,7 +173,7 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['Gruntfile.js', 'js/src/**/*.js'],
-                tasks: 'uglify:dev'
+                tasks: ['uglify:dev', 'uglify:debug']
             },
             sass: {
                 files: ['Gruntfile.js', 'css/src/**/*.scss'],
@@ -191,6 +191,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 
     grunt.registerTask('third-party', ['copy:php', 'string-replace:php']);
-    grunt.registerTask('default', ['uglify:dev', 'sass', 'watch']);
-    grunt.registerTask('build', ['pot', 'uglify:dist', 'uglify:debug', 'sass']);
+    grunt.registerTask('default', ['uglify:debug', 'uglify:dev', 'sass', 'watch']);
+    grunt.registerTask('build', ['pot', 'wp_readme_to_markdown', 'uglify:dist', 'uglify:debug', 'sass']);
 };
