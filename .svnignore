@@ -3,9 +3,16 @@ VERSION
 composer.json
 composer.lock
 package.json
+package-lock.json
 yarn.lock
 Gruntfile.js
 .gitignore
 .svnignore
 .gitattributes
-js/src/
+.checklist
+.php_cs.cache
+.php_cs.dist
+vnignore
+config
+js/src
+css/src
