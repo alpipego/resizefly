@@ -236,7 +236,7 @@ final class Cache implements CacheInterface
         }
 
         // create duplicate
-        $this->duplicate->rebuild($this->image);
+        $this->duplicate->rebuild($this->image->getOriginalPath());
 
         // actually move the file
         copy($file, $newFile);
