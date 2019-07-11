@@ -58,8 +58,6 @@ final class EditorWrapper implements EditorWrapperInterface
         $origWidth  = $this->getWidth();
         $origHeight = $this->getHeight();
         $factor     = max($width / $origWidth, $height / $origHeight);
-        $srcX       = round(($origWidth - $width / $factor) * $focalX / 100);
-        $srcY       = round(($origHeight - $height / $factor) * $focalY / 100);
 
         if ($density > 0) {
             list($quality, $width, $height) = $this->parseDensity($width, $height, $density);
@@ -68,8 +66,8 @@ final class EditorWrapper implements EditorWrapperInterface
             if ($width > $origWidth || $height > $origHeight) {
                 $ratio = $width / $height;
                 if ($width > $origWidth && $height > $origHeight) {
-                    $width  = $origWidth / $ratio * ($origWidth / $origHeight);
-                    $height = $origHeight / $ratio * ($origWidth / $origHeight);
+                    $height  = $origWidth / $ratio * ($origHeight / $origWidth);
+                    $width = $origHeight / $ratio * ($origWidth / $origHeight);
                 } elseif ($width > $origWidth) {
                     $width  = $origWidth;
                     $height = $width * $height / $width;
@@ -82,6 +80,9 @@ final class EditorWrapper implements EditorWrapperInterface
 
             $this->editor->set_quality($quality);
         }
+
+        $srcX       = round(($origWidth - $width / $factor) * $focalX / 100);
+        $srcY       = round(($origHeight - $height / $factor) * $focalY / 100);
 
         return $this->editor->crop($srcX, $srcY, $width / $factor, $height / $factor, $width, $height);
     }
