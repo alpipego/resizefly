@@ -59,8 +59,7 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 3.1.1 =
-* Add visual feedback (a spinner) to purging caches
-* Confirm compatibility with WordPress 5.2
+= 3.1.3=
+* Fix requested image size larger than image
 
 see https://github.com/alpipego/resizefly/releases for full changelog
