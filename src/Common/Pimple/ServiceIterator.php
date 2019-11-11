@@ -39,7 +39,7 @@ final class ServiceIterator implements \Iterator
     public function __construct(Container $container, array $ids)
     {
         $this->container = $container;
-        $this->ids = $ids;
+        $this->ids       = $ids;
     }
 
     public function rewind()

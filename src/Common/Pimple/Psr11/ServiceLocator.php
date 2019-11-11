@@ -38,7 +38,7 @@ use Alpipego\Resizefly\Common\Psr\Container\ContainerInterface;
 class ServiceLocator implements ContainerInterface
 {
     private $container;
-    private $aliases = array();
+    private $aliases = [];
 
     /**
      * @param PimpleContainer $container The Container instance used to locate services
@@ -58,7 +58,7 @@ class ServiceLocator implements ContainerInterface
      */
     public function get($id)
     {
-        if (!isset($this->aliases[$id])) {
+        if (! isset($this->aliases[$id])) {
             throw new UnknownIdentifierException($id);
         }
 
@@ -70,6 +70,6 @@ class ServiceLocator implements ContainerInterface
      */
     public function has($id)
     {
-        return isset($this->aliases[$id]) && isset($this->container[$this->aliases[$id]]);
+        return isset($this->aliases[$id], $this->container[$this->aliases[$id]]);
     }
 }
