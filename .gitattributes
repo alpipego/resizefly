@@ -3,9 +3,16 @@ VERSION export-ignore
 composer.json export-ignore
 composer.lock export-ignore
 package.json export-ignore
+package-lock.json export-ignore
 yarn.lock export-ignore
 Gruntfile.js export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .svnignore export-ignore
+.checklist export-ignore
+.php_cs.cache export-ignore
+.php_cs.dist export-ignore
 js/src/ export-ignore
+css/src export-ignore
+.github/ export-ignore
+
