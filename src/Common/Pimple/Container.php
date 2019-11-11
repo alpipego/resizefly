@@ -38,12 +38,12 @@ use Alpipego\Resizefly\Common\Pimple\Exception\UnknownIdentifierException;
  */
 class Container implements \ArrayAccess
 {
-    private $values = array();
+    private $values = [];
     private $factories;
     private $protected;
-    private $frozen = array();
-    private $raw = array();
-    private $keys = array();
+    private $frozen = [];
+    private $raw    = [];
+    private $keys   = [];
 
     /**
      * Instantiates the container.
@@ -52,7 +52,7 @@ class Container implements \ArrayAccess
      *
      * @param array $values The parameters or objects
      */
-    public function __construct(array $values = array())
+    public function __construct(array $values = [])
     {
         $this->factories = new \SplObjectStorage();
         $this->protected = new \SplObjectStorage();
@@ -83,7 +83,7 @@ class Container implements \ArrayAccess
         }
 
         $this->values[$id] = $value;
-        $this->keys[$id] = true;
+        $this->keys[$id]   = true;
     }
 
     /**
@@ -91,21 +91,21 @@ class Container implements \ArrayAccess
      *
      * @param string $id The unique identifier for the parameter or object
      *
-     * @return mixed The value of the parameter or an object
-     *
      * @throws UnknownIdentifierException If the identifier is not defined
+     *
+     * @return mixed The value of the parameter or an object
      */
     public function offsetGet($id)
     {
-        if (!isset($this->keys[$id])) {
+        if (! isset($this->keys[$id])) {
             throw new UnknownIdentifierException($id);
         }
 
         if (
             isset($this->raw[$id])
-            || !\is_object($this->values[$id])
+            || ! \is_object($this->values[$id])
             || isset($this->protected[$this->values[$id]])
-            || !\method_exists($this->values[$id], '__invoke')
+            || ! \method_exists($this->values[$id], '__invoke')
         ) {
             return $this->values[$id];
         }
@@ -114,8 +114,8 @@ class Container implements \ArrayAccess
             return $this->values[$id]($this);
         }
 
-        $raw = $this->values[$id];
-        $val = $this->values[$id] = $raw($this);
+        $raw            = $this->values[$id];
+        $val            = $this->values[$id]            = $raw($this);
         $this->raw[$id] = $raw;
 
         $this->frozen[$id] = true;
@@ -156,13 +156,13 @@ class Container implements \ArrayAccess
      *
      * @param callable $callable A service definition to be used as a factory
      *
-     * @return callable The passed callable
-     *
      * @throws ExpectedInvokableException Service definition has to be a closure or an invokable object
+     *
+     * @return callable The passed callable
      */
     public function factory($callable)
     {
-        if (!\method_exists($callable, '__invoke')) {
+        if (! \method_exists($callable, '__invoke')) {
             throw new ExpectedInvokableException('Service definition is not a Closure or invokable object.');
         }
 
@@ -178,13 +178,13 @@ class Container implements \ArrayAccess
      *
      * @param callable $callable A callable to protect from being evaluated
      *
-     * @return callable The passed callable
-     *
      * @throws ExpectedInvokableException Service definition has to be a closure or an invokable object
+     *
+     * @return callable The passed callable
      */
     public function protect($callable)
     {
-        if (!\method_exists($callable, '__invoke')) {
+        if (! \method_exists($callable, '__invoke')) {
             throw new ExpectedInvokableException('Callable is not a Closure or invokable object.');
         }
 
@@ -198,13 +198,13 @@ class Container implements \ArrayAccess
      *
      * @param string $id The unique identifier for the parameter or object
      *
-     * @return mixed The value of the parameter or the closure defining an object
-     *
      * @throws UnknownIdentifierException If the identifier is not defined
+     *
+     * @return mixed The value of the parameter or the closure defining an object
      */
     public function raw($id)
     {
-        if (!isset($this->keys[$id])) {
+        if (! isset($this->keys[$id])) {
             throw new UnknownIdentifierException($id);
         }
 
@@ -224,16 +224,16 @@ class Container implements \ArrayAccess
      * @param string   $id       The unique identifier for the object
      * @param callable $callable A service definition to extend the original
      *
-     * @return callable The wrapped callable
-     *
      * @throws UnknownIdentifierException        If the identifier is not defined
      * @throws FrozenServiceException            If the service is frozen
      * @throws InvalidServiceIdentifierException If the identifier belongs to a parameter
      * @throws ExpectedInvokableException        If the extension callable is not a closure or an invokable object
+     *
+     * @return callable The wrapped callable
      */
     public function extend($id, $callable)
     {
-        if (!isset($this->keys[$id])) {
+        if (! isset($this->keys[$id])) {
             throw new UnknownIdentifierException($id);
         }
 
@@ -241,7 +241,7 @@ class Container implements \ArrayAccess
             throw new FrozenServiceException($id);
         }
 
-        if (!\is_object($this->values[$id]) || !\method_exists($this->values[$id], '__invoke')) {
+        if (! \is_object($this->values[$id]) || ! \method_exists($this->values[$id], '__invoke')) {
             throw new InvalidServiceIdentifierException($id);
         }
 
@@ -249,7 +249,7 @@ class Container implements \ArrayAccess
             @\trigger_error(\sprintf('How Pimple behaves when extending protected closures will be fixed in Pimple 4. Are you sure "%s" should be protected?', $id), \E_USER_DEPRECATED);
         }
 
-        if (!\is_object($callable) || !\method_exists($callable, '__invoke')) {
+        if (! \is_object($callable) || ! \method_exists($callable, '__invoke')) {
             throw new ExpectedInvokableException('Extension service definition is not a Closure or invokable object.');
         }
 
@@ -285,7 +285,7 @@ class Container implements \ArrayAccess
      *
      * @return static
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    public function register(ServiceProviderInterface $provider, array $values = [])
     {
         $provider->register($this);
 
