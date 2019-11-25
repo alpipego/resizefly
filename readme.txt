@@ -62,4 +62,5 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 = 3.1.4 =
 * Fix registered and user-generated image sizes
 
+
 see https://github.com/alpipego/resizefly/releases for full changelog
