@@ -44,10 +44,8 @@ final class Handler implements HandlerInterface
     /**
      * Handler constructor.
      *
-     * @param ImageInterface         $image
-     * @param EditorWrapperInterface $editor
-     * @param string                 $cachePath
-     * @param string                 $duplicatesPath
+     * @param string $cachePath
+     * @param string $duplicatesPath
      */
     public function __construct(ImageInterface $image, EditorWrapperInterface $editor, $cachePath, $duplicatesPath)
     {
@@ -126,16 +124,20 @@ final class Handler implements HandlerInterface
                     return true;
                 }
             } else {
-                if ($this->image->getWidth() === $width) {
+                if ($this->image->getWidth() === $width && $this->image->getHeight() <= $height) {
                     $this->parseRequestedImageSize(['width' => $width, 'height' => 0]);
-
-                    return true;
+                    if ($this->aspect['height'] <= $height) {
+                        return true;
+                    }
+                    $this->aspect = [];
                 }
 
-                if ($this->image->getHeight() === $height) {
+                if ($this->image->getHeight() === $height && $this->image->getWidth() <= $width) {
                     $this->parseRequestedImageSize(['width' => 0, 'height' => $height]);
-
-                    return true;
+                    if ($this->aspect['width'] <= $width) {
+                        return true;
+                    }
+                    $this->aspect = [];
                 }
             }
         }
@@ -178,10 +180,10 @@ final class Handler implements HandlerInterface
         $origHeight = $this->editor->getHeight();
 
         // if width or height is larger than the image itself, set it to the original width/height
-        if (! isset($size['width']) || empty($size['width'])) {
+        if (! isset($size['width']) || (empty($size['width']) && $size['width'] !== 0)) {
             $size['width'] = $this->image->getWidth();
         }
-        if (! isset($size['height']) || empty($size['height'])) {
+        if (! isset($size['height']) || (empty($size['height']) && $size['height'] !== 0)) {
             $size['height'] = $this->image->getHeight();
         }
         if (! isset($size['density'])) {
