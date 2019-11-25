@@ -12,7 +12,9 @@ Gruntfile.js export-ignore
 .checklist export-ignore
 .php_cs.cache export-ignore
 .php_cs.dist export-ignore
+.php-version export-ignore
+.wordpress-org export-ignore
 js/src/ export-ignore
-css/src export-ignore
+css/src/ export-ignore
 .github/ export-ignore
 

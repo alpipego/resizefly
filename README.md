@@ -1,10 +1,10 @@
 # ResizeFly #
 **Contributors:** [alpipego](https://profiles.wordpress.org/alpipego)  
 **Tags:** dynamic images, dynamic, image, png, jpg, gif, photo, media library, on-the-fly, resize  
-**Stable tag:** 3.1.1  
+**Stable tag:** 3.1.4  
 **License:** MIT  
 **Requires at least:** 4.7.0  
-**Requires PHP:** 5.6  
+**Requires PHP:** 5.5  
 **Tested up to:** 5.3  
 
 Dynamically resize your WordPress images on the fly. Upload them once and don't worry about missing or new image sizes.
@@ -59,8 +59,7 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 ## Changelog ##
 
-### 3.1.1 ###
-* Add visual feedback (a spinner) to purging caches
-* Confirm compatibility with WordPress 5.2
+### 3.1.4 ###
+* Fix registered and user-generated image sizes
 
 see https://github.com/alpipego/resizefly/releases for full changelog
