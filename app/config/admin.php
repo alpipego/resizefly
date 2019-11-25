@@ -30,6 +30,8 @@ return [
     'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection' => Alpipego\Resizefly\object(),
     'Alpipego\Resizefly\Admin\Sizes\RestrictSizesField'     => Alpipego\Resizefly\object()
         ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
+    'Alpipego\Resizefly\Admin\Sizes\SizesField'       => \Alpipego\Resizefly\object()
+        ->constructorParam('section', 'Alpipego\Resizefly\Admin\Sizes\RegisteredSizesSection'),
     'Alpipego\Resizefly\Upload\Fake'                        => Alpipego\Resizefly\object(),
     'Alpipego\Resizefly\Admin\Admin'                        => Alpipego\Resizefly\object()
         ->constructorParam('basename', 'config.basename'),
