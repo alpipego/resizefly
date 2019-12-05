@@ -138,7 +138,7 @@ final class EditorWrapper implements EditorWrapperInterface
     {
         $width   = $width * $density;
         $height  = $height * $density;
-        $quality = (int) apply_filters('resizefly/image/hidpi_quality', 40);
+        $quality = (int) apply_filters('resizefly/image/hidpi_quality', 70, $density);
         if (1 === $density) {
             $quality = $this->getQuality();
         }
