@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - "*"
+      - "!*-*"
 jobs:
   tag:
     name: New tag
