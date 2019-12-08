@@ -8,6 +8,7 @@
 
 namespace Alpipego\Resizefly\Upload;
 
+use Alpipego\Resizefly\Async\Queue\Queue;
 use Alpipego\Resizefly\Image\ImageInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -20,7 +21,7 @@ final class Cache implements CacheInterface
 {
     private $uploads;
     private $cachePath;
-    private $duplicate;
+    private $queue;
     private $filesize = 0;
     private $files    = 0;
     private $addons;
@@ -29,7 +30,7 @@ final class Cache implements CacheInterface
     public function __construct(
         UploadsInterface $uploads,
         ImageInterface $image,
-        DuplicateOriginal $duplicate,
+        Queue $queue,
         $cachePath,
         $addons
     ) {
@@ -37,7 +38,7 @@ final class Cache implements CacheInterface
         $this->cachePath = $cachePath;
         $this->addons    = $addons;
         $this->image     = $image;
-        $this->duplicate = $duplicate;
+        $this->queue     = $queue;
     }
 
     public function purgeSingle($id, $deleteDuplicate = true)
@@ -88,14 +89,13 @@ final class Cache implements CacheInterface
 
     public function purgeAll($smart = true)
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->cachePath, RecursiveDirectoryIterator::SKIP_DOTS)
-        );
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->cachePath, RecursiveDirectoryIterator::SKIP_DOTS));
 
         if ($smart) {
             $retain = $this->smartPurge();
         }
 
+        /** @var SplFileInfo $path */
         foreach ($iterator as $path) {
             if (! $path->isFile()) {
                 continue;
@@ -115,9 +115,9 @@ final class Cache implements CacheInterface
 
     public function warmUpAll()
     {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->uploads->getBasePath(),
-            RecursiveDirectoryIterator::SKIP_DOTS));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->uploads->getBasePath(), RecursiveDirectoryIterator::SKIP_DOTS));
 
+        /** @var SplFileInfo $path */
         foreach ($iterator as $path) {
             if (! $path->isFile()) {
                 continue;
@@ -236,7 +236,7 @@ final class Cache implements CacheInterface
         }
 
         // create duplicate
-        $this->duplicate->rebuild($this->image->getOriginalPath());
+        $this->queue->resolve($this->duplicateOriginal, $this->image->getOriginalPath());
 
         // actually move the file
         copy($file, $newFile);
