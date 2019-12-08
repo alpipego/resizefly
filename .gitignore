@@ -4,3 +4,4 @@ node_modules/
 vendor/
 js/*.map
 .php-version
+myreport/
