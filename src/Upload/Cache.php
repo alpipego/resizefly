@@ -20,19 +20,22 @@ final class Cache implements CacheInterface
     private $files    = 0;
     private $addons;
     private $image;
+    private $duplicateOriginal;
 
     public function __construct(
         UploadsInterface $uploads,
         ImageInterface $image,
+        DuplicateOriginal $duplicateOriginal,
         Queue $queue,
         $cachePath,
         $addons
     ) {
-        $this->uploads   = $uploads;
-        $this->cachePath = $cachePath;
-        $this->addons    = $addons;
-        $this->image     = $image;
-        $this->queue     = $queue;
+        $this->uploads           = $uploads;
+        $this->cachePath         = $cachePath;
+        $this->addons            = $addons;
+        $this->image             = $image;
+        $this->queue             = $queue;
+        $this->duplicateOriginal = $duplicateOriginal;
     }
 
     public function purgeSingle($id, $deleteDuplicate = true)

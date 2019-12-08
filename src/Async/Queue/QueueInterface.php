@@ -16,11 +16,6 @@ interface QueueInterface
     public function push(Job $job, $delay = 0);
 
     /**
-     * Setup the watch tasks.
-     */
-    public function watch();
-
-    /**
      * Pass a class name and check if there is an asynchronous implementation.
      *
      * @param string $class   Class name to get asynchronous class for

@@ -16,6 +16,7 @@ require_once __DIR__.'/functions.php';
 add_action('plugins_loaded', function () use ($classLoader) {
     $plugin = new Plugin();
     $plugin->addDefiniton(__DIR__.'/config/plugin.php');
+    $plugin->addDefiniton(__DIR__.'/config/queue.php');
     load_plugin_textdomain('resizefly', false, __DIR__.'/../languages');
 
     // Load compatibility fixes for other plugins
@@ -86,9 +87,6 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // save options to retrieve them on uninstall
     update_option('resizefly_options', $plugin->get('options'), false);
-
-    $plugin->addDefiniton(__DIR__.'/config/queue.php');
-    $plugin->get('Alpipego\Resizefly\Async\Queue\Queue')->watch();
 
     $plugin->run();
 
