@@ -28,28 +28,6 @@ class Uploads implements UploadsInterface
         $this->setUploads(wp_upload_dir(null, false));
     }
 
-    /**
-     * @deprecated 1.4.0 Method has moved to \\Alpipego\\Resizefly\\Uploads\\Filter, this method returns the original URL without filtering it
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    public function filterImageUrl($url)
-    {
-        return $url;
-    }
-
-    /**
-     * @return array wp_uploads_dir()
-     *
-     * @deprecated 1.4.0 use getPath(), getUrl(), getBasePath(), getBaseUrl() directly
-     */
-    public function getUploads()
-    {
-        return $this->uploads;
-    }
-
     public function getPath()
     {
         return $this->_get('path');
@@ -151,7 +129,7 @@ class Uploads implements UploadsInterface
                 return dirname($a);
             }
 
-            return preg_replace('@[\\/]+@', '/', "$a/$b");
+            return preg_replace('@[/]+@', '/', "$a/$b");
         }, 0);
     }
 
