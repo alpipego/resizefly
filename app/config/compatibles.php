@@ -1,12 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 01.11.18
- * Time: 16:36.
- */
+
+use function Alpipego\Resizefly\object;
 
 return [
-    'Alpipego\Resizefly\Compatibles\WPML' => \Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Compatibles\WPML' => object()
         ->instantiateEarly(),
 ];

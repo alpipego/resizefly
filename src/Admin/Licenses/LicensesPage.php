@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 13.03.2018
- * Time: 19:43.
- */
 
 namespace Alpipego\Resizefly\Admin\Licenses;
 
@@ -16,7 +10,6 @@ class LicensesPage implements PageInterface
 
     public function run()
     {
-        // TODO: Implement run() method.
     }
 
     /**

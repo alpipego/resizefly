@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 18.07.2017
- * Time: 12:05.
- */
 
 namespace Alpipego\Resizefly\Image;
 
@@ -24,8 +18,6 @@ interface HandlerInterface
 
     /**
      * Check if requested image size is in array of allowed sizes.
-     *
-     * @param array $allowedSizes
      *
      * @return bool
      */

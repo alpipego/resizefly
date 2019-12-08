@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 04/08/16
- * Time: 11:46.
- */
 
 namespace Alpipego\Resizefly\Admin;
 
@@ -33,7 +27,9 @@ final class Admin
      */
     public function addActionLinks($links)
     {
-        $links[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', get_admin_url(null, 'upload.php?page=resizefly'),
+        $links[] = sprintf(
+            '<a href="%1$s" title="%2$s">%2$s</a>',
+            get_admin_url(null, 'upload.php?page=resizefly'),
             __('Resizefly Settings', 'resizefly')
         );
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 16/09/16
- * Time: 10:15.
- */
 
 namespace Alpipego\Resizefly\Upload;
 

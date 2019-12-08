@@ -1,12 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 18.07.2017
- * Time: 11:35.
- */
 
 namespace Alpipego\Resizefly\Image;
+
+use WP_Error;
 
 interface EditorWrapperInterface
 {
@@ -50,7 +46,7 @@ interface EditorWrapperInterface
      * @param int $focalX
      * @param int $focalY
      *
-     * @return bool|\WP_Error true on success | \WP_Error on error
+     * @return bool|WP_Error true on success | \WP_Error on error
      *
      * @see WP_Image_Editor::crop()
      */
@@ -59,9 +55,9 @@ interface EditorWrapperInterface
     /**
      * @param string $file full path to save image file
      *
-     * @see WP_Image_Editor::save()
+     * @return array|WP_Error {'path'=>string, 'file'=>string, 'width'=>int, 'height'=>int, 'mime-type'=>string}
      *
-     * @return array|\WP_Error {'path'=>string, 'file'=>string, 'width'=>int, 'height'=>int, 'mime-type'=>string}
+     * @see WP_Image_Editor::save()
      */
     public function saveImage($file);
 

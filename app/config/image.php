@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 17.07.2017
- * Time: 15:29.
- */
+
+use function Alpipego\Resizefly\object;
 
 return [
-    'Alpipego\Resizefly\Image\EditorWrapper' => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Image\EditorWrapper' => object()
         ->constructorParam('editor', 'wp_image_editor'),
-    'Alpipego\Resizefly\Image\Handler'       => Alpipego\Resizefly\object()
+    'Alpipego\Resizefly\Image\Handler'       => object()
         ->constructorParam('editor', 'Alpipego\Resizefly\Image\EditorWrapper')
         ->constructorParam('cachePath', 'options.cache.path')
         ->constructorParam('duplicatesPath', 'options.duplicates.path'),

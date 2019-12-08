@@ -1,13 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 1.11.2017
- * Time: 12:21.
+ * Setup plugin, add options, add tables.
  *
- * @var Plugin $plugin
+ * @var Plugin
  */
-
 use Alpipego\Resizefly\Common\Psr\Container\ContainerExceptionInterface;
 use Alpipego\Resizefly\Common\Psr\Container\NotFoundExceptionInterface;
 use Alpipego\Resizefly\Plugin;
@@ -23,8 +19,8 @@ if (version_compare(get_option('resizefly_version'), $plugin['config.version'], 
     require_once ABSPATH.'wp-admin/includes/upgrade.php';
 
     /** @var wpdb $wpdb */
-    $wpdb = $GLOBALS['wpdb'];
-    $before = $wpdb->hide_errors();
+    $wpdb            = $GLOBALS['wpdb'];
+    $before          = $wpdb->hide_errors();
     $charset_collate = $wpdb->get_charset_collate();
 
     dbDelta(<<<JOBS
@@ -57,4 +53,3 @@ FAILS
     add_option('resizefly_version_initial', $plugin['config.version']);
     update_option('resizefly_version', $plugin['config.version']);
 }
-;

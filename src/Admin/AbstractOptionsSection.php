@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 25/07/16
- * Time: 14:30.
- */
 
 namespace Alpipego\Resizefly\Admin;
 
 /**
  * Class AbstractOptionsSection.
  */
-abstract class AbstractOptionsSection
+abstract class AbstractOptionsSection implements OptionsSectionInterface
 {
     /**
      * @var array id and title for field group
@@ -35,9 +29,8 @@ abstract class AbstractOptionsSection
     /**
      * AbstractOptionsSection constructor.
      *
-     * @param PageInterface $page
-     * @param string        $pluginPath    base plugin path
-     * @param string        $customSection
+     * @param string $pluginPath    base plugin path
+     * @param string $customSection
      */
     public function __construct(PageInterface $page, $pluginPath, $customSection = '')
     {

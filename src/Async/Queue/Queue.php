@@ -37,8 +37,8 @@ class Queue implements QueueInterface
         $this->connection = $connection;
         $this->id         = $queueId;
         $this->worker     = $worker;
-        $this->interval   = (int)apply_filters('resizefly/queue/interval', $this->interval);
-        $this->cronLock   = (int)apply_filters('resizefly/queue/cron_lock', $this->cronLock);
+        $this->interval   = (int) apply_filters('resizefly/queue/interval', $this->interval);
+        $this->cronLock   = (int) apply_filters('resizefly/queue/cron_lock', $this->cronLock);
         $this->worker->setInterval($this->interval);
     }
 
@@ -70,7 +70,7 @@ class Queue implements QueueInterface
             define('WP_CRON_LOCK_TIMEOUT', $this->cronLock);
         }
 
-        if (!wp_next_scheduled($this->id.'_watch')) {
+        if (! wp_next_scheduled($this->id.'_watch')) {
             // schedule watcher
             wp_schedule_event(time(), $this->id, $this->id.'_watch');
         }
@@ -106,7 +106,7 @@ class Queue implements QueueInterface
 
         $this->worker->lock();
 
-        while (!$this->timeExceeded() && !$this->memoryExceeded() && $this->connection->jobs() > 0) {
+        while (! $this->timeExceeded() && ! $this->memoryExceeded() && $this->connection->jobs() > 0) {
             $this->worker->process();
         }
 
@@ -128,6 +128,36 @@ class Queue implements QueueInterface
     }
 
     /**
+     * Pass a class name and check if there is an asynchronous implementation.
+     *
+     * @param string $class   Class name to get asynchronous class for
+     * @param mixed  ...$args Args that will be passed to async class
+     *
+     * @return mixed
+     */
+    public function resolve($class, ...$args)
+    {
+        try {
+            $namespace      = explode('\\', __NAMESPACE__);
+            $requestedClass = explode('\\', get_class($class));
+            $commonNs       = array_intersect($namespace, $requestedClass);
+            if (empty($commonNs)) {
+                throw new \Exception();
+            }
+            array_push($commonNs, 'Async');
+            array_splice($requestedClass, 0, count($commonNs) - 1, $commonNs);
+            $asyncClass = implode('\\', $requestedClass);
+            if (! class_exists($asyncClass)) {
+                throw new \Exception();
+            }
+
+            $this->push(new $asyncClass($class, ...$args));
+            $this->trigger($this->cronLock);
+        } catch (\Exception $e) {
+        }
+    }
+
+    /**
      * Memory exceeded.
      *
      * Ensures the worker process never exceeds 80%
@@ -145,7 +175,7 @@ class Queue implements QueueInterface
             $return = true;
         }
 
-        return (bool)apply_filters('resizefly/queue/memory_exceeded', $return);
+        return (bool) apply_filters('resizefly/queue/memory_exceeded', $return);
     }
 
     /**
@@ -160,12 +190,12 @@ class Queue implements QueueInterface
             $memoryLimit = ini_get('memory_limit');
         }
 
-        if (!$memoryLimit || $memoryLimit == -1) {
+        if (! $memoryLimit || $memoryLimit == -1) {
             // Unlimited, set to 1GB
             $memoryLimit = '1000M';
         }
 
-        $memoryLimit = (int)apply_filters('resizefly/queue/memory_limit', $memoryLimit);
+        $memoryLimit = (int) apply_filters('resizefly/queue/memory_limit', $memoryLimit);
 
         return intval($memoryLimit) * 1024 * 1024;
     }
@@ -187,47 +217,17 @@ class Queue implements QueueInterface
             $return = true;
         }
 
-        return (bool)apply_filters('resizefly/queue/time_exceeded', $return);
+        return (bool) apply_filters('resizefly/queue/time_exceeded', $return);
     }
 
     /**
-     * Pass a class name and check if there is an asynchronous implementation.
-     *
-     * @param string $class Class name to get asynchronous class for
-     * @param mixed ...$args Args that will be passed to async class
-     *
-     * @return mixed
-     */
-    public function resolve($class, ...$args)
-    {
-        try {
-            $namespace      = explode('\\', __NAMESPACE__);
-            $requestedClass = explode('\\', get_class($class));
-            $commonNs       = array_intersect($namespace, $requestedClass);
-            if (empty($commonNs)) {
-                throw new \Exception();
-            }
-            array_push($commonNs, 'Async');
-            array_splice($requestedClass, 0, count($commonNs) - 1, $commonNs);
-            $asyncClass = implode('\\', $requestedClass);
-            if (!class_exists($asyncClass)) {
-                throw new \Exception();
-            }
-
-            $this->push(new $asyncClass($class, ...$args));
-            $this->trigger($this->cronLock);
-        } catch (\Exception $e) {
-        }
-    }
-
-    /**
-     * Trigger cron handler
+     * Trigger cron handler.
      *
      * @param int $delay
      */
     protected function trigger($delay = 0)
     {
-        if (!wp_next_scheduled($this->id)) {
+        if (! wp_next_scheduled($this->id)) {
             add_action('shutdown', function () use ($delay) {
                 wp_schedule_single_event(time() + $delay, $this->id);
             });
