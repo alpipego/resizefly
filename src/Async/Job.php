@@ -14,10 +14,19 @@ abstract class Job
      */
     private $attempts;
 
+    /**
+     * @var string MySQl datetime
+     */
     private $reservedAt;
 
+    /**
+     * @var string MySQl datetime
+     */
     private $availableAt;
 
+    /**
+     * @var string MySQl datetime
+     */
     private $createdAt;
 
     /**
@@ -98,7 +107,7 @@ abstract class Job
     }
 
     /**
-     * @param mixed $reservedAt
+     * @param string $reservedAt MySQl datetime
      *
      * @return Job
      */
@@ -110,7 +119,7 @@ abstract class Job
     }
 
     /**
-     * @return mixed
+     * @return string MySQl datetime
      */
     public function getReservedAt()
     {
@@ -118,7 +127,7 @@ abstract class Job
     }
 
     /**
-     * @param mixed $availableAt
+     * @param string $availableAt MySQl datetime
      *
      * @return Job
      */
@@ -130,7 +139,7 @@ abstract class Job
     }
 
     /**
-     * @return mixed
+     * @return string MySQl datetime
      */
     public function getAvailableAt()
     {
@@ -138,7 +147,7 @@ abstract class Job
     }
 
     /**
-     * @param mixed $createdAt
+     * @param string $createdAt MySQl datetime
      *
      * @return Job
      */
@@ -150,7 +159,7 @@ abstract class Job
     }
 
     /**
-     * @return mixed
+     * @return string MySQl datetime
      */
     public function getCreatedAt()
     {

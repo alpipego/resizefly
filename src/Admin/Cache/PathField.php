@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 21/07/16
- * Time: 17:54.
- */
 
 namespace Alpipego\Resizefly\Admin\Cache;
 
@@ -85,9 +79,11 @@ class PathField extends AbstractOption implements OptionInterface
 
         if ($path !== $this->currentSetting) {
             if (! $this->renameDir($path)) {
-                add_settings_error($this->optionsField['id'], 'resizefly-dir-exists',
-                    __('This directory already exists. Please remove the directory manually and try setting it again.',
-                        'resizefly'));
+                add_settings_error(
+                    $this->optionsField['id'],
+                    'resizefly-dir-exists',
+                    __('This directory already exists. Please remove the directory manually and try setting it again.', 'resizefly')
+                );
                 $path = $this->currentSetting;
             }
         }
@@ -101,9 +97,14 @@ class PathField extends AbstractOption implements OptionInterface
 
         if (! $this->permissions) {
             add_action('admin_init', function () {
-                add_settings_error($this->optionsField['id'], 'resizefly-dir-writeable',
-                    sprintf(__('The provided path (%s) is not writeable! Please fix the permissions in your uploads directory.',
-                        'resizefly'), "<code>{$this->path}</code>"));
+                add_settings_error(
+                    $this->optionsField['id'],
+                    'resizefly-dir-writeable',
+                    sprintf(
+                        __('The provided path (%s) is not writeable! Please fix the permissions in your uploads directory.', 'resizefly'),
+                        "<code>{$this->path}</code>"
+                    )
+                );
             });
         }
     }

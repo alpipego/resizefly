@@ -5,8 +5,6 @@ namespace Alpipego\Resizefly\Async\Queue;
 interface WorkerInterface
 {
     /**
-     * Process a job on the queue.
-     *
      * @return bool
      */
     public function process();

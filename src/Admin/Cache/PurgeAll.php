@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 01.11.18
- * Time: 13:41.
- */
 
 namespace Alpipego\Resizefly\Admin\Cache;
 

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Add user added generated image sizes.
+ */
 add_filter('wp_get_attachment_image_src', function ($image, $imageId, $size) {
     if (
         ! $image

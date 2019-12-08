@@ -81,7 +81,7 @@ class Worker implements WorkerInterface
      */
     public function isLocked()
     {
-        return (bool)get_site_transient($this->queueId);
+        return (bool) get_site_transient($this->queueId);
     }
 
     public function lock()

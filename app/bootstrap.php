@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 14.07.2017
- * Time: 10:45.
- */
+
 use Alpipego\Resizefly\Admin\Licenses\LicensesPage;
 use Alpipego\Resizefly\Admin\Licenses\LicensesSection;
 use Alpipego\Resizefly\Common\Composer\Autoload\ClassLoader;
@@ -94,7 +89,6 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     $plugin->addDefiniton(__DIR__.'/config/queue.php');
     $plugin->get('Alpipego\Resizefly\Async\Queue\Queue')->watch();
-
 
     $plugin->run();
 

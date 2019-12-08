@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 26/07/16
- * Time: 12:10.
- */
 
 namespace Alpipego\Resizefly\Admin;
 
@@ -28,7 +22,13 @@ interface OptionsSectionInterface
      */
     public function callback();
 
+    /**
+     * @return string
+     */
     public function getId();
 
+    /**
+     * @return string
+     */
     public function getTitle();
 }

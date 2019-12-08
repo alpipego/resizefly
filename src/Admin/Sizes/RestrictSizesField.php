@@ -18,9 +18,7 @@ class RestrictSizesField extends AbstractOption implements OptionInterface
     /**
      * RestrictSizesField constructor.
      *
-     * @param PageInterface           $page
-     * @param OptionsSectionInterface $section
-     * @param string                  $pluginPath
+     * @param string $pluginPath
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
     {

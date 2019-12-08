@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 13.03.2018
- * Time: 17:39.
- */
 
 namespace Alpipego\Resizefly\Admin\Licenses;
 

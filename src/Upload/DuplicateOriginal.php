@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 26/09/16
- * Time: 18:05.
- */
 
 namespace Alpipego\Resizefly\Upload;
 
@@ -17,7 +11,7 @@ use Imagick;
 class DuplicateOriginal
 {
     /**
-     * @var array
+     * @var UploadsInterface
      */
     private $uploads;
 
@@ -32,10 +26,14 @@ class DuplicateOriginal
     private $errorAdded = false;
 
     /**
+     * @var string
+     */
+    private $path;
+
+    /**
      * DuplicateOriginal constructor.
      *
-     * @param UploadsInterface $uploads
-     * @param string           $duplicateDir
+     * @param string $duplicateDir
      */
     public function __construct(UploadsInterface $uploads, $duplicateDir)
     {
@@ -174,9 +172,8 @@ class DuplicateOriginal
                 $this->errorAdded = true;
                 add_action('admin_notices', function () {
                     echo '<div class="error"><p>';
-                    printf(__('The directory %s is not writeable by Resizefly. Please correct the permissions.',
-                        'resizefly'
-                    ),
+                    printf(
+                        __('The directory %s is not writeable by Resizefly. Please correct the permissions.', 'resizefly'),
                         '<code>'.$this->path.'</code>'
                     );
                     echo '</p></div>';
@@ -190,8 +187,7 @@ class DuplicateOriginal
     /**
      * Calculate the memory Imagick will need based on amount of pixels.
      *
-     * @param array         $sizes  ['width', 'height']
-     * @param EditorImagick $editor
+     * @param array $sizes ['width', 'height']
      *
      * @return bool
      */
@@ -205,8 +201,6 @@ class DuplicateOriginal
 
     /**
      * Try tweaking the resources to save an image (that could not be saved before).
-     *
-     * @param EditorImagick $editor
      *
      * @return bool
      */

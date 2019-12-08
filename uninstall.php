@@ -5,7 +5,7 @@
  * Date: 31.10.2017
  * Time: 10:42.
  */
-if (!defined('WP_UNINSTALL_PLUGIN')) {
+if (! defined('WP_UNINSTALL_PLUGIN')) {
     exit();
 }
 

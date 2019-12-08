@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 18.07.2017
- * Time: 11:56.
- */
 
 namespace Alpipego\Resizefly\Image;
 
@@ -51,7 +45,7 @@ interface ImageInterface
     public function getDensity();
 
     /**
-     * Get the requesetd image width.
+     * Get the requested image width.
      *
      * @return int
      */
