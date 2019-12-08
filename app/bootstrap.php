@@ -90,12 +90,6 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     $plugin->run();
 
-    if (version_compare($plugin->get('config.version'), get_option('resizefly_version')) !== 0) {
-        require_once __DIR__.'/queue-tables.php';
-
-        update_option('resizefly_version', $plugin->get('config.version'));
-    }
-
     // register user added image sizes
     require_once __DIR__.'/actions/after-setup-theme.php';
 
