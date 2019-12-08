@@ -60,7 +60,7 @@ class Queue implements QueueInterface
     /**
      * Setup the watch tasks.
      */
-    public function watch()
+    public function run()
     {
         add_filter('cron_schedules', [$this, 'addSchedule']);
         add_action($this->id.'_watch', [$this, 'checkJobs']);
