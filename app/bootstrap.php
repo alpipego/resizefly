@@ -28,7 +28,7 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin['config.url']      = plugin_dir_url($file);
     $plugin['config.basename'] = plugin_basename($file);
     $plugin['config.siteurl']  = apply_filters('resizefly/home_url', get_bloginfo('url'));
-    $plugin['config.version']  = '4.0.0-beta1';
+    $plugin['config.version']  = '4.0.0-beta2';
 
     // settings/filterable configuration values
     $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
@@ -90,6 +90,12 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     $plugin->run();
 
+    if (version_compare($plugin->get('config.version'), get_option('resizefly_version')) !== 0) {
+        require_once __DIR__.'/queue-tables.php';
+
+        update_option('resizefly_version', $plugin->get('config.version'));
+    }
+
     // register user added image sizes
     require_once __DIR__.'/actions/after-setup-theme.php';
 
@@ -101,7 +107,4 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // fix wrong attachment date
     require_once __DIR__.'/actions/media-send-to-editor.php';
-
-    // update version after upgrade
-    require_once __DIR__.'/actions/upgrader-process-complete.php';
 });
