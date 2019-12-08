@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 11.12.18
- * Time: 11:26.
- */
 
 namespace Alpipego\Resizefly\Compatibles;
 

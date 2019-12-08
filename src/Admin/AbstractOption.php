@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 25/07/16
- * Time: 15:10.
- */
 
 namespace Alpipego\Resizefly\Admin;
 
 /**
  * Class AbstractOption.
  */
-abstract class AbstractOption
+abstract class AbstractOption implements OptionInterface
 {
     /**
      * @var array id and title of the field

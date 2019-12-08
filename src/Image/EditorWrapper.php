@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 05/20/16
- * Time: 12:07 PM.
- */
 
 namespace Alpipego\Resizefly\Image;
 
@@ -22,8 +16,6 @@ final class EditorWrapper implements EditorWrapperInterface
 
     /**
      * inject image editor.
-     *
-     * @param WP_Image_Editor $editor
      */
     public function __construct(WP_Image_Editor $editor)
     {

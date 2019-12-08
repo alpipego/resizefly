@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 08/10/16
- * Time: 13:59.
- */
 
 namespace Alpipego\Resizefly\Admin;
 
@@ -25,5 +19,8 @@ interface PageInterface
      */
     public function getSlug();
 
+    /**
+     * @return array
+     */
     public function localize(array $toLocalize);
 }

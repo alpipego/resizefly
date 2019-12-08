@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 19/07/16
- * Time: 17:47.
- */
 
 namespace Alpipego\Resizefly\Addon;
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 29.06.2017
- * Time: 11:50.
- */
 
 namespace Alpipego\Resizefly\Upload;
 
@@ -31,9 +25,7 @@ class Filter
     /**
      * Filter constructor.
      *
-     * @param UploadsInterface $uploads
-     * @param ImageInterface   $image
-     * @param string           $cacheUrl
+     * @param string $cacheUrl
      */
     public function __construct(UploadsInterface $uploads, ImageInterface $image, $cacheUrl)
     {
@@ -146,8 +138,7 @@ class Filter
         return preg_replace_callback(
             "%{$this->cacheUrl}(?<image>[^\",\s]*?)(?<dim>-\d+x\d+)?(?:@\d)?\.(?<ext>png|jpe?g|gif)%",
             function ($matches) {
-                return sprintf('%s%s%s.%s', $this->uploads->getBaseUrl(), $matches['image'], $matches['dim'],
-                    $matches['ext']);
+                return sprintf('%s%s%s.%s', $this->uploads->getBaseUrl(), $matches['image'], $matches['dim'], $matches['ext']);
             },
             $content
         );
@@ -203,7 +194,8 @@ class Filter
      */
     public function urlInHtml($content)
     {
-        $content = preg_replace_callback("%{$this->uploads->getBaseUrl()}(?:[^\",\s]*?)(?:\d+x\d+)(?:@\d)?\.(?:png|jpe?g|gif)%",
+        $content = preg_replace_callback(
+            "%{$this->uploads->getBaseUrl()}(?:[^\",\s]*?)(?:\d+x\d+)(?:@\d)?\.(?:png|jpe?g|gif)%",
             function ($matches) {
                 return $this->addDensity($this->imageUrl($matches[0]), 1);
             },
@@ -221,7 +213,7 @@ class Filter
      *
      * @return bool
      */
-    private function isValidUrl($url, &$matches = [])
+    private function isValidUrl($url, array &$matches = [])
     {
         $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@?(?<density>[0-3])?\.(?<ext>jpe?g|png|gif)/i';
         $valid = preg_match($regex, $url, $matches);

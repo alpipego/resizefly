@@ -17,8 +17,7 @@ class RegisteredSizesSection extends AbstractOptionsSection implements OptionsSe
     /**
      * RegisteredSizesSection constructor.
      *
-     * @param PageInterface $page
-     * @param string        $pluginPath
+     * @param string $pluginPath
      */
     public function __construct(PageInterface $page, $pluginPath)
     {

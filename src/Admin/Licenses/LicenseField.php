@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 13.03.2018
- * Time: 18:39.
- */
 
 namespace Alpipego\Resizefly\Admin\Licenses;
 
@@ -16,8 +10,7 @@ use Alpipego\Resizefly\Admin\PageInterface;
 
 class LicenseField extends AbstractOption implements OptionInterface
 {
-    //	const STORE_URL = 'https://www.resizefly.com';
-    const STORE_URL        = 'https://resizefly.dvlp';
+    const STORE_URL        = 'https://www.resizefly.com';
     private $errorMessages = [];
     private $addon;
     private $license;

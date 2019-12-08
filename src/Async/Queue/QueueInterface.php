@@ -23,8 +23,8 @@ interface QueueInterface
     /**
      * Pass a class name and check if there is an asynchronous implementation.
      *
-     * @param string $class Class name to get asynchronous class for
-     * @param mixed ...$args Args that will be passed to async class
+     * @param string $class   Class name to get asynchronous class for
+     * @param mixed  ...$args Args that will be passed to async class
      *
      * @return mixed
      */

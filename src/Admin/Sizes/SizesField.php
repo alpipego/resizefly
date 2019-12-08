@@ -26,11 +26,11 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * @var string action name, referenced in form and ajax
      */
-    const ADD_ACTION = 'rzf_user_size_add';
+    const ADD_ACTION = 'resizefly_user_size_add';
     /**
      * @var string action name, referenced in form and ajax
      */
-    const DELETE_ACTION = 'rzf_user_size_delete';
+    const DELETE_ACTION = 'reszifly_user_size_delete';
     /**
      * @var array
      */
@@ -55,8 +55,6 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * RestrictSizesField constructor.
      *
-     * @param PageInterface $page
-     * @param OptionsSectionInterface $section
      * @param string $pluginPath
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
@@ -322,9 +320,6 @@ class SizesField extends AbstractOption implements OptionInterface
         return $sizes;
     }
 
-    /**
-     * @param PageInterface $page
-     */
     private function localize(PageInterface $page)
     {
         $page->localize([
@@ -350,8 +345,6 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * Sanitize values added to this settings field.
      *
-     * @param array $size
-     *
      * @return array
      */
     private function sanitizeAjax(array $size)
@@ -371,9 +364,6 @@ class SizesField extends AbstractOption implements OptionInterface
     }
 
     /**
-     * @param array $size
-     * @param array $userSizes
-     *
      * @return array
      */
     private function errorHandling(array $size, array $userSizes)

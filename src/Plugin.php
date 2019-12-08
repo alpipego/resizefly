@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 05/17/16
- * Time: 12:23 PM.
- */
 
 namespace Alpipego\Resizefly;
 
@@ -64,10 +58,10 @@ class Plugin extends Container implements ContainerInterface
      *
      * @param string $id identifier of the entry to look for
      *
-     * @return mixed entry
+     * @throws \Alpipego\Resizefly\DI\NotFoundException
      * @throws ReflectionException
      *
-     * @throws \Alpipego\Resizefly\DI\NotFoundException
+     * @return mixed entry
      */
     public function get($id)
     {
@@ -169,18 +163,6 @@ class Plugin extends Container implements ContainerInterface
         $this->definitions = array_merge($this->definitions, $definition);
     }
 
-    /**
-     * @param string $dir path to languages dir
-     *
-     * @deprecated 3.1.0
-     * wrapper for `load_plugin_textdomain`.
-     *
-     */
-    public function loadTextdomain($dir)
-    {
-        load_plugin_textdomain('resizefly', false, $dir);
-    }
-
     public function getEarly()
     {
         array_walk($this->definitions, function ($element, $id) {
@@ -205,13 +187,13 @@ class Plugin extends Container implements ContainerInterface
     {
         // check if this is an array-like config request and return it as array
         $return = [];
-        $idArr  = (array)explode('.', $id);
+        $idArr  = (array) explode('.', $id);
         foreach ($this->keys() as $key) {
             $keyArr = explode('.', $key);
             if (! array_diff($idArr, $keyArr)) {
                 $keys  = array_diff($keyArr, $idArr);
                 $value = $this[$key];
-                while ($key = array_pop($keys)) {
+                while (($key = array_pop($keys))) {
                     $value = [$key => $value];
                 }
 
@@ -225,9 +207,9 @@ class Plugin extends Container implements ContainerInterface
     /**
      * @param string $id
      *
-     * @return mixed
      * @throws ReflectionException
      *
+     * @return mixed
      */
     private function resolveDependency(ReflectionParameter $dependency, $id)
     {
@@ -242,10 +224,9 @@ class Plugin extends Container implements ContainerInterface
                     return $this->get($dependency->getName());
                 }
                 // mapped values
-                if (array_key_exists(
-                        $dependency->getName(),
-                        $this->definitions
-                    ) && $this->has($this->definitions[$dependency->getName()])
+                if (
+                    array_key_exists($dependency->getName(), $this->definitions)
+                    && $this->has($this->definitions[$dependency->getName()])
                 ) {
                     return $this->get($this->definitions[$dependency->getName()]);
                 }

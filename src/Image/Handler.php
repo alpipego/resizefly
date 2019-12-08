@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alpipego
- * Date: 05/20/16
- * Time: 4:32 PM.
- */
 
 namespace Alpipego\Resizefly\Image;
 
@@ -62,13 +56,15 @@ final class Handler implements HandlerInterface
      */
     public function run()
     {
-        if (! file_exists($this->setImageName()) && $this->editor->resizeImage(
+        if (
+            ! file_exists($this->setImageName()) && $this->editor->resizeImage(
                 $this->aspect['width'],
                 $this->aspect['height'],
                 $this->aspect['density'],
                 $this->aspect['focal_x'],
                 $this->aspect['focal_y']
-            )) {
+            )
+        ) {
             $this->editor->saveImage($this->file);
             $this->editor->streamImage();
         }
@@ -80,7 +76,11 @@ final class Handler implements HandlerInterface
         return $this->setImageName();
     }
 
-    // TODO make this easier readable
+    /**
+     * Check if the requested image size in allowed (or added) by the user.
+     *
+     * @return bool
+     */
     public function allowedImageSize(array $allowedSizes)
     {
         // if requested size is original size
@@ -90,6 +90,19 @@ final class Handler implements HandlerInterface
         ) {
             return true;
         }
+
+        $focal = [
+            'x' => [
+                'left'   => 0,
+                'center' => 50,
+                'right'  => 100,
+            ],
+            'y' => [
+                'top'    => 0,
+                'center' => 50,
+                'bottom' => 100,
+            ],
+        ];
 
         foreach ($allowedSizes as $size) {
             if (! (bool) $size['active']) {
@@ -103,18 +116,6 @@ final class Handler implements HandlerInterface
                 if ($this->image->getWidth() === $width && $this->image->getHeight() === $height) {
                     $aspect = ['width' => $width, 'height' => $height];
                     if (is_array($size['crop'])) {
-                        $focal             = [
-                            'x' => [
-                                'left'   => 0,
-                                'center' => 50,
-                                'right'  => 100,
-                            ],
-                            'y' => [
-                                'top'    => 0,
-                                'center' => 50,
-                                'bottom' => 100,
-                            ],
-                        ];
                         $aspect['focal_x'] = $focal['x'][$size['crop'][0]];
                         $aspect['focal_y'] = $focal['y'][$size['crop'][1]];
                     }

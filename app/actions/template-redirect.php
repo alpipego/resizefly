@@ -1,12 +1,6 @@
 <?php
 /**
- * Main image resize handling through 404 template redirect
- * included in main plugin file.
- *
- * Created by PhpStorm.
- * User: alpipego
- * Date: 26.06.2017
- * Time: 16:53
+ * Main image resize handling through 404 template redirect.
  */
 
 use Alpipego\Resizefly\Image\Image;
