@@ -116,6 +116,8 @@ class Queue implements QueueInterface
 
         $this->worker->unlock();
 
+        wp_schedule_single_event(time(), $this->id);
+
         if ($this->connection->jobs() > 0 || $this->cronLock <= 60) {
             $url = site_url('wp-cron.php');
             if (wp_doing_cron() && ($lock = _get_cron_lock())) {
@@ -135,8 +137,8 @@ class Queue implements QueueInterface
     /**
      * Pass a class name and check if there is an asynchronous implementation.
      *
-     * @param string $class   Class name to get asynchronous class for
-     * @param mixed  ...$args Args that will be passed to async class
+     * @param string $class Class name to get asynchronous class for
+     * @param mixed ...$args Args that will be passed to async class
      *
      * @return mixed
      */
