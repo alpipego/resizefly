@@ -30,7 +30,11 @@ class Queue implements QueueInterface
      * @var int
      */
     protected $workerStartTime;
-    protected $cronLock;
+
+    /**
+     * @var int amount of seconds for which to lock wp-cron
+     */
+    protected $cronLock = 5;
 
     public function __construct(ConnectionInterface $connection, WorkerInterface $worker, $queueId)
     {
@@ -113,16 +117,17 @@ class Queue implements QueueInterface
         $this->worker->unlock();
 
         if ($this->connection->jobs() > 0 || $this->cronLock <= 60) {
-            $url = get_bloginfo('wpurl').'/wp-cron.php';
+            $url = site_url('wp-cron.php');
             if (wp_doing_cron() && ($lock = _get_cron_lock())) {
                 $url = add_query_arg(['wp_doing_cron' => $lock], $url);
             }
 
             sleep($this->cronLock);
-            wp_remote_get($url, [
+            wp_remote_post($url, [
                 'timeout'   => 0.01,
                 'blocking'  => false,
-                'sslverify' => false,
+                /* This filter is documented in wp-includes/class-wp-http-streams.php */
+                'sslverify' => apply_filters('https_local_ssl_verify', false),
             ]);
         }
     }
