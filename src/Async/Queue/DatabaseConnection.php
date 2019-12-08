@@ -1,10 +1,10 @@
 <?php
 
-namespace Alpipego\Resizefly\Common\WP_Queue\Connections;
+namespace Alpipego\Resizefly\Async\Queue;
 
-use Alpipego\Resizefly\Common\Carbon\Carbon;
-use Alpipego\Resizefly\Common\WP_Queue\Job;
+use Alpipego\Resizefly\Async\Job;
 use Exception;
+use wpdb;
 
 class DatabaseConnection implements ConnectionInterface
 {
@@ -23,22 +23,16 @@ class DatabaseConnection implements ConnectionInterface
      */
     protected $failures_table;
 
-    /**
-     * DatabaseQueue constructor.
-     *
-     * @param wpdb $wpdb
-     */
-    public function __construct($wpdb)
+    public function __construct()
     {
-        $this->database       = $wpdb;
-        $this->jobs_table     = $this->database->prefix.'queue_jobs';
-        $this->failures_table = $this->database->prefix.'queue_failures';
+        $this->database       = $GLOBALS['wpdb'];
+        $this->jobs_table     = $this->database->prefix.'rzf_queue_jobs';
+        $this->failures_table = $this->database->prefix.'rzf_queue_failures';
     }
 
     /**
      * Push a job onto the queue.
      *
-     * @param Job $job
      * @param int $delay
      *
      * @return bool|int
@@ -65,7 +59,7 @@ class DatabaseConnection implements ConnectionInterface
      */
     public function pop()
     {
-        $this->release_reserved();
+        $this->releaseReserved();
 
         $sql = $this->database->prepare("
 			SELECT * FROM {$this->jobs_table}
@@ -81,7 +75,7 @@ class DatabaseConnection implements ConnectionInterface
             return false;
         }
 
-        $job = $this->vitalize_job($raw_job);
+        $job = $this->vitalizeJob($raw_job);
 
         $this->reserve($job);
 
@@ -98,7 +92,7 @@ class DatabaseConnection implements ConnectionInterface
     public function delete($job)
     {
         $where = [
-            'id' => $job->id(),
+            'id' => $job->getId(),
         ];
 
         if ($this->database->delete($this->jobs_table, $where)) {
@@ -119,11 +113,11 @@ class DatabaseConnection implements ConnectionInterface
     {
         $data  = [
             'job'         => serialize($job),
-            'attempts'    => $job->attempts(),
+            'attempts'    => $job->getAttempts(),
             'reserved_at' => null,
         ];
         $where = [
-            'id' => $job->id(),
+            'id' => $job->getId(),
         ];
 
         if ($this->database->update($this->jobs_table, $data, $where)) {
@@ -136,8 +130,7 @@ class DatabaseConnection implements ConnectionInterface
     /**
      * Push a job onto the failure queue.
      *
-     * @param Job       $job
-     * @param Exception $exception
+     * @param Job $job
      *
      * @return bool
      */
@@ -145,7 +138,7 @@ class DatabaseConnection implements ConnectionInterface
     {
         $insert = $this->database->insert($this->failures_table, [
             'job'       => serialize($job),
-            'error'     => $this->format_exception($exception),
+            'error'     => $this->formatException($exception),
             'failed_at' => $this->datetime(),
         ]);
 
@@ -165,9 +158,7 @@ class DatabaseConnection implements ConnectionInterface
      */
     public function jobs()
     {
-        $sql = "SELECT COUNT(*) FROM {$this->jobs_table}";
-
-        return (int) $this->database->get_var($sql);
+        return (int) $this->database->get_var("SELECT COUNT(*) FROM {$this->jobs_table}");
     }
 
     /**
@@ -175,11 +166,9 @@ class DatabaseConnection implements ConnectionInterface
      *
      * @return int
      */
-    public function failed_jobs()
+    public function failedJobs()
     {
-        $sql = "SELECT COUNT(*) FROM {$this->failures_table}";
-
-        return (int) $this->database->get_var($sql);
+        return (int) $this->database->get_var("SELECT COUNT(*) FROM {$this->failures_table}");
     }
 
     /**
@@ -194,14 +183,14 @@ class DatabaseConnection implements ConnectionInterface
         ];
 
         $this->database->update($this->jobs_table, $data, [
-            'id' => $job->id(),
+            'id' => $job->getId(),
         ]);
     }
 
     /**
      * Release reserved jobs back onto the queue.
      */
-    protected function release_reserved()
+    protected function releaseReserved()
     {
         $expired = $this->datetime(-300);
 
@@ -220,15 +209,16 @@ class DatabaseConnection implements ConnectionInterface
      *
      * @return Job
      */
-    protected function vitalize_job($raw_job)
+    protected function vitalizeJob($raw_job)
     {
+        /** @var Job $job */
         $job = unserialize($raw_job->job);
 
-        $job->set_id($raw_job->id);
-        $job->set_attempts($raw_job->attempts);
-        $job->set_reserved_at(empty($raw_job->reserved_at) ? null : new Carbon($raw_job->reserved_at));
-        $job->set_available_at(new Carbon($raw_job->available_at));
-        $job->set_created_at(new Carbon($raw_job->created_at));
+        $job->setId($raw_job->id)
+            ->setAttempts($raw_job->attempts)
+            ->setReservedAt(empty($raw_job->reserved_at) ? null : $raw_job->reserved_at)
+            ->setAvailableAt($raw_job->available_at)
+            ->setCreatedAt($raw_job->created_at);
 
         return $job;
     }
@@ -250,11 +240,9 @@ class DatabaseConnection implements ConnectionInterface
     /**
      * Format an exception error string.
      *
-     * @param Exception $exception
-     *
      * @return string
      */
-    protected function format_exception(Exception $exception)
+    protected function formatException(Exception $exception)
     {
         $string = get_class($exception);
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Alpipego\Resizefly\Common\WP_Queue\Connections;
+namespace Alpipego\Resizefly\Async\Queue;
 
-use Alpipego\Resizefly\Common\WP_Queue\Job;
+use Alpipego\Resizefly\Async\Job;
 use Exception;
 
 interface ConnectionInterface
@@ -10,7 +10,6 @@ interface ConnectionInterface
     /**
      * Push a job onto the queue.
      *
-     * @param Job $job
      * @param int $delay
      *
      * @return bool|int
@@ -41,8 +40,7 @@ interface ConnectionInterface
     /**
      * Push a job onto the failure queue.
      *
-     * @param Job       $job
-     * @param Exception $exception
+     * @param Job $job
      *
      * @return
      */
@@ -60,5 +58,5 @@ interface ConnectionInterface
      *
      * @return int
      */
-    public function failed_jobs();
+    public function failedJobs();
 }

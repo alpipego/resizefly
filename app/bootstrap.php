@@ -76,8 +76,8 @@ add_action('plugins_loaded', function () use ($classLoader) {
     // Add own implementation to image editors
     add_filter('wp_image_editors', function (array $editors) {
         return array_merge(apply_filters('resizefly/image_editors', [
-            '\\Alpipego\\Resizefly\\Image\\EditorImagick',
-            '\\Alpipego\\Resizefly\\Image\\EditorGD',
+            '\Alpipego\Resizefly\Image\EditorImagick',
+            '\Alpipego\Resizefly\Image\EditorGD',
         ]), $editors);
     });
 
@@ -95,6 +95,10 @@ add_action('plugins_loaded', function () use ($classLoader) {
 
     // save options to retrieve them on uninstall
     update_option('resizefly_options', $plugin->get('options'), false);
+
+    $plugin->addDefiniton(__DIR__.'/config/queue.php');
+    $plugin->get('Alpipego\Resizefly\Async\Queue\Queue')->watch();
+
 
     $plugin->run();
 
