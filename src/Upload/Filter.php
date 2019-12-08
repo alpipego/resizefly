@@ -208,12 +208,12 @@ class Filter
     /**
      * Check if this is a valid image url and not the original image.
      *
-     * @param string $url
-     * @param array  $matches Passed by reference - same as `preg_match`
+     * @param string     $url
+     * @param null|array $matches Passed by reference - same as `preg_match`
      *
      * @return bool
      */
-    private function isValidUrl($url, array &$matches = [])
+    private function isValidUrl($url, &$matches = [])
     {
         $regex = '/(?<file>.*?)-(?<width>[0-9]+)x(?<height>[0-9]+)@?(?<density>[0-3])?\.(?<ext>jpe?g|png|gif)/i';
         $valid = preg_match($regex, $url, $matches);
