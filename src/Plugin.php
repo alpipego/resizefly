@@ -64,10 +64,10 @@ class Plugin extends Container implements ContainerInterface
      *
      * @param string $id identifier of the entry to look for
      *
-     * @throws \Alpipego\Resizefly\DI\NotFoundException
+     * @return mixed entry
      * @throws ReflectionException
      *
-     * @return mixed entry
+     * @throws \Alpipego\Resizefly\DI\NotFoundException
      */
     public function get($id)
     {
@@ -85,8 +85,12 @@ class Plugin extends Container implements ContainerInterface
                 return $configArray;
             }
             // if mapped value exists
-            if (array_key_exists($id, $this->definitions) && $this->has($this->definitions[$id])) {
-                return $this[$this->definitions[$id]];
+            if (array_key_exists($id, $this->definitions)) {
+                if ($this->has($this->definitions[$id])) {
+                    return $this[$this->definitions[$id]];
+                }
+
+                return $this->definitions[$id];
             }
             throw new NotFoundException(sprintf('Identifier "%s" is not defined.', $id));
         }
@@ -166,10 +170,11 @@ class Plugin extends Container implements ContainerInterface
     }
 
     /**
+     * @param string $dir path to languages dir
+     *
      * @deprecated 3.1.0
      * wrapper for `load_plugin_textdomain`.
      *
-     * @param string $dir path to languages dir
      */
     public function loadTextdomain($dir)
     {
@@ -200,7 +205,7 @@ class Plugin extends Container implements ContainerInterface
     {
         // check if this is an array-like config request and return it as array
         $return = [];
-        $idArr  = (array) explode('.', $id);
+        $idArr  = (array)explode('.', $id);
         foreach ($this->keys() as $key) {
             $keyArr = explode('.', $key);
             if (! array_diff($idArr, $keyArr)) {
@@ -218,12 +223,11 @@ class Plugin extends Container implements ContainerInterface
     }
 
     /**
-     * @param ReflectionParameter $dependency
-     * @param string              $id
-     *
-     * @throws ReflectionException
+     * @param string $id
      *
      * @return mixed
+     * @throws ReflectionException
+     *
      */
     private function resolveDependency(ReflectionParameter $dependency, $id)
     {
@@ -239,13 +243,17 @@ class Plugin extends Container implements ContainerInterface
                 }
                 // mapped values
                 if (array_key_exists(
-                         $dependency->getName(),
-                         $this->definitions
-                     ) && $this->has($this->definitions[$dependency->getName()])
+                        $dependency->getName(),
+                        $this->definitions
+                    ) && $this->has($this->definitions[$dependency->getName()])
                 ) {
                     return $this->get($this->definitions[$dependency->getName()]);
                 }
             }
+        }
+
+        if (array_key_exists($dependency->getName(), $this->definitions)) {
+            return $this->definitions[$dependency->getName()];
         }
 
         if ($dependency->isDefaultValueAvailable()) {
