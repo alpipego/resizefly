@@ -86,7 +86,7 @@ add_action('plugins_loaded', function () use ($classLoader) {
     }
 
     // save options to retrieve them on uninstall
-    update_option('resizefly_options', $plugin->get('options'), false);
+    update_option('resizefly_options', $plugin->get('options'));
 
     $plugin->run();
 
