@@ -3,15 +3,17 @@
  * Main image resize handling through 404 template redirect
  * included in main plugin file.
  *
- * @var Plugin
+ * @var Plugin $plugin
  *
  * Created by PhpStorm.
  * User: alpipego
  * Date: 26.06.2017
  * Time: 16:53
  */
+
 use Alpipego\Resizefly\Image\Image;
 use Alpipego\Resizefly\Plugin;
+use Alpipego\Resizefly\Upload\DuplicateOriginal;
 
 add_action('template_redirect', function () use ($plugin) {
     if (! is_404()) {
@@ -37,9 +39,12 @@ add_action('template_redirect', function () use ($plugin) {
         }
 
         // check if to resize from duplicate
-        if ((bool) apply_filters('resizefly/duplicate', true) && $matches['width'] <= (int) apply_filters('resizefly/duplicate/long_edge', 2560)) {
+        /** @var DuplicateOriginal $duplicate */
+        $duplicate         = $plugin->get('Alpipego\Resizefly\Upload\DuplicateOriginal');
+        $bigImageThreshold = $duplicate->getImageSizeThreshold();
+        if ((bool) apply_filters('resizefly/duplicate', true) && $matches['width'] <= $bigImageThreshold) {
             if (! file_exists($image->getDuplicatePath())) {
-                $plugin->get('Alpipego\Resizefly\Upload\DuplicateOriginal')->rebuild($image->getOriginalPath());
+                $duplicate->rebuild($image->getOriginalPath());
             }
 
             // get wp image editor and handle errors

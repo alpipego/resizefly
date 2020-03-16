@@ -35,7 +35,7 @@ class DuplicateOriginal
      * DuplicateOriginal constructor.
      *
      * @param UploadsInterface $uploads
-     * @param string           $duplicateDir
+     * @param string $duplicateDir
      */
     public function __construct(UploadsInterface $uploads, $duplicateDir)
     {
@@ -54,6 +54,7 @@ class DuplicateOriginal
         }
 
         add_action('delete_attachment', [$this, 'delete']);
+        $this->getImageSizeThreshold();
     }
 
     /**
@@ -94,6 +95,20 @@ class DuplicateOriginal
         }
     }
 
+    public function getImageSizeThreshold()
+    {
+        static $longEdge;
+        if (! is_null($longEdge)) {
+            return $longEdge;
+        }
+
+        $longEdge = apply_filters('big_image_size_threshold', 2560);
+        $longEdge = (int) apply_filters('resizefly/duplicate/long_edge', (int) $longEdge);
+        add_filter('big_image_size_threshold', '__return_false', 1000);
+
+        return $longEdge = $longEdge > 0 ? $longEdge : 2560;
+    }
+
     /**
      * Duplicate the image.
      *
@@ -125,9 +140,7 @@ class DuplicateOriginal
         }
 
         // resize the image
-        $longEdge = (int) apply_filters('resizefly/duplicate/long_edge', 2560);
-        $longEdge = $longEdge > 0 ? $longEdge : 2560;
-        $longEdge = $longEdge > max($editor->get_size()) ? max($editor->get_size()) : $longEdge;
+        $longEdge = $this->getImageSizeThreshold() > max($editor->get_size()) ? max($editor->get_size()) : $this->getImageSizeThreshold();
         $editor->resize($longEdge, $longEdge);
 
         if ($editor instanceof EditorImagick) {
@@ -190,7 +203,7 @@ class DuplicateOriginal
     /**
      * Calculate the memory Imagick will need based on amount of pixels.
      *
-     * @param array         $sizes  ['width', 'height']
+     * @param array $sizes ['width', 'height']
      * @param EditorImagick $editor
      *
      * @return bool

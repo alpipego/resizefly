@@ -5,10 +5,11 @@
  * Date: 1.11.2017
  * Time: 12:21.
  *
- * @var \Alpipego\Resizefly\Plugin
+ * @var \Alpipego\Resizefly\Plugin $plugin
  */
 
 // try to move thumbnail files
+use Alpipego\Resizefly\Admin\Sizes\SizesField;
 use Alpipego\Resizefly\Common\Psr\Container\ContainerExceptionInterface;
 use Alpipego\Resizefly\Common\Psr\Container\NotFoundExceptionInterface;
 
@@ -23,3 +24,7 @@ if (version_compare(get_option('resizefly_version'), $plugin['config.version'], 
     add_option('resizefly_version_initial', $plugin['config.version']);
     update_option('resizefly_version', $plugin['config.version']);
 }
+
+/** @var SizesField $imageSizes */
+$imageSizes = $plugin->get(SizesField::class);
+$imageSizes->updateImageSizes(true);

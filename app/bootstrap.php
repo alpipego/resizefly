@@ -5,6 +5,7 @@
  * Date: 14.07.2017
  * Time: 10:45.
  */
+
 use Alpipego\Resizefly\Admin\Licenses\LicensesPage;
 use Alpipego\Resizefly\Admin\Licenses\LicensesSection;
 use Alpipego\Resizefly\Common\Composer\Autoload\ClassLoader;
@@ -32,7 +33,7 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin['config.url']      = plugin_dir_url($file);
     $plugin['config.basename'] = plugin_basename($file);
     $plugin['config.siteurl']  = apply_filters('resizefly/home_url', get_bloginfo('url'));
-    $plugin['config.version']  = '3.1.4';
+    $plugin['config.version']  = '3.1.5';
 
     // settings/filterable configuration values
     $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
@@ -83,7 +84,10 @@ add_action('plugins_loaded', function () use ($classLoader) {
     if (is_admin()) {
         $plugin->addDefiniton(__DIR__.'/config/admin.php');
 
-        require_once __DIR__.'/actions/activation.php';
+        register_activation_hook($file, function () use ($plugin) {
+            require_once __DIR__.'/actions/activation.php';
+        });
+
 
         // add compatibility fixes that are only needed in admin
         $plugin->addDefiniton(__DIR__.'/config/compatibles-admin.php');
