@@ -2,8 +2,10 @@
 /**
  * Main image resize handling through 404 template redirect.
  */
+
 use Alpipego\Resizefly\Image\Image;
 use Alpipego\Resizefly\Plugin;
+use Alpipego\Resizefly\Upload\DuplicateOriginal;
 use function Alpipego\Resizefly\throw404;
 
 /* @var Plugin $plugin */
@@ -31,7 +33,10 @@ add_action('template_redirect', function () use ($plugin) {
         }
 
         // check if to resize from duplicate
-        if ((bool) apply_filters('resizefly/duplicate', true)) {
+        /** @var DuplicateOriginal $duplicate */
+        $duplicate         = $plugin->get('Alpipego\Resizefly\Upload\DuplicateOriginal');
+        $bigImageThreshold = $duplicate->getImageSizeThreshold();
+        if ((bool) apply_filters('resizefly/duplicate', true) && $matches['width'] <= $bigImageThreshold) {
             if (file_exists($image->getDuplicatePath())) {
                 $plugin['wp_image_editor'] = wp_get_image_editor($image->getDuplicatePath());
             } else {

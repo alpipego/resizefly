@@ -54,7 +54,7 @@ class Filter
             }
 
             return $post;
-        });
+        }, 50);
 
         // add density to all image sources
         add_filter('wp_get_attachment_image_src', function ($image) {

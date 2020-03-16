@@ -50,7 +50,7 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * @var array
      */
-    private $userSizes;
+    private $userSizes = [];
 
     /**
      * RestrictSizesField constructor.
@@ -68,35 +68,19 @@ class SizesField extends AbstractOption implements OptionInterface
         ];
         $this->localize($page);
 
-        add_option($this->optionsField['id'], []);
-
         parent::__construct($page, $section, $pluginPath);
     }
 
     public function run()
     {
-        add_action('after_setup_theme', function () {
-            // get registered and saved image sizes
-            $this->savedSizes      = get_option($this->optionsField['id'], []);
-            $this->userSizes       = get_option(self::USERSIZES, []);
-            $this->registeredSizes = $this->getRegisteredImageSizes();
+        // get registered and saved image sizes
+        $this->savedSizes = get_option($this->optionsField['id'], $this->savedSizes);
+        $this->userSizes  = get_option(self::USERSIZES, $this->userSizes);
 
-            // set defaults
-            add_option($this->optionsField['id'], $this->registeredSizes);
-            add_option(self::OUTOFSYNC, []);
-            add_option(self::USERSIZES, []);
+        // save all registered image sizes
+        add_action('after_setup_theme', [$this, 'updateImageSizes'], 11);
 
-            // if there are more user sizes then registered, delete them
-            $this->deleteZombieSizes();
-        }, 11);
-
-        add_action('current_screen', function (\WP_Screen $screen) {
-            // check if saved and registered image sizes are in sync
-            if ($screen->id === $this->page->getId()) {
-                $this->imageSizesSynced();
-            }
-        });
-
+        // save user sizes
         add_action('wp_ajax_'.self::ADD_ACTION, [$this, 'addUserSize']);
         add_action('wp_ajax_'.self::DELETE_ACTION, [$this, 'deleteUserSize']);
 
@@ -110,6 +94,21 @@ class SizesField extends AbstractOption implements OptionInterface
         add_action('deactivated_plugin', [$this, 'imageSizesSynced']);
 
         parent::run();
+    }
+
+    public function updateImageSizes($force = false)
+    {
+        $this->registeredSizes = $this->getRegisteredImageSizes();
+        // set defaults
+        add_option($this->optionsField['id'], $this->registeredSizes);
+        if ($force) {
+            update_option($this->optionsField['id'], $this->registeredSizes);
+        }
+        $this->imageSizesSynced();
+        add_option(self::USERSIZES, $this->userSizes);
+
+        // if there are more user sizes then registered, delete them
+        $this->deleteZombieSizes();
     }
 
     /**
@@ -174,6 +173,9 @@ class SizesField extends AbstractOption implements OptionInterface
     public function sanitize($sizes)
     {
         unset($sizes['clone']);
+        if (! is_array($sizes)) {
+            $sizes = [];
+        }
         // cast types
         foreach ($sizes as &$size) {
             $size['width']  = (int) $size['width'];
@@ -236,7 +238,7 @@ class SizesField extends AbstractOption implements OptionInterface
         } ?>
         <div class="notice notice-warning">
             <p>
-				<?=
+                <?=
                 sprintf(
                     wp_kses(
                         __(
@@ -249,7 +251,7 @@ class SizesField extends AbstractOption implements OptionInterface
                 ); ?>
             </p>
         </div>
-		<?php
+        <?php
     }
 
     /**

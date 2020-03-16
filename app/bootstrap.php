@@ -79,7 +79,10 @@ add_action('plugins_loaded', function () use ($classLoader) {
     if (is_admin()) {
         $plugin->addDefiniton(__DIR__.'/config/admin.php');
 
-        require_once __DIR__.'/actions/activation.php';
+        register_activation_hook($file, function () use ($plugin) {
+            require_once __DIR__.'/actions/activation.php';
+        });
+
 
         // add compatibility fixes that are only needed in admin
         $plugin->addDefiniton(__DIR__.'/config/compatibles-admin.php');
