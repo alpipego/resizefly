@@ -57,16 +57,21 @@ final class EditorWrapper implements EditorWrapperInterface
             // make sure not to request an image larger than the original
             if ($width > $origWidth || $height > $origHeight) {
                 $ratio = $width / $height;
-                if ($width > $origWidth && $height > $origHeight) {
-                    $height  = $origWidth / $ratio * ($origHeight / $origWidth);
-                    $width   = $origHeight / $ratio * ($origWidth / $origHeight);
-                } elseif ($width > $origWidth) {
-                    $width  = $origWidth;
-                    $height = $width * $height / $width;
-                } elseif ($height > $origHeight) {
-                    $height = $origHeight;
-                    $width  = $height * $ratio;
+                if ($ratio === 1) {
+                    $width = $height = min($origWidth, $origHeight);
+                } else {
+                    if ($width > $origWidth && $height > $origHeight) {
+                        $height = $origWidth / $ratio * ($origHeight / $origWidth);
+                        $width  = $origHeight / $ratio * ($origWidth / $origHeight);
+                    } elseif ($width > $origWidth) {
+                        $width  = $origWidth;
+                        $height = $width * $height / $width;
+                    } elseif ($height > $origHeight) {
+                        $height = $origHeight;
+                        $width  = $height * $ratio;
+                    }
                 }
+
                 $factor = max($width / $origWidth, $height / $origHeight);
             }
 
