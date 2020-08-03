@@ -89,7 +89,7 @@ final class EditorWrapper implements EditorWrapperInterface
         $srcX       = round(($origWidth - $width / $factor) * $focalX / 100);
         $srcY       = round(($origHeight - $height / $factor) * $focalY / 100);
 
-        return $this->editor->crop($srcX, $srcY, $width / $factor, $height / $factor, $width, $height);
+        return $this->editor->crop($srcX, $srcY, round($width / $factor), round($height / $factor), $width, $height);
     }
 
     public function getQuality()
