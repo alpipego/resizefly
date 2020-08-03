@@ -59,7 +59,7 @@ The plugin stores an optimized duplicate of each image in this folder. The reaso
 
 == Changelog ==
 
-= 3.2.1 =
+= 3.2.2 =
 * fix request to square image if sizes are larger than original
 
 
