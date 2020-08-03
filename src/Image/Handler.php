@@ -125,17 +125,17 @@ final class Handler implements HandlerInterface
                     return true;
                 }
             } else {
-                if ($this->image->getWidth() === $width && $this->image->getHeight() <= $height) {
+                if ($this->image->getWidth() === $width && ($this->image->getHeight() <= $height || $height === 0)) {
                     $this->parseRequestedImageSize(['width' => $width, 'height' => 0]);
-                    if ($this->aspect['height'] <= $height) {
+                    if ($this->aspect['height'] === $this->image->getHeight()) {
                         return true;
                     }
                     $this->aspect = [];
                 }
 
-                if ($this->image->getHeight() === $height && $this->image->getWidth() <= $width) {
+                if ($this->image->getHeight() === $height && ($this->image->getWidth() <= $width || $width === 0)) {
                     $this->parseRequestedImageSize(['width' => 0, 'height' => $height]);
-                    if ($this->aspect['width'] <= $width) {
+                    if ($this->aspect['width'] === $this->image->getWidth()) {
                         return true;
                     }
                     $this->aspect = [];
@@ -202,9 +202,9 @@ final class Handler implements HandlerInterface
             $size['width']  = $origWidth;
             $size['height'] = $origHeight;
         } elseif ($size['width'] === 0) {
-            $size['width'] = round($size['height'] * $this->editor->getRatio('width'));
+            $size['width'] = (int)round($size['height'] * $this->editor->getRatio('width'));
         } elseif ($size['height'] === 0) {
-            $size['height'] = round($size['width'] * $this->editor->getRatio('height'));
+            $size['height'] = (int)round($size['width'] * $this->editor->getRatio('height'));
         }
 
         return $this->aspect = $size;
