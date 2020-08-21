@@ -9,6 +9,7 @@
 namespace Alpipego\Resizefly\Image;
 
 use Alpipego\Resizefly\Upload\UploadsInterface;
+use WP_Query;
 
 /**
  * Holds all information relevant to the image.
@@ -71,15 +72,23 @@ final class Image implements ImageInterface
      * @var string wordpress site url
      */
     private $siteUrl;
+    /**
+     * @var int
+     */
+    private $id;
+    /**
+     * @var array
+     */
+    private $meta;
 
     /**
      * Image constructor. Sets up member variables.
      *
-     * @param UploadsInterface $uploads        `wp_upload_dir` array
-     * @param string           $siteUrl        the full website url
-     * @param string           $cachePath      the full path to resizefly cache dir
-     * @param string           $cacheUrl
-     * @param string           $duplicatesPath Full path to duplicates dir, since 2.0.0
+     * @param UploadsInterface $uploads `wp_upload_dir` array
+     * @param string $siteUrl the full website url
+     * @param string $cachePath the full path to resizefly cache dir
+     * @param string $cacheUrl
+     * @param string $duplicatesPath Full path to duplicates dir, since 2.0.0
      */
     public function __construct(UploadsInterface $uploads, $siteUrl, $cachePath, $cacheUrl, $duplicatesPath)
     {
@@ -97,8 +106,9 @@ final class Image implements ImageInterface
         $this->filename         = pathinfo($this->input)['filename'];
         $this->url              = $this->setImageUrl();
         $this->path             = $this->setImagePath();
-        $this->originalFilename = array_slice(explode(DIRECTORY_SEPARATOR, $file['file']), -1)[0];
+        $this->originalFilename = array_slice(explode(DIRECTORY_SEPARATOR, $file['file']), -1)[0].'.'.$file['ext'];
         $this->originalPath     = $this->setOriginalFile($file);
+        $this->id               = $this->setId();
         $this->resize           = [
             'width'  => (int) $file['width'],
             'height' => (int) $file['height'],
@@ -206,10 +216,59 @@ final class Image implements ImageInterface
     private function setOriginalFile($file)
     {
         $path = str_replace($this->cachePath, $this->uploads->getBasePath(), $this->path);
-        $path = file_exists($path.$this->originalFilename.'.'.$file['ext'])
-            ? $path.$this->originalFilename.'.'.$file['ext']
-            : sprintf('%s%s-%dx%d.%s', $path, $this->originalFilename, $file['width'], $file['height'], $file['ext']);
+        if (! file_exists($path.$this->originalFilename)) {
+            $filename               = substr($this->originalFilename, 0, strlen($this->originalFilename) - (strlen($file['ext'] + 1)));
+            $this->originalFilename = sprintf('%s-%dx%d.%s', $filename, $file['width'], $file['height'], $file['ext']);
+        }
 
-        return $path;
+        return $path.$this->originalFilename;
+    }
+
+    /**
+     * Get the attachment ID for this image.
+     *
+     * @return int Attachment ID on success, 0 on failure
+     */
+    function setId()
+    {
+        $query = new WP_Query([
+            'post_type'   => 'attachment',
+            'post_status' => 'inherit',
+            'fields'      => 'ids',
+            'meta_query'  => [
+                [
+                    'value'   => $this->originalFilename,
+                    'compare' => 'LIKE',
+                    'key'     => '_wp_attachment_metadata',
+                ],
+            ],
+        ]);
+
+        foreach ($query->posts as $post_id) {
+            $meta = wp_get_attachment_metadata($post_id);
+
+            if ($this->originalFilename === $meta['original_image'] || in_array($this->originalFilename, wp_list_pluck($meta['sizes'], 'file'), true)) {
+                $this->meta = $meta;
+                return $post_id;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMeta()
+    {
+        return $this->meta;
     }
 }

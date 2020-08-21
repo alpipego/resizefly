@@ -41,7 +41,7 @@ add_action('template_redirect', function () use ($plugin) {
         // check if to resize from duplicate
         /** @var DuplicateOriginal $duplicate */
         $duplicate         = $plugin->get('Alpipego\Resizefly\Upload\DuplicateOriginal');
-        $bigImageThreshold = $duplicate->getImageSizeThreshold();
+        $bigImageThreshold = $duplicate->setImageSizeThreshold([$image->getMeta()['width'], $image->getMeta()['height']], $image->getOriginalPath(), $image->getId());
         if ((bool) apply_filters('resizefly/duplicate', true) && $matches['width'] <= $bigImageThreshold) {
             if (! file_exists($image->getDuplicatePath())) {
                 $duplicate->rebuild($image->getOriginalPath());

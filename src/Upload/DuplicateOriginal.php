@@ -30,6 +30,14 @@ class DuplicateOriginal
      * @var bool
      */
     private $errorAdded = false;
+    /**
+     * @var string
+     */
+    private $path;
+    /**
+     * @var int
+     */
+    private $longEdge;
 
     /**
      * DuplicateOriginal constructor.
@@ -54,7 +62,6 @@ class DuplicateOriginal
         }
 
         add_action('delete_attachment', [$this, 'delete']);
-        $this->getImageSizeThreshold();
     }
 
     /**
@@ -77,7 +84,9 @@ class DuplicateOriginal
      */
     public function generateMeta($metadata, $attId)
     {
-        $this->create(get_attached_file($attId));
+        $path = get_attached_file($attId);
+        $this->setImageSizeThreshold([$metadata['sizes']['full']['width'], $metadata['sizes']['full']['height']], $path, $attId);
+        $this->create($path);
 
         return $metadata;
     }
@@ -95,18 +104,35 @@ class DuplicateOriginal
         }
     }
 
-    public function getImageSizeThreshold()
+    /**
+     * Sets the image threshold.
+     *
+     * @param array $imagesize [width, height].
+     * @param string $file full path to original file.
+     * @param int $attachmentId
+     *
+     * @return int
+     */
+    public function setImageSizeThreshold($imagesize, $file, $attachmentId)
     {
-        static $longEdge;
-        if (! is_null($longEdge)) {
-            return $longEdge;
-        }
-
-        $longEdge = apply_filters('big_image_size_threshold', 2560);
-        $longEdge = (int) apply_filters('resizefly/duplicate/long_edge', (int) $longEdge);
+        $longEdge = (int) apply_filters('big_image_size_threshold', 2560, $imagesize, $file, $attachmentId);
+        $longEdge = (int) apply_filters('resizefly/duplicate/long_edge', $longEdge);
         add_filter('big_image_size_threshold', '__return_false', 1000);
 
-        return $longEdge = $longEdge > 0 ? $longEdge : 2560;
+        return $this->longEdge = $longEdge > 0 ? $longEdge : 2560;
+    }
+
+    /**
+     * @return int
+     * @deprecated 3.2.3 use setImageSizeThreshold
+     */
+    public function getImageSizeThreshold()
+    {
+        if (is_null($this->longEdge)) {
+            return 2560;
+        }
+
+        return $this->longEdge;
     }
 
     /**
@@ -140,7 +166,7 @@ class DuplicateOriginal
         }
 
         // resize the image
-        $longEdge = $this->getImageSizeThreshold() > max($editor->get_size()) ? max($editor->get_size()) : $this->getImageSizeThreshold();
+        $longEdge = $this->longEdge > max($editor->get_size()) ? max($editor->get_size()) : $this->longEdge;
         $editor->resize($longEdge, $longEdge);
 
         if ($editor instanceof EditorImagick) {
