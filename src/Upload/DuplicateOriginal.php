@@ -30,6 +30,7 @@ class DuplicateOriginal
      * @var bool
      */
     private $errorAdded = false;
+
     /**
      * @var string
      */

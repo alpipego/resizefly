@@ -217,8 +217,13 @@ final class Image implements ImageInterface
     {
         $path = str_replace($this->cachePath, $this->uploads->getBasePath(), $this->path);
         if (! file_exists($path.$this->originalFilename)) {
-            $filename               = substr($this->originalFilename, 0, strlen($this->originalFilename) - (strlen($file['ext'] + 1)));
-            $this->originalFilename = sprintf('%s-%dx%d.%s', $filename, $file['width'], $file['height'], $file['ext']);
+            $this->originalFilename = sprintf(
+                '%s-%dx%d.%s',
+                substr($this->originalFilename, 0, strlen($this->originalFilename) - (strlen($file['ext'] + 1))),
+                $file['width'],
+                $file['height'],
+                $file['ext']
+            );
         }
 
         return $path.$this->originalFilename;
@@ -247,8 +252,13 @@ final class Image implements ImageInterface
         foreach ($query->posts as $post_id) {
             $meta = wp_get_attachment_metadata($post_id);
 
-            if ($this->originalFilename === $meta['original_image'] || in_array($this->originalFilename, wp_list_pluck($meta['sizes'], 'file'), true)) {
+            if (
+                $this->originalFilename === $meta['file']
+                || $this->originalFilename === substr($meta['file'], 8)
+                || in_array($this->originalFilename, wp_list_pluck($meta['sizes'], 'file'), true)
+            ) {
                 $this->meta = $meta;
+
                 return $post_id;
             }
         }
