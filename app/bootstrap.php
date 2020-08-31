@@ -33,7 +33,7 @@ add_action('plugins_loaded', function () use ($classLoader) {
     $plugin['config.url']      = plugin_dir_url($file);
     $plugin['config.basename'] = plugin_basename($file);
     $plugin['config.siteurl']  = apply_filters('resizefly/home_url', get_bloginfo('url'));
-    $plugin['config.version']  = '3.2.3';
+    $plugin['config.version']  = '3.2.4';
 
     // settings/filterable configuration values
     $plugin['options.cache.suffix']      = get_option('resizefly_resized_path', 'resizefly');
