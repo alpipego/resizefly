@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: resizefly 3.0.0\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2018-12-31 13:56+0100\n"
+"POT-Creation-Date: 2020-09-28 15:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -167,50 +167,50 @@ msgstr ""
 msgid "Image Sizes"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:159
+#: src/Admin/Sizes/SizesField.php:158
 msgid ""
 "This image size is not yet saved. If you want to allow images in this size "
 "save the form."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:160
+#: src/Admin/Sizes/SizesField.php:159
 msgid "This image size has been updated since your last save."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:161
+#: src/Admin/Sizes/SizesField.php:160
 msgid ""
 "This image size is no longer registered. If you still want to keep it you "
 "will have to add it manually."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:245
+#: src/Admin/Sizes/SizesField.php:247
 #, php-format
 msgid ""
 "The registered and saved image sizes for ResizeFly are out of sync. <a href="
 "\"%s\"><button type=\"button\">Please review them here.</button></a>"
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:330
+#: src/Admin/Sizes/SizesField.php:332
 msgctxt "admin custom image size."
 msgid "Please choose a unique name."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:331
+#: src/Admin/Sizes/SizesField.php:333
 msgctxt "admin custom image size."
 msgid "Please add either width or height."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:332
+#: src/Admin/Sizes/SizesField.php:334
 msgctxt "admin custom image size"
 msgid "When specifying \"crop\", please add both width and height."
 msgstr ""
 
-#: src/Admin/Sizes/SizesField.php:334 views/field/resizefly-sizes.php:93
+#: src/Admin/Sizes/SizesField.php:336 views/field/resizefly-sizes.php:93
 msgctxt "button text"
 msgid "Add Size"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:177
+#: src/Upload/DuplicateOriginal.php:217
 #, php-format
 msgid ""
 "The directory %s is not writeable by Resizefly. Please correct the "
