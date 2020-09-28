@@ -236,7 +236,8 @@ final class Image implements ImageInterface
      */
     function setId()
     {
-        $query = new WP_Query([
+        static $queryCache = [];
+        $args     = [
             'post_type'   => 'attachment',
             'post_status' => 'inherit',
             'fields'      => 'ids',
@@ -247,7 +248,14 @@ final class Image implements ImageInterface
                     'key'     => '_wp_attachment_metadata',
                 ],
             ],
-        ]);
+        ];
+        $queryKey = md5(wp_json_encode($args));
+        if (! array_key_exists($queryKey, $queryCache)) {
+            $queryCache[$queryKey] = new WP_Query($args);
+        }
+
+        /** @var WP_Query $query */
+        $query = $queryCache[$queryKey];
 
         foreach ($query->posts as $post_id) {
             $meta = wp_get_attachment_metadata($post_id);
