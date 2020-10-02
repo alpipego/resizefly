@@ -110,17 +110,21 @@ class DuplicateOriginal
      *
      * @param array $imagesize [width, height].
      * @param string $file full path to original file.
-     * @param int $attachmentId
      *
      * @return int
      */
-    public function setImageSizeThreshold($imagesize, $file, $attachmentId)
+    public function setImageSizeThreshold($imagesize, $file)
     {
-        $longEdge = (int) apply_filters('big_image_size_threshold', 2560, $imagesize, $file, $attachmentId);
-        $longEdge = (int) apply_filters('resizefly/duplicate/long_edge', $longEdge);
-        add_filter('big_image_size_threshold', '__return_false', 1000);
+        if (is_null($this->longEdge)) {
+            $this->longEdge = (int) apply_filters('big_image_size_threshold', 2560, $imagesize, $file, 0);
+            $this->longEdge = (int) apply_filters('resizefly/duplicate/long_edge', $this->longEdge);
+            if ($this->longEdge <= 0) {
+                $this->longEdge = 2560;
+            }
+        }
+        add_filter('big_image_size_threshold', '__return_false', 100);
 
-        return $this->longEdge = $longEdge > 0 ? $longEdge : 2560;
+        return $this->longEdge;
     }
 
     /**
@@ -130,7 +134,7 @@ class DuplicateOriginal
     public function getImageSizeThreshold()
     {
         if (is_null($this->longEdge)) {
-            return 2560;
+            return $this->setImageSizeThreshold([0, 0], '');
         }
 
         return $this->longEdge;

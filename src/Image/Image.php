@@ -9,7 +9,6 @@
 namespace Alpipego\Resizefly\Image;
 
 use Alpipego\Resizefly\Upload\UploadsInterface;
-use WP_Query;
 
 /**
  * Holds all information relevant to the image.
@@ -72,14 +71,6 @@ final class Image implements ImageInterface
      * @var string wordpress site url
      */
     private $siteUrl;
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var array
-     */
-    private $meta;
 
     /**
      * Image constructor. Sets up member variables.
@@ -108,7 +99,6 @@ final class Image implements ImageInterface
         $this->path             = $this->setImagePath();
         $this->originalFilename = array_slice(explode(DIRECTORY_SEPARATOR, $file['file']), -1)[0].'.'.$file['ext'];
         $this->originalPath     = $this->setOriginalFile($file);
-        $this->id               = $this->setId();
         $this->resize           = [
             'width'  => (int) $file['width'],
             'height' => (int) $file['height'],
@@ -227,66 +217,5 @@ final class Image implements ImageInterface
         }
 
         return $path.$this->originalFilename;
-    }
-
-    /**
-     * Get the attachment ID for this image.
-     *
-     * @return int Attachment ID on success, 0 on failure
-     */
-    function setId()
-    {
-        static $queryCache = [];
-        $args     = [
-            'post_type'   => 'attachment',
-            'post_status' => 'inherit',
-            'fields'      => 'ids',
-            'meta_query'  => [
-                [
-                    'value'   => $this->originalFilename,
-                    'compare' => 'LIKE',
-                    'key'     => '_wp_attachment_metadata',
-                ],
-            ],
-        ];
-        $queryKey = md5(wp_json_encode($args));
-        if (! array_key_exists($queryKey, $queryCache)) {
-            $queryCache[$queryKey] = new WP_Query($args);
-        }
-
-        /** @var WP_Query $query */
-        $query = $queryCache[$queryKey];
-
-        foreach ($query->posts as $post_id) {
-            $meta = wp_get_attachment_metadata($post_id);
-
-            if (
-                $this->originalFilename === $meta['file']
-                || $this->originalFilename === substr($meta['file'], 8)
-                || in_array($this->originalFilename, wp_list_pluck($meta['sizes'], 'file'), true)
-            ) {
-                $this->meta = $meta;
-
-                return $post_id;
-            }
-        }
-
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMeta()
-    {
-        return $this->meta;
     }
 }
