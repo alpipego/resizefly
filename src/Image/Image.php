@@ -209,7 +209,7 @@ final class Image implements ImageInterface
         if (! file_exists($path.$this->originalFilename)) {
             $this->originalFilename = sprintf(
                 '%s-%dx%d.%s',
-                substr($this->originalFilename, 0, strlen($this->originalFilename) - (strlen($file['ext'] + 1))),
+                substr($this->originalFilename, 0, strlen($this->originalFilename) - (strlen($file['ext']) + 1)),
                 $file['width'],
                 $file['height'],
                 $file['ext']
