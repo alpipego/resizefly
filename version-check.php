@@ -7,7 +7,7 @@
  * Time: 19:11
  */
 class Resizefly_Version_Check {
-	const PHP_VERSION = '5.5';
+	const PHP_VERSION = '5.6';
 	const WP_VERSION = '4.7';
 
 	private $versions = array(
