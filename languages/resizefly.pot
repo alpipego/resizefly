@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: resizefly 3.0.0\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2020-09-28 15:18+0200\n"
+"POT-Creation-Date: 2020-12-17 13:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,7 +210,7 @@ msgctxt "button text"
 msgid "Add Size"
 msgstr ""
 
-#: src/Upload/DuplicateOriginal.php:217
+#: src/Upload/DuplicateOriginal.php:221
 #, php-format
 msgid ""
 "The directory %s is not writeable by Resizefly. Please correct the "
