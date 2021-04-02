@@ -35,11 +35,6 @@ class DuplicateOriginal
     private $longEdge;
 
     /**
-     * @var string
-     */
-    private $path;
-
-    /**
      * DuplicateOriginal constructor.
      *
      * @param string $duplicateDir
