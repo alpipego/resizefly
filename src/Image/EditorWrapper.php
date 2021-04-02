@@ -37,12 +37,12 @@ final class EditorWrapper implements EditorWrapperInterface
 
     public function getWidth()
     {
-        return (int) $this->editor->get_size()['width'];
+        return (int)$this->editor->get_size()['width'];
     }
 
     public function getHeight()
     {
-        return (int) $this->editor->get_size()['height'];
+        return (int)$this->editor->get_size()['height'];
     }
 
     public function resizeImage($width, $height, $density, $focalX, $focalY)
@@ -52,24 +52,30 @@ final class EditorWrapper implements EditorWrapperInterface
         $factor     = max($width / $origWidth, $height / $origHeight);
 
         if ($density > 0) {
-            list($quality, $width, $height) = $this->parseDensity($width, $height, $density);
-            $factor                         = $factor * $density;
+            [$quality, $width, $height] = $this->parseDensity($width, $height, $density);
+            $factor = $factor * $density;
             // make sure not to request an image larger than the original
             if ($width > $origWidth || $height > $origHeight) {
                 $ratio = $width / $height;
                 if ($ratio === 1) {
                     $width = $height = min($origWidth, $origHeight);
-                } else {
-                    if ($width > $origWidth && $height > $origHeight) {
-                        $height = $origWidth / $ratio * ($origHeight / $origWidth);
-                        $width  = $origHeight / $ratio * ($origWidth / $origHeight);
-                    } elseif ($width > $origWidth) {
-                        $width  = $origWidth;
-                        $height = $width * $height / $width;
-                    } elseif ($height > $origHeight) {
-                        $height = $origHeight;
-                        $width  = $height * $ratio;
+                } elseif ($width > $origWidth && $height > $origHeight) {
+                    $count = 0;
+                    while ($width > $origWidth && $height > $origHeight) {
+                        $height    = (int) ($origHeight / $ratio * $origWidth / $origHeight);
+                        $width     = (int) ($origWidth / $ratio * $origWidth / $origHeight);
+                        if ($count++ > 10) {
+                            $height = $origHeight;
+                            $width  = $origWidth;
+                            break;
+                        }
                     }
+                } elseif ($width > $origWidth) {
+                    $width  = $origWidth;
+                    $height = (int) ($width * $height / $width);
+                } elseif ($height > $origHeight) {
+                    $height = $origHeight;
+                    $width  = (int) ($height * $ratio);
                 }
 
                 $factor = max($width / $origWidth, $height / $origHeight);
@@ -78,15 +84,18 @@ final class EditorWrapper implements EditorWrapperInterface
             $this->editor->set_quality($quality);
         }
 
-        $srcX       = round(($origWidth - $width / $factor) * $focalX / 100);
-        $srcY       = round(($origHeight - $height / $factor) * $focalY / 100);
+        $srcX = round(($origWidth - $width / $factor) * $focalX / 100);
+        $srcY = round(($origHeight - $height / $factor) * $focalY / 100);
+//        echo '<code><pre style="white-space: pre-wrap; word-wrap: break-word;">';
+//            var_dump($srcX, $srcY, $factor, round($width / $factor), round($height / $factor), $width, $height);
+//        echo '</pre></code>';
 
         return $this->editor->crop($srcX, $srcY, round($width / $factor), round($height / $factor), $width, $height);
     }
 
     public function getQuality()
     {
-        return (int) $this->editor->get_quality();
+        return (int)$this->editor->get_quality();
     }
 
     public function saveImage($file)
@@ -107,11 +116,11 @@ final class EditorWrapper implements EditorWrapperInterface
         http_response_code(200);
         header('HTTP/1.1 200 OK');
         header('Pragma: public');
-        header('Cache-Control: max-age='.$cacheAge.', public');
-        header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + $cacheAge));
+        header('Cache-Control: max-age=' . $cacheAge . ', public');
+        header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $cacheAge));
 
         if (empty($image) && method_exists($this->editor, 'getImageSize')) {
-            header('Content-Length: '.$this->editor->getImageSize());
+            header('Content-Length: ' . $this->editor->getImageSize());
         }
 
         do_action('resizefly/before_stream', $image, $this->editor);
@@ -135,7 +144,7 @@ final class EditorWrapper implements EditorWrapperInterface
     {
         $width   = $width * $density;
         $height  = $height * $density;
-        $quality = (int) apply_filters('resizefly/image/hidpi_quality', 70, $density);
+        $quality = (int)apply_filters('resizefly/image/hidpi_quality', 70, $density);
         if (1 === $density) {
             $quality = $this->getQuality();
         }
