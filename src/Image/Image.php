@@ -176,16 +176,11 @@ final class Image implements ImageInterface
      */
     private function setImagePath()
     {
-        // if this a full url to this wp install, set path
-        if (0 === strpos($this->input, $this->uploads->getBaseUrl())) {
-            $filePath = $this->uploads->getBasePath().str_replace($this->uploads->getBaseUrl(), '', $this->url);
-        } else {
-            $abspathArr = explode(DIRECTORY_SEPARATOR, ABSPATH);
-            $uploadsArr = explode(DIRECTORY_SEPARATOR, $this->uploads->getBasePath());
-            $pathArr    = array_intersect($abspathArr, $uploadsArr);
-            $path       = implode(DIRECTORY_SEPARATOR, $pathArr);
-            $filePath   = $path.str_replace(trailingslashit($this->siteUrl), '', $this->url);
-        }
+        $intersection = implode('/', array_intersect(
+            explode(DIRECTORY_SEPARATOR, $this->input),
+            explode(DIRECTORY_SEPARATOR, $this->uploads->getBasePath())
+        ));
+        $filePath     = $this->uploads->getBasePath() . str_replace($intersection, '', $this->input);
 
         return str_replace($this->basename, '', $filePath);
     }
