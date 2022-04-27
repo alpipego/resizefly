@@ -14,7 +14,7 @@
   },
   "homepage": "https://resizefly.com/",
   "devDependencies": {
-    "grunt": "^1.0.3",
+    "grunt": "^1.5.2",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^3.4.0",
     "grunt-contrib-watch": "^1.1.0",
