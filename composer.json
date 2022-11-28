@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=5.5",
-        "composer/installers": "~1.0"
+        "composer/installers": "~1.0|~2.0"
     },
     "require-dev": {
         "pimple/pimple": "^3.1.0",
@@ -22,5 +22,10 @@
     },
     "scripts": {
         "post-update-cmd": ["grunt third-party"]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }

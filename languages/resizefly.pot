@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: resizefly 3.0.0\n"
 "Report-Msgid-Bugs-To: hi@resizefly.com\n"
-"POT-Creation-Date: 2020-12-17 13:03+0100\n"
+"POT-Creation-Date: 2022-11-28 14:45+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/Admin/Admin.php:37
+#: src/Admin/Admin.php:43
 msgid "Resizefly Settings"
 msgstr ""
 
@@ -186,8 +186,8 @@ msgstr ""
 #: src/Admin/Sizes/SizesField.php:247
 #, php-format
 msgid ""
-"The registered and saved image sizes for ResizeFly are out of sync. <a href="
-"\"%s\"><button type=\"button\">Please review them here.</button></a>"
+"The registered and saved image sizes for ResizeFly are out of sync. <a "
+"href=\"%s\"><button type=\"button\">Please review them here.</button></a>"
 msgstr ""
 
 #: src/Admin/Sizes/SizesField.php:332
