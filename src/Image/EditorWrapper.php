@@ -22,8 +22,6 @@ final class EditorWrapper implements EditorWrapperInterface
 
     /**
      * inject image editor.
-     *
-     * @param WP_Image_Editor $editor
      */
     public function __construct(WP_Image_Editor $editor)
     {

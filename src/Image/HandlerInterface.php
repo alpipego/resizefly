@@ -25,8 +25,6 @@ interface HandlerInterface
     /**
      * Check if requested image size is in array of allowed sizes.
      *
-     * @param array $allowedSizes
-     *
      * @return bool
      */
     public function allowedImageSize(array $allowedSizes);

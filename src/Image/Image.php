@@ -75,11 +75,11 @@ final class Image implements ImageInterface
     /**
      * Image constructor. Sets up member variables.
      *
-     * @param UploadsInterface $uploads `wp_upload_dir` array
-     * @param string $siteUrl the full website url
-     * @param string $cachePath the full path to resizefly cache dir
-     * @param string $cacheUrl
-     * @param string $duplicatesPath Full path to duplicates dir, since 2.0.0
+     * @param UploadsInterface $uploads        `wp_upload_dir` array
+     * @param string           $siteUrl        the full website url
+     * @param string           $cachePath      the full path to resizefly cache dir
+     * @param string           $cacheUrl
+     * @param string           $duplicatesPath Full path to duplicates dir, since 2.0.0
      */
     public function __construct(UploadsInterface $uploads, $siteUrl, $cachePath, $cacheUrl, $duplicatesPath)
     {

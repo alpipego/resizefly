@@ -35,9 +35,8 @@ abstract class AbstractOptionsSection
     /**
      * AbstractOptionsSection constructor.
      *
-     * @param PageInterface $page
-     * @param string        $pluginPath    base plugin path
-     * @param string        $customSection
+     * @param string $pluginPath    base plugin path
+     * @param string $customSection
      */
     public function __construct(PageInterface $page, $pluginPath, $customSection = '')
     {

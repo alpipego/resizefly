@@ -58,7 +58,7 @@ final class Handler implements HandlerInterface
     /**
      * Try to resize and save the image, else return a WP_Error.
      *
-     * @return WP_Error | void
+     * @return void|WP_Error
      */
     public function run()
     {
@@ -201,9 +201,9 @@ final class Handler implements HandlerInterface
             $size['width']  = $origWidth;
             $size['height'] = $origHeight;
         } elseif ($size['width'] === 0) {
-            $size['width'] = (int)round($size['height'] * $this->editor->getRatio('width'));
+            $size['width'] = (int) round($size['height'] * $this->editor->getRatio('width'));
         } elseif ($size['height'] === 0) {
-            $size['height'] = (int)round($size['width'] * $this->editor->getRatio('height'));
+            $size['height'] = (int) round($size['width'] * $this->editor->getRatio('height'));
         }
 
         return $this->aspect = $size;

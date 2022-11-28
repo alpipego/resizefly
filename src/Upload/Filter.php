@@ -31,9 +31,7 @@ class Filter
     /**
      * Filter constructor.
      *
-     * @param UploadsInterface $uploads
-     * @param ImageInterface   $image
-     * @param string           $cacheUrl
+     * @param string $cacheUrl
      */
     public function __construct(UploadsInterface $uploads, ImageInterface $image, $cacheUrl)
     {

@@ -36,7 +36,7 @@
         </tr>
         </tfoot>
         <tbody>
-		<?php foreach ($args['image_sizes'] as $name => $size) : ?>
+		<?php foreach ($args['image_sizes'] as $name => $size) { ?>
 			<?php
             $user   = isset($args['user_sizes'][$name]);
             $status = function () use ($args, $name) {
@@ -65,12 +65,12 @@
 						<?php checked($size['active'], 1); ?>
 						<?= ($user || 'missing' === $status()) ? 'disabled' : ''; ?>
                     >
-					<?php if ($user) : ?>
+					<?php if ($user) { ?>
                         <input type="hidden" name="resizefly_sizes[<?= $name; ?>][active]" value="on">
-					<?php endif; ?>
+					<?php } ?>
                 </td>
                 <td class="rzf-size-action">
-					<?php if ($user) : ?>
+					<?php if ($user) { ?>
                         <button
                                 type="button"
                                 class="js-rzf-user-size-delete button-secondary"
@@ -80,9 +80,9 @@
                         >
 							<?= _x('Delete Size', 'button text', 'resizefly'); ?>
                         </button>
-					<?php endif; ?>
+					<?php } ?>
 
-					<?php if ('missing' === $status()) : ?>
+					<?php if ('missing' === $status()) { ?>
                         <button
                                 type="button"
                                 class="js-rzf-user-size-readd button-secondary"
@@ -92,20 +92,20 @@
                         >
 							<?= _x('Add Size', 'button text', 'resizefly'); ?>
                         </button>
-					<?php endif; ?>
+					<?php } ?>
                 </td>
                 <td class="rzf-size-width">
 					<?= $size['width']; ?>
 
-					<?php if ('missing' !== $status()) : ?>
+					<?php if ('missing' !== $status()) { ?>
                         <input type="hidden" name="resizefly_sizes[<?= $name; ?>][width]" value="<?= $size['width']; ?>">
-					<?php endif; ?>
+					<?php } ?>
                 </td>
                 <td class="rzf-size-height">
 					<?= $size['height']; ?>
-					<?php if ('missing' !== $status()) : ?>
+					<?php if ('missing' !== $status()) { ?>
                         <input type="hidden" name="resizefly_sizes[<?= $name; ?>][height]" value="<?= $size['height']; ?>">
-					<?php endif; ?>
+					<?php } ?>
                 </td>
                 <td class="rzf-size-crop">
 					<?php
@@ -117,17 +117,17 @@
                         }
                     }
                     ?>
-					<?php if ('missing' !== $status()) : ?>
+					<?php if ('missing' !== $status()) { ?>
                         <input
                                 type="hidden"
                                 name="resizefly_sizes[<?= $name; ?>][crop]"
                                 value="<?= implode(', ', (array) $size['crop']); ?>"
                         >
-					<?php endif; ?>
+					<?php } ?>
                 </td>
                 <td class="rzf-size-name"><?= $name; ?></td>
             </tr>
-		<?php endforeach; ?>
+		<?php } ?>
         </tbody>
     </table>
 

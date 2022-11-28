@@ -26,5 +26,5 @@ if (version_compare(get_option('resizefly_version'), $plugin['config.version'], 
 }
 
 /** @var SizesField $imageSizes */
-$imageSizes = $plugin->get(SizesField::class);
+$imageSizes = $plugin->get('Alpipego\Resizefly\Admin\Sizes\SizesField');
 $imageSizes->updateImageSizes(true);

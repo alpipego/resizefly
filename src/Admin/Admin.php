@@ -21,8 +21,8 @@ final class Admin
 
     public function run()
     {
-        add_filter('plugin_action_links_' . $this->basename, [$this, 'addActionLinks']);
-        if (!get_transient('rzf_notice_shown')) {
+        add_filter('plugin_action_links_'.$this->basename, [$this, 'addActionLinks']);
+        if (! get_transient('rzf_notice_shown')) {
             add_action('admin_notices', [$this, 'deprecationNotice']);
         }
         add_action('wp_ajax_rzf_dismiss_notice', [$this, 'setNoticeTransient']);
@@ -65,7 +65,7 @@ final class Admin
                 notice.querySelector('.notice-dismiss').addEventListener('click', () => {
                     const data = new FormData();
                     data.append('action', 'rzf_dismiss_notice');
-                    data.append('_ajax_nonce', '<?= wp_create_nonce('rzf_dismiss_notice') ?>');
+                    data.append('_ajax_nonce', '<?= wp_create_nonce('rzf_dismiss_notice'); ?>');
                     fetch(window.ajaxurl, {
                         method: 'POST',
                         credentials: 'same-origin',

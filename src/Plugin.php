@@ -218,8 +218,7 @@ class Plugin extends Container implements ContainerInterface
     }
 
     /**
-     * @param ReflectionParameter $dependency
-     * @param string              $id
+     * @param string $id
      *
      * @throws ReflectionException
      *

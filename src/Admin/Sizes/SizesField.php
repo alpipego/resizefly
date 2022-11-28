@@ -55,8 +55,6 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * RestrictSizesField constructor.
      *
-     * @param PageInterface $page
-     * @param OptionsSectionInterface $section
      * @param string $pluginPath
      */
     public function __construct(PageInterface $page, OptionsSectionInterface $section, $pluginPath)
@@ -240,8 +238,7 @@ class SizesField extends AbstractOption implements OptionInterface
         } ?>
         <div class="notice notice-warning">
             <p>
-                <?=
-                sprintf(
+                <?= sprintf(
                     wp_kses(
                         __(
                             'The registered and saved image sizes for ResizeFly are out of sync. <a href="%s"><button type="button">Please review them here.</button></a>',
@@ -322,9 +319,6 @@ class SizesField extends AbstractOption implements OptionInterface
         return $sizes;
     }
 
-    /**
-     * @param PageInterface $page
-     */
     private function localize(PageInterface $page)
     {
         $page->localize([
@@ -350,8 +344,6 @@ class SizesField extends AbstractOption implements OptionInterface
     /**
      * Sanitize values added to this settings field.
      *
-     * @param array $size
-     *
      * @return array
      */
     private function sanitizeAjax(array $size)
@@ -371,9 +363,6 @@ class SizesField extends AbstractOption implements OptionInterface
     }
 
     /**
-     * @param array $size
-     * @param array $userSizes
-     *
      * @return array
      */
     private function errorHandling(array $size, array $userSizes)

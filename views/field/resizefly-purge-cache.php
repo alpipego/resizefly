@@ -8,13 +8,13 @@
 ?>
 
 <p>
-	<?php if ($args['path']) : ?>
+	<?php if ($args['path']) { ?>
 		<?= sprintf(__('Remove %s resized images in <code>%s</code>.', 'resizefly'), '<strong id="'.$args['id'].'-text">most</strong>', $args['path']); ?>
         <br/>
         <em><?= __('(Note: This will not remove any images in your default upload folder.)', 'resizefly'); ?></em>
-	<?php else : ?>
+	<?php } else { ?>
 		<?= __('To configure more options, please add a resize path above.', 'resizefly'); ?>
-	<?php endif; ?>
+	<?php } ?>
 </p>
 <p>
     <label for="<?= $args['id']; ?>-smart">

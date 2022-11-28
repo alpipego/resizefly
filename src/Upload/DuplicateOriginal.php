@@ -43,7 +43,6 @@ class DuplicateOriginal
     /**
      * DuplicateOriginal constructor.
      *
-     * @param UploadsInterface $uploads
      * @param string $duplicateDir
      */
     public function __construct(UploadsInterface $uploads, $duplicateDir)
@@ -108,8 +107,8 @@ class DuplicateOriginal
     /**
      * Sets the image threshold.
      *
-     * @param array $imagesize [width, height].
-     * @param string $file full path to original file.
+     * @param array  $imagesize [width, height]
+     * @param string $file      full path to original file
      *
      * @return int
      */
@@ -129,6 +128,7 @@ class DuplicateOriginal
 
     /**
      * @return int
+     *
      * @deprecated 3.2.3 use setImageSizeThreshold
      */
     public function getImageSizeThreshold()
@@ -235,7 +235,6 @@ class DuplicateOriginal
      * Calculate the memory Imagick will need based on amount of pixels.
      *
      * @param array $sizes ['width', 'height']
-     * @param EditorImagick $editor
      *
      * @return bool
      */
@@ -249,8 +248,6 @@ class DuplicateOriginal
 
     /**
      * Try tweaking the resources to save an image (that could not be saved before).
-     *
-     * @param EditorImagick $editor
      *
      * @return bool
      */
